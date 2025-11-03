@@ -1,0 +1,1 @@
+import{a as P,b as D}from"/build/_shared/chunk-TYFUAS6F.js";import{d as H}from"/build/_shared/chunk-W6WK5VNR.js";var x=H(P());var L="/build/_assets/spinner-MHNSWKD5.gif";var C=H(D());function J(p){return(0,C.jsx)(C.Fragment,{children:(0,C.jsx)("div",{className:"loader",children:(0,C.jsx)("img",{src:L,alt:"my-gif",style:{width:200,height:200,margin:"0 auto"}})})})}export{J as a};

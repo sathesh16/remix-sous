@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/dashboard/index.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction dashboard() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default dashboard\n"],
+  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,YAAY;AACnB,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,oBAAQ;",
+  "names": []
+}

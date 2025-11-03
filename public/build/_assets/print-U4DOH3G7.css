@@ -1,0 +1,61 @@
+/* app/stylesheet/print.css */
+@media print {
+  *,
+  :after,
+  :before {
+    text-shadow: none !important;
+    background: #DFCB9C !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  .print-body-section-content-1 {
+    padding-left: 5mm;
+    padding-right: 5mm;
+  }
+  .print-btn {
+    display: none;
+  }
+  .menu-logo {
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+  .print-body-section-content-1 .banner-contents {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .print-body-section-content-1 .banner-contents .menu-title {
+    font-size: 16px;
+  }
+  .print-body-section-content-1 .banner-contents .allergen,
+  .print-body-section-content-1 .banner-contents .banner-dietary {
+    font-size: 12px;
+    line-height: normal;
+    margin-bottom: 4px;
+  }
+  .print-body-section-content-1 .banner-contents .co2_section {
+    height: 50px;
+    width: 50px;
+    background-color: #dedfd2 !important;
+  }
+  .print-body-section-content-1 .banner-contents .co2_section .main-value {
+    font-size: 12px;
+    background-color: #dedfd2 !important;
+  }
+  .print-body-section-content-1 .banner-contents .co2_section .unit {
+    font-size: 10px;
+    background-color: #dedfd2 !important;
+  }
+  .print-body-section-content-1 .banner-contents .energy {
+    font-size: 10px;
+  }
+  .print-body-section-content-1 .banner-contents .menu-title {
+    padding-bottom: 10px;
+  }
+  .print-body-section-content-1 .banner-contents .store_name {
+    font-size: 12px;
+  }
+}

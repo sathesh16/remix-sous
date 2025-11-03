@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../app/components/Button.jsx"],
+  "sourcesContent": ["// app/components/Button.jsx\nexport default function Button({\n    children,\n    variant = \"primary\",\n    className = \"\",\n    type=\"button\",\n    ...props\n}) {\n    // Define base styles\n    const baseStyles =\n        \"px-4 py-2 rounded-lg font-medium focus:outline-none focus:ring transition\";\n\n    // Define color variants\n    const variants = {\n        primary: \"bg-[#000022] text-white hover:bg-blue-700 focus:ring-blue-300\",\n        secondary: \"bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400\",\n        danger: \"bg-red-600 text-white hover:bg-red-700 focus:ring-red-300\",\n        outline:\n            \"border border-gray-400 text-gray-700 hover:bg-gray-100 focus:ring-gray-300\",\n    };\n\n    // Combine all styles\n    const styles = `${baseStyles} ${variants[variant]} ${className}`;\n\n    return (\n        <button type={type} className={styles} {...props}>\n            {children}\n        </button>\n    );\n}\n"],
+  "mappings": ";;;;;;AAyBQ;AAxBO,SAAR,OAAwB;AAAA,EAC3B;AAAA,EACA,UAAU;AAAA,EACV,YAAY;AAAA,EACZ,OAAK;AAAA,KACF;AACP,GAAG;AAEC,QAAM,aACF;AAGJ,QAAM,WAAW;AAAA,IACb,SAAS;AAAA,IACT,WAAW;AAAA,IACX,QAAQ;AAAA,IACR,SACI;AAAA,EACR;AAGA,QAAM,SAAS,GAAG,cAAc,SAAS,YAAY;AAErD,SACI,mDAAC,YAAO,MAAY,WAAW,QAAS,GAAG,OACtC,YADL;AAAA;AAAA;AAAA;AAAA,SAEA;AAER;",
+  "names": []
+}

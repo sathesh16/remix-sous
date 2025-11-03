@@ -1,0 +1,1533 @@
+/* app/stylesheet/banner.css */
+@font-face {
+  font-family: Roboto;
+  src: url(/build/_assets/Roboto-Regular-ACHFAADV.woff2) format("woff2"), url(/build/_assets/Roboto-Regular-52DZ5CAI.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(/build/_assets/Roboto-LightItalic-ISZ6FB26.woff2) format("woff2"), url(/build/_assets/Roboto-LightItalic-BJBLTNCO.woff) format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(/build/_assets/Roboto-Light-67QLWSJ7.woff2) format("woff2"), url(/build/_assets/Roboto-Light-GUCOFG4U.woff) format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(/build/_assets/Roboto-Bold-23VOEHZ2.woff2) format("woff2"), url(/build/_assets/Roboto-Bold-MHUAAJY5.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(/build/_assets/Roboto-Medium-HC6JAPRJ.woff2) format("woff2"), url(/build/_assets/Roboto-Medium-BDLLT33U.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(/build/_assets/Roboto-MediumItalic-OGN6HJBE.woff2) format("woff2"), url(/build/_assets/Roboto-MediumItalic-EH73OGF7.woff) format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: Noto Sans;
+  src: url(/build/_assets/NotoSans-Bold-Q5J5MRZB.woff2) format("woff2"), url(/build/_assets/NotoSans-Bold-KPHK53P5.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Noto Sans;
+  src: url(/build/_assets/NotoSans-Medium-UYLF6VE7.woff2) format("woff2"), url(/build/_assets/NotoSans-Medium-V5LDIJLD.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Noto Sans;
+  src: url(/build/_assets/NotoSans-Italic-ZHBXNVDG.woff2) format("woff2"), url(/build/_assets/NotoSans-Italic-SSDOJ23Y.woff) format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: Noto Sans;
+  src: url(/build/_assets/NotoSans-SemiBold-DF7JIXDP.woff2) format("woff2"), url(/build/_assets/NotoSans-SemiBold-LCJC7WCB.woff) format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Noto Sans;
+  src: url(/build/_assets/NotoSans-Regular-QTKLLDQY.woff2) format("woff2"), url(/build/_assets/NotoSans-Regular-NH7YWFJW.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+body .station-preview,
+body .page-preview {
+  font-family: Noto Sans;
+  margin: 0;
+  color: #002;
+  font-size: 100%;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.font-noto {
+  font-family: Noto Sans;
+}
+.f-60 {
+  font-size: 5.35vw;
+}
+.f-32 {
+  font-size: 1.75vw;
+}
+.f-30 {
+  font-size: 1.7vw;
+}
+.fw-700 {
+  font-weight: 700;
+}
+.fw-600 {
+  font-weight: 600;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.fw-300 {
+  font-weight: 300;
+}
+.fs-it {
+  font-style: italic;
+}
+.fs-nor {
+  font-style: normal;
+}
+.xs-subTitle {
+  font-weight: 300;
+}
+.power-plant {
+  display: flex;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.lunch {
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.station-preview .banner-fluid.lunch.iss-group .container,
+.page-preview .banner-fluid.lunch.iss-group .container {
+  background-position: initial;
+}
+.lunch.iss-group {
+  background-image: unset;
+}
+.deli-lunch,
+.harvest,
+.harvest.net,
+.deli.pieces,
+.friday-breakfast,
+.sweet-iss-group,
+.soup-iss-group {
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.station-preview .banner-fluid {
+  width: 100%;
+  height: 86%;
+  background-size: cover;
+}
+.banner-fluid {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+}
+.banner-fluid .container {
+  min-height: 100vh;
+  padding: 20px 4%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+}
+.station-preview .banner-fluid .container {
+  height: 100%;
+  padding: 20px 4%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 90vh;
+}
+.station-preview .supplement.banner-fluid .container {
+  max-width: 86%;
+  padding-right: 15px;
+}
+.banner-fluid.deli.pieces .container {
+  width: 64%;
+  padding-right: 15px;
+}
+.banner-fluid.deli.pieces .container .title {
+  padding-top: 18px;
+}
+.banner-fluid.deli.pieces .lunch-section .lunch-today {
+  grid-template-columns: 100%;
+  grid-gap: 20px;
+  padding: 0 0 25px;
+}
+.banner-fluid.deli.pieces .lunch-allergens .allergens-list {
+  padding: 0;
+}
+.banner-fluid .container .title {
+  padding-bottom: 36px;
+  padding-top: 36px;
+}
+.page-preview .banner-fluid.deli.pieces .container {
+  width: 64%;
+}
+.page-preview .banner-fluid .container .title,
+.banner-fluid.deli.pieces .container .title {
+  padding-bottom: 40px;
+  padding-top: 40px;
+}
+.page-preview .banner-fluid.deli.pieces .container .title .heading {
+  font-size: 5vw;
+}
+.banner-fluid .container .title .heading {
+  font-size: 5.35vw;
+  font-weight: 700;
+  padding: 10px 0;
+  line-height: 1;
+}
+.banner-fluid .container .title .heading > span {
+  font-weight: 300;
+  font-style: italic;
+}
+.banner-fluid .container .title .heading.iss-title-blue {
+  color: #0084ff;
+  font-size: 2.4vw;
+  text-transform: capitalize;
+}
+.banner-fluid .container .title .heading.iss-title-blue span {
+  font-style: normal;
+  font-weight: 700;
+}
+.harvest.banner-fluid .container .title .heading > span {
+  font-weight: 300;
+  display: block;
+  font-size: 3vw;
+  padding-left: .45vw;
+  font-style: normal;
+  text-transform: capitalize;
+}
+.banner-fluid.power-plant .container .title .sub-heading {
+  font-size: 2.7vw;
+  font-weight: 700;
+  padding: 15px 10% 15px 0;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: break-word;
+}
+.banner-fluid .container .title .heading .number {
+  font-style: normal;
+  border: 2px solid #0084ff;
+  border-radius: 50%;
+  width: 4vw;
+  height: 4vw;
+  font-size: 3vw;
+  display: inline-flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.4vw;
+  float: left;
+  margin-top: .75vw;
+  color: #0084ff;
+  font-weight: 500;
+}
+.banner-fluid.power-plant .container .pad-r-12 {
+  padding-right: 12%;
+}
+.banner-fluid.power-plant.ey .container .pad-r-12 {
+  padding-right: 10%;
+}
+.page-preview .power-plant.sweet-iss-group .container .flex.flex-row.gap-8 {
+  padding-right: 6%;
+}
+.power-plant.comfort-food.Iss-Group .pad-r-12 {
+  padding-right: 0;
+}
+.food-allergens {
+  display: block;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 50%;
+}
+.page-preview .food-allergens {
+  width: 100%;
+}
+.site-blue {
+  color: #0084ff;
+}
+.line-normal {
+  line-height: normal;
+}
+.food-allergens .m-text {
+  font-size: 2vw;
+  font-weight: 700;
+  padding-bottom: 0;
+  line-height: 1;
+}
+.food-allergens .f-list {
+  padding: 10px 0;
+  display: block;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.food-allergens .f-list li {
+  list-style-type: none;
+  float: left;
+  margin-right: 15px;
+  font-size: 1.75vw;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+.page-preview .food-allergens .f-list li {
+  margin-right: 16px;
+}
+.food-allergens .f-list li img {
+  width: 1.6vw;
+  float: left;
+  margin-right: 10px;
+  margin-top: 1px;
+}
+.food-allergens .f-list .m-text {
+  font-size: 1.75vw;
+}
+.content-vh {
+  display: grid;
+  overflow: hidden;
+  min-height: 90vh;
+  max-height: 90vh;
+  width: 100%;
+  overflow-y: auto;
+  align-items: center;
+}
+.page-preview .content-vh.f-height {
+  max-height: 100%;
+}
+.banner-fluid.lunch h1 > span,
+.banner-fluid.deli-lunch h1 > span {
+  font-weight: 400;
+  font-size: 2.34375vw;
+  display: block;
+  text-transform: none;
+}
+.banner-fluid.lunch h1,
+.banner-fluid.deli-lunch h1 {
+  margin: 0 auto;
+  font-size: 4vw;
+  padding-bottom: 10px;
+  line-height: 1;
+  font-weight: 700;
+}
+.banner-fluid.deli-lunch .lunchTitle h1 {
+  margin: 0;
+}
+.lunch-section .lunch-today {
+  display: grid;
+  grid-template-columns: 40% calc(60% - 30px);
+  grid-gap: 30px;
+  padding: 15px 0;
+  align-items: flex-start;
+}
+.lunch-list .site-blue,
+.allergens-list .m-text {
+  line-height: normal;
+}
+.lunch-allergens .f-list {
+  padding: 10px 0;
+  margin: 0 auto;
+  display: block;
+  overflow: hidden;
+}
+.lunch-allergens .f-list li {
+  float: left;
+  font-size: 1.5vw;
+  font-weight: 700;
+  margin-right: 10px;
+  list-style-type: none;
+  padding: 4px 4px 4px 0;
+  line-height: 1;
+}
+.harvest .lunch-allergens .f-list li {
+  float: left;
+  font-size: 1.25vw;
+  font-weight: 700;
+  margin-right: 10px;
+  list-style-type: none;
+  padding: 5px 4px 5px 0;
+  line-height: 1;
+}
+.harvest .lunch-allergens .f-list li img {
+  float: left;
+  width: 1.25vw;
+  margin-right: 6px;
+  margin-top: -1px;
+}
+.lunch-allergens .f-list li img {
+  float: left;
+  width: 1.5vw;
+  margin-right: 6px;
+  margin-top: -1px;
+}
+.lunch-allergens .allergens-list {
+  display: block;
+  overflow: hidden;
+  padding: 0 5px;
+}
+.harvest .lunch-section .lunch-today .lunch-list .m-text {
+  padding: 0;
+  line-height: normal;
+  font-weight: 700;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 1.6vw;
+  padding-left: .45vw;
+}
+.lunch-section .lunch-today .lunch-list .m-text {
+  padding: 5px 0;
+  line-height: normal;
+  font-weight: 700;
+  white-space: normal;
+  word-break: break-word;
+}
+.harvest .lunch-section .lunch-allergens,
+.banner-fluid.deli.pieces .lunch-section .lunch-today .lunch-allergens,
+.supplement .lunch-section .lunch-today .lunch-allergens {
+  width: 50%;
+}
+.harvest .lunch-section .gap-10,
+.deli.pieces.ey .lunch-today .gap-10 {
+  gap: 30px;
+}
+.deli.pieces.ey .lunch-today .lunch-allergens {
+  width: 50%;
+}
+.banner-fluid.deli .lunch-section .lunch-today .lunch-list .m-text {
+  font-weight: 700;
+}
+.lunch-section .lunch-today .lunch-list .number,
+.next-step .lunch-list .number {
+  border: 2px solid #0084ff;
+  border-radius: 50%;
+  width: 1.8vw;
+  height: 1.8vw;
+  font-size: 1.25vw;
+  display: inline-flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.4vw;
+  float: left;
+  margin-top: .4vw;
+}
+.page-preview .banner-fluid.lunch .container {
+  max-width: 100%;
+  padding-bottom: 80px;
+}
+.station-preview .banner-fluid .lunch-section .row,
+.page-preview .banner-fluid .lunch-section .row {
+  display: block;
+}
+.banner-fluid.harvest h1 {
+  margin: 0 auto;
+  font-weight: 700;
+  line-height: 1;
+}
+.harvest .lunch-allergens .f-list {
+  padding: 5px 0 0;
+  margin: 5px auto 0;
+}
+.banner-fluid.harvest .title .sub-heading {
+  padding-left: .4vw;
+}
+.harvest .lunch-section {
+  padding-bottom: 30px;
+}
+.banner-fluid.harvest.dressings .lunch-section {
+  padding-bottom: 20px;
+}
+.harvest .lunch-allergens .allergens-list {
+  padding: 0 5px;
+}
+.harvest .lunch-allergens .allergens-list .f-32 {
+  font-size: 1.7vw;
+}
+.station-preview .banner-fluid.deli.pieces.ey .container {
+  padding-right: 15px;
+}
+.station-preview .banner-fluid.power-plant .container {
+  max-width: 85%;
+  padding-right: 0;
+}
+.station-preview .banner-fluid.power-plant.sweet-iss-group .container,
+.station-preview .banner-fluid.power-plant.Iss-Group .container {
+  max-width: 80%;
+  padding-right: 0;
+}
+.station-preview .banner-fluid.harvest .container,
+.page-preview .banner-fluid.harvest .container {
+  max-width: 86%;
+  padding-right: 1%;
+}
+.station-preview .banner-fluid.lunch.iss-group.w-full .lunch-section .lunch-today,
+.page-preview .banner-fluid.lunch.iss-group .lunch-section .lunch-today {
+  grid-template-columns: 100%;
+}
+.station-preview .banner-fluid.lunch.iss-group.w-full .lunch-section .lunch-today .fs-it,
+.page-preview .banner-fluid.lunch.iss-group .lunch-section .lunch-today .fs-it {
+  font-style: normal;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.station-preview .banner-fluid.lunch.iss-group.w-full .lunch-section .lunch-today .lunch-allergens,
+.page-preview .banner-fluid.lunch.iss-group .lunch-section .lunch-today .lunch-allergens {
+  display: grid;
+  grid-template-columns: 60% calc(40% - 30px);
+  grid-gap: 30px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.lunch-section .lunch-today .three-col {
+  grid-template-columns: 30% 30% 30%;
+}
+.station-preview .banner-fluid.lunch .container {
+  max-width: 100%;
+}
+.ReactModal__Content .carousel-root .carousel.carousel-slider .control-arrow.control-next:before {
+  background-image: url(/build/_assets/right-arrow-26SMCFCV.png);
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background-color: #fff;
+  border-radius: 50%;
+  background-size: 20px;
+  background-position: 7px 5px;
+  background-repeat: no-repeat;
+}
+.ReactModal__Content .carousel-root .carousel.carousel-slider .control-arrow.control-prev:before {
+  background-image: url(/build/_assets/left-arrow-7FRSBASI.png);
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background-color: #fff;
+  border-radius: 50%;
+  background-size: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ReactModal__Content .carousel-root .carousel.carousel-slider .control-arrow {
+  opacity: 1;
+}
+.ReactModal__Content .carousel-root .carousel.carousel-slider .control-arrow:hover {
+  background: transparent;
+}
+.ReactModal__Content .carousel-root .control-dots {
+  display: none;
+}
+.lunch-section {
+  white-space: normal;
+  word-break: break-all;
+}
+.page-preview .fluid-container .container {
+  max-width: 100%;
+}
+.ecological-logo {
+  max-width: 100px;
+  float: right;
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  width: 100px;
+}
+.ecological-logo-left {
+  max-width: 100px;
+  float: left;
+  position: relative;
+  left: 0;
+  bottom: 15px;
+  width: 100px;
+}
+.multiSelectContainer,
+.multiSelectContainer *,
+.multiSelectContainer :after,
+.multiSelectContainer :before {
+  box-sizing: border-box;
+}
+.multiSelectContainer {
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+.disable_ms {
+  pointer-events: none;
+  opacity: .5;
+}
+.display-none {
+  display: none;
+}
+.searchWrapper {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 5px;
+  min-height: 22px;
+  position: relative;
+}
+#css_custom_multiselect .searchWrapper {
+  font-size: 14px;
+  min-height: 38px;
+  font-weight: 400;
+  padding-left: .75rem;
+}
+#css_custom_multiselect .search-wrapper.searchWrapper .chip.false {
+  padding: 2px 0 0;
+  margin-left: 0;
+}
+.multiselect#css_custom_multiselect .search-wrapper.searchWrapper .chip.false {
+  padding: 4px 10px;
+  margin-left: 0;
+}
+.location-select .multiSelectContainer li,
+.location-select .multiSelectContainer .searchWrapper .chip {
+  font-size: 14px;
+}
+.multiSelectContainer input {
+  border: none;
+  margin-top: 3px;
+  background: transparent;
+}
+.multiSelectContainer input:focus {
+  outline: none;
+}
+.chip {
+  padding: 4px 10px;
+  background: #0096fb;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 19px;
+  color: #fff;
+  white-space: nowrap;
+}
+.singleChip {
+  background: none;
+  border-radius: none;
+  color: inherit;
+  white-space: nowrap;
+}
+.singleChip i {
+  display: none;
+}
+.closeIcon {
+  height: 13px;
+  width: 13px;
+  float: right;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.optionListContainer {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  margin-top: 1px;
+  z-index: 2;
+}
+.multiSelectContainer ul {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.multiSelectContainer li {
+  padding: 10px;
+  font-size: 14px;
+}
+.multiSelectContainer li:hover {
+  background: #0096fb;
+  color: #fff;
+  cursor: pointer;
+}
+.checkbox {
+  margin-right: 10px;
+}
+.disableSelection {
+  pointer-events: none;
+  opacity: .5;
+}
+.highlightOption {
+  background: #0096fb;
+  color: #fff;
+}
+.displayBlock {
+  display: block;
+}
+.displayNone {
+  display: none;
+}
+.notFound {
+  padding: 10px;
+  display: block;
+}
+.singleSelect {
+  padding-right: 20px;
+}
+li.groupHeading {
+  color: #908e8e;
+  pointer-events: none;
+  padding: 5px 15px;
+}
+li.groupChildEle {
+  padding-left: 30px;
+}
+.icon_down_dir {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+}
+.icon_down_dir:before {
+  content: "\e803";
+}
+.custom-close {
+  display: flex;
+}
+.page-preview .banner-fluid .container.container-2.justifycenter {
+  justify-content: center;
+  max-width: 82%;
+  padding-right: 15px;
+}
+.page-preview .power-plant.comfort-food.Iss-Group .container,
+.station-preview .banner-fluid.power-plant.comfort-food.Iss-Group .container {
+  max-width: 70%;
+}
+.power-plant.comfort-food.Iss-Group .container .title .heading,
+.power-plant.comfort-food.Iss-Group .container .title .sub-heading {
+  padding-right: 22%;
+}
+.page-preview .power-plant.sweet-iss-group .container,
+.page-preview .power-plant.soup-iss-group .container,
+.page-preview .power-plant.Iss-Group1 .container {
+  max-width: 80%;
+  padding-right: 0;
+}
+.lunch.iss-group .lunch-section .lunch-today .lunch-list .m-text {
+  max-width: 80%;
+}
+.page-preview .power-plant.comfort-food.Iss-Group .container .title,
+.page-preview .banner-fluid.power-plant.Iss-Group .container .title,
+.page-preview .power-plant.Iss-Group1 .container .title,
+.page-preview .power-plant.soup-iss-group .container .title,
+.page-preview .power-plant.sweet-iss-group .container .title,
+.page-preview .banner-fluid.lunch.iss-group .container .title {
+  padding-top: 100px;
+}
+.power-plant.Iss-Group1 .title {
+  padding-right: 12%;
+}
+.page-preview .power-plant.Iss-Group .container {
+  max-width: 80%;
+}
+.page-preview .banner-fluid.lunch.iss-group .container .m-text {
+  font-size: 2.2vw;
+}
+.page-preview .banner-fluid.lunch.iss-group .container .title,
+.station-preview .banner-fluid.lunch.iss-group .container .title {
+  padding-top: 170px;
+  padding-bottom: 50px;
+}
+.page-preview .banner-fluid.lunch.iss-group .container .allergens-list .m-text {
+  font-size: 1.75vw;
+}
+.page-preview .banner-fluid .lunch-section .row.no-data,
+.station-preview .banner-fluid .lunch-section .row.no-data,
+.page-preview .banner-fluid .lunch-section .station-views .singleStation.no-data,
+.station-preview .banner-fluid .lunch-section .station-views .singleStation.no-data,
+.lunch-section .station-views .singleStation .single-left.no-data {
+  display: none;
+}
+.page-preview .banner-fluid.lunch.iss-group .container .allergens-list .m-text.empty-section,
+.station-preview .banner-fluid.lunch.iss-group .container .allergens-list .m-text.empty-section {
+  font-size: 1.5vw;
+}
+.station-preview .banner-fluid.deli.pieces.iss_den_hq .m-text.empty-section,
+.station-preview .banner-fluid.supplement.iss_den_hq .m-text.empty-section,
+.station-preview .banner-fluid.lunch.iss_den_hq .m-text.empty-section {
+  font-size: 1.5vw;
+  padding: 0;
+}
+.page-preview .banner-fluid.harvest.dressings.supplement.iss_den_hq .m-text.empty-section {
+  font-size: 1.25vw;
+  padding-top: 0;
+}
+.page-preview .banner-fluid.deli.pieces.iss_den_hq .m-text.empty-section,
+.page-preview .banner-fluid.lunch.lunch.iss_den_hq .m-text.empty-section {
+  font-size: 1.5vw;
+  padding-top: 0;
+}
+.m-text.empty-section {
+  padding-top: 0;
+}
+.page-preview .banner-fluid.lunch.lunch .m-text.empty-section,
+.station-preview .banner-fluid.lunch.lunch .m-text.empty-section {
+  font-size: 1.5vw;
+}
+.page-preview .banner-fluid.harvest.dressings .m-text.empty-section,
+.station-preview .banner-fluid.harvest.dressings .m-text.empty-section,
+.harvest .lunch-allergens .allergens-list .f-list .m-text.empty-section {
+  font-size: 1.25vw;
+}
+.banner-fluid.power-plant.Iss-Group-empty .content-vh {
+  grid-template-columns: 62% 38%;
+}
+.banner-fluid.power-plant.Iss-Group-empty .content-vh .right-0 {
+  position: relative;
+  width: 100%;
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+}
+.banner-fluid.power-plant.Iss-Group-empty .content-vh .fallback-image {
+  width: 100%;
+  height: 90vh;
+  max-height: 80vh;
+  background-size: cover;
+  background-position: 50px 0px;
+  background-repeat: no-repeat;
+}
+.banner-fluid.power-plant.Iss-Group-empty .content-vh .container {
+  max-width: 100%;
+  padding-right: 20px;
+}
+.banner-fluid .lunch-section .lunch-today.three-col {
+  grid-template-columns: 32% 32% 32%;
+  grid-gap: 25px;
+}
+.banner-fluid .lunch-section .lunch-today.three-col .allergens-list {
+  padding: 0;
+}
+.lunchTitle {
+  display: flex;
+}
+.banner-fluid.lunch .lunchTitle h1 {
+  margin: 0;
+}
+.lunchTitleIcons {
+  display: flex;
+  height: auto;
+  align-items: flex-end;
+  margin-left: 30px;
+  padding-bottom: 10px;
+}
+.lunchTitleIcons .dish-icons .d-icon {
+  text-align: center;
+  min-width: 75px;
+}
+.lunchTitleIcons .dish-icons .d-icon.plus {
+  min-width: 20px;
+}
+.lunchTitleIcons .dish-icons .d-icon img {
+  max-height: 2vw;
+  margin: 0 auto;
+  width: auto;
+}
+.lunchTitleIcons .dish-icons .d-icon .text-sm {
+  font-size: .7vw;
+  text-align: center;
+}
+.lunchTitleIcons .dish-icons .d-icon.plus img {
+  max-height: 1.5vw;
+}
+.banner-fluid.ey .station-views {
+  display: grid;
+  grid-template-columns: 48% 48%;
+  grid-gap: 0;
+}
+.banner-fluid.ey .station-views .singleStation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.banner-fluid.ey .container .lunch-section .station-views .lunch-today .site-blue {
+  padding-bottom: 5px;
+}
+.banner-fluid.ey .container .lunch-section .station-views .singleStation .lunch-today {
+  grid-template-columns: 70% 30%;
+  grid-gap: 0;
+}
+.banner-fluid.ey .container .lunch-section .station-views .parentStation .lunch-today {
+  grid-template-columns: 90% 10%;
+  grid-gap: 0;
+}
+.banner-fluid.ey .container .lunch-section .station-views .lunch-today .m-text {
+  padding: 10px 0;
+  font-size: 1.6vw;
+}
+.banner-fluid.ey .station-views .singleStation .single-left:last-child {
+  padding-bottom: 20px;
+}
+.supplement.ey .container {
+  max-width: 75%;
+  padding-right: 0;
+}
+.banner-fluid.supplement.ey.w-full .lunch-list .m-text {
+  font-size: 1.5vw;
+}
+.banner-fluid.supplement.ey.w-full .lunch-allergens .f-list li {
+  font-size: 1.25vw;
+}
+.station-preview .banner-fluid.power-plant.ey .container,
+.page-preview .banner-fluid.power-plant.ey .container {
+  max-width: 72%;
+}
+.banner-fluid.supplement.ey .m-text.f-30.fw-700.line-normal.pt-4.empty-section {
+  word-break: break-word;
+}
+.food-waste-banner,
+.page-preview .tablet-section {
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.page-preview .tablet-section .container {
+  max-width: 100%;
+}
+.page-preview .tablet-section.banner-fluid .container .title .heading {
+  font-size: 54px;
+  font-weight: 700;
+  padding: 10px 0;
+  line-height: 1;
+}
+.tablet-content-section {
+  white-space: normal;
+  word-break: break-word;
+}
+.banner-fluid.tablet-section .station-views {
+  display: grid;
+  grid-template-columns: 56% 40%;
+  grid-gap: 4%;
+}
+.banner-fluid.tablet-section .station-views .singleStation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.tablet-content-section .food-allergens .f-list li img {
+  width: 16px;
+  height: 16px;
+}
+.tablet-content-section .food-allergens {
+  padding-top: 10px;
+}
+.page-preview .tablet-content-section .food-allergens .f-list li {
+  margin-right: 10px;
+}
+.tablet-empty-section {
+  padding: 18px 0;
+  display: block;
+  margin: 0 auto;
+}
+.food-waste-grid .react-grid-Header .widget-HeaderCell__value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+.food-waste-grid .ReactModal__Content.ReactModal__Content--after-open {
+  background-color: #f8f8f8;
+}
+.food-waste-grid .react-grid-Viewport .react-grid-Canvas {
+  max-height: 210px;
+  min-height: 210px;
+  overflow: hidden !important;
+}
+.food-waste-grid .react-grid-Grid {
+  min-height: 210px !important;
+  max-height: 210px !important;
+  border: 0;
+  border-left: 1px solid #ccc;
+  left: 7px;
+}
+.food-waste-grid .react-grid-Main {
+  outline: 0;
+}
+.food-waste-grid .react-grid-Grid .react-grid-HeaderRow .react-grid-HeaderCell:nth-child(2),
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row .react-grid-Cell:nth-child(2) {
+  left: 25% !important;
+}
+.food-waste-grid .react-grid-Grid .react-grid-HeaderRow .react-grid-HeaderCell:nth-child(3),
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row .react-grid-Cell:nth-child(3) {
+  left: 50% !important;
+}
+.food-waste-grid .react-grid-Grid .react-grid-HeaderRow .react-grid-HeaderCell:nth-child(4),
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row .react-grid-Cell:nth-child(4) {
+  left: 75% !important;
+}
+.food-waste-grid .react-grid-Grid .react-grid-HeaderRow .react-grid-HeaderCell {
+  width: 25% !important;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row .react-grid-Cell {
+  width: 25% !important;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row {
+  position: relative;
+}
+.food-waste-grid .react-grid-Viewport .react-grid-Canvas > div {
+  width: 885px !important;
+}
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row .react-grid-Cell .react-grid-Cell__value {
+  color: #333;
+  text-align: right;
+}
+.food-waste-grid .react-grid-Grid .react-grid-Viewport .react-grid-Row .react-grid-Cell:first-child .react-grid-Cell__value {
+  text-align: left;
+}
+.f-2vw {
+  font-size: 2vw;
+}
+.food-waste-banner .container {
+  max-width: 75%;
+}
+.page-preview .food-waste-banner .container {
+  max-width: 75%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  justify-content: center;
+}
+.station-preview .banner-fluid.food-waste-banner .container {
+  padding: 5% 4%;
+}
+.page-preview .food-waste-banner .container .total-waste {
+  padding-top: 25px;
+}
+.weekdays .content-section .content {
+  max-width: 350px;
+  line-height: 1.5;
+  font-size: 16px;
+}
+.menu-of-the-week .weekdays .content-section:nth-child(even) {
+  background-color: #d9d9d9;
+}
+.menu-of-the-week .weekdays .allergen,
+.menu-of-the-week .weekdays .dietary {
+  max-width: 350px;
+  padding: 2px 0;
+  font-size: 14px;
+}
+@media (min-width: 1640px) {
+  .page-preview .power-plant .container {
+    max-width: 80%;
+    padding-right: 0;
+  }
+}
+@media (max-width: 1199px) {
+  .banner-fluid {
+    background-size: cover;
+  }
+  .banner-fluid .container .title {
+    padding-bottom: 10px;
+  }
+  .lunch-section .lunch-today {
+    padding: 10px 0;
+  }
+}
+@media (max-width: 767px) {
+  .station-preview .banner-fluid {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+  .banner-fluid.power-plant .container .title .sub-heading {
+    padding: 15px 0;
+  }
+  .food-allergens {
+    padding-top: 20px;
+  }
+  .banner-fluid .container .title .heading {
+    padding-bottom: 20px;
+  }
+  .station-preview .banner-fluid.power-plant .container {
+    display: grid;
+    align-items: center;
+  }
+  .food-allergens .f-list li img {
+    margin-left: 10px;
+    margin-top: 2px;
+  }
+  .food-allergens .f-list li {
+    margin-right: 20px;
+  }
+  .content-vh {
+    display: flex;
+  }
+  .menu-of-the-week .content-section:nth-of-type(even) {
+    background-color: #d9d9d9;
+  }
+  .menu-of-the-week .weekdays .content {
+    max-width: 350px;
+    line-height: 1.5;
+    font-size: 16px;
+  }
+  .menu-of-the-week .weekdays .station-title {
+    font-size: 24px;
+  }
+}
+.banner-main-bg,
+.page-preview.station-preview {
+  background-image: url(/build/_assets/today_menu-SIMCAXQ3.jpg);
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  justify-content: center;
+  min-height: 86vh;
+}
+.page-preview .banner-main-bg,
+.page-preview.station-preview {
+  min-height: 100vh;
+}
+.banner-bg {
+  background-image: url(/build/_assets/banner-bg-432PFSD4.png);
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.page-preview .banner-bg {
+  display: flex;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  max-width: 985px;
+  min-width: 985px;
+  min-height: 1000px;
+  max-height: max-content;
+  margin: 0 auto;
+}
+.page-preview.station-preview .banner-contents .banner-left {
+  font-family: var(--sliderfont);
+}
+.page-preview.station-preview .value.slider-ivymode-font {
+  font-family: var(--sliderivymodefont);
+}
+.banner-img {
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.page-preview .banner-right .banner-img {
+  width: 34vw;
+  height: 36vw;
+  background-position: 5vw 0;
+}
+.page-preview .banner-main-bg .main-image img {
+  width: 100%;
+}
+.page-preview .banner-main-bg .banner-left .banner-menu {
+  font-size: 3vw;
+  line-height: normal;
+  margin-bottom: 15px;
+}
+.page-preview .banner-contents .banner-left .banner-allergen,
+.page-preview .banner-contents .banner-left .banner-dietary {
+  font-size: 1.75vw;
+  margin-top: 2rem;
+}
+.page-preview.station-preview .banner-contents .banner-allergen,
+.page-preview.station-preview .banner-contents .banner-dietary {
+  font-size: 2.25vw;
+  margin-top: 5px;
+}
+.page-preview.station-preview .banner-main-bg .banner-left .banner-menu {
+  margin-bottom: 25px;
+}
+.carousel .slide .banner-right .banner-img {
+  width: 24vw;
+  height: 26vw;
+  background-position: 3vw 0;
+}
+.carousel .slide .banner-bg .menu-logo .banner-img {
+  width: 18vw !important;
+  height: 9vw !important;
+  padding-bottom: 15px;
+}
+.carousel .slide .banner-main-bg.lunch-content .menu-logo .banner-img {
+  width: 16vw !important;
+  height: 8vw !important;
+  padding-bottom: 2rem;
+  background-size: contain;
+}
+.carousel .slide .banner-main-bg.preview .banner-bg,
+.carousel .slide .banner-main-bg .banner-bg {
+  margin: 5% auto;
+  padding: 3rem 3rem 5rem;
+  padding-right: 0;
+  max-width: 90%;
+  min-width: 90%;
+}
+.carousel .slide .banner-main-bg.lunch-content .banner-bg {
+  padding: 3rem;
+  max-width: 80%;
+  min-width: 80%;
+  min-height: 1575px;
+  background-color: #818a73;
+  background-image: none;
+}
+.carousel .slide .banner-contents .absolute.bottom-5 {
+  padding-bottom: 0;
+  padding-right: 3rem;
+  font-size: 1.5vw;
+}
+.carousel .slide .banner-main-bg .banner-left .banner-menu {
+  font-size: 1.75vw;
+  line-height: normal;
+  padding-bottom: 5%;
+}
+.carousel .slide .banner-main-bg .banner-allergen.slider-font,
+.carousel .slide .banner-main-bg .banner-dietary.slider-font {
+  font-size: 1.3vw;
+}
+.carousel .slide .banner-calorie-co2 .value {
+  font-size: 2rem;
+}
+.carousel .slide .banner-calorie-co2 .content {
+  font-size: 1.2rem;
+  line-height: normal;
+}
+.carousel .slide .banner-contents.p-slides {
+  padding-bottom: 5rem;
+}
+.carousel .slide .slider-font,
+.intranet-page .slider-font {
+  font-family: var(--sliderfont);
+}
+.carousel .slide .slider-ivymode-font,
+.intranet-page .slider-ivymode-font {
+  font-family: var(--sliderivymodefont);
+}
+.banner-main-bg.lunch-content .banner-contents .co2-section {
+  min-width: 25%;
+  max-width: 25%;
+  padding-left: 5%;
+  gap: 0;
+}
+.banner-main-bg.lunch-content .banner-contents .text-section {
+  min-width: 75%;
+  max-width: 75%;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.page-preview .banner-main-bg.lunch-content .banner-bg {
+  padding: 4rem;
+  max-width: 75vw;
+  min-width: 75vw;
+  min-height: 1615px;
+  max-height: max-content;
+  margin: 4vw auto;
+  background-color: #818a73;
+  background-image: none;
+}
+.page-preview .banner-main-bg.lunch-content .menu-logo .banner-img {
+  max-width: 40vw;
+  max-height: 20vw;
+}
+.page-preview .banner-main-bg .menu-logo {
+  padding-bottom: 4vw;
+  padding-top: 2vw;
+  margin-bottom: 0;
+}
+.page-preview .banner-main-bg.lunch-content .banner-contents .text-section {
+  max-width: 75%;
+  min-width: 75%;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.page-preview .banner-main-bg.lunch-content .banner-contents .co2-section {
+  max-width: 25%;
+  min-width: 25%;
+  padding-left: 5%;
+  gap: 0;
+  max-height: 210px;
+}
+.page-preview .banner-main-bg.lunch-content .banner-contents .station-name {
+  font-size: 1.5vw;
+  line-height: normal;
+}
+.page-preview .banner-main-bg.lunch-content .banner-contents .banner-dietary,
+.page-preview .banner-main-bg.lunch-content .banner-contents .allergen {
+  font-size: 1.5vw;
+  line-height: normal;
+  margin-top: .5rem;
+}
+.page-preview .banner-main-bg.lunch-content .banner-contents .menu-title {
+  font-size: 2.5vw;
+  line-height: normal;
+  margin-bottom: 0;
+}
+.page-preview .banner-main-bg.lunch-content .banner-bg .banner-contents {
+  padding-bottom: 2rem;
+}
+.lunch-preview .info-text {
+  position: absolute;
+  width: calc(100% - 6rem);
+  bottom: 25px;
+}
+.page-preview.tablet .banner-main-bg.preview {
+  background-image: none;
+  background-color: #818a73;
+  justify-content: start;
+  width: 100%;
+}
+.page-preview.tablet .banner-main-bg.preview .banner-bg {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  background-image: none;
+  padding: 2rem 3rem;
+  padding-right: 0;
+  min-height: 100vh;
+  max-height: 100vh;
+}
+.page-preview.tablet .banner-main-bg .banner-contents {
+  padding-top: 1.5rem;
+}
+.page-preview.tablet .menu-logo .banner-img {
+  width: 20vw;
+  height: 10vw;
+}
+.page-preview.tablet .banner-main-bg .menu-logo {
+  padding: 0;
+  padding-bottom: 2rem;
+}
+.page-preview.tablet .banner-contents.p-slides .banner-calorie-co2 {
+  margin-top: 2rem;
+}
+.page-preview.tablet .banner-contents.p-slides .banner-calorie-co2 .value,
+.page-preview.tablet .banner-contents.p-slides .banner-calorie-co2 .content {
+  font-size: 1.5vw;
+}
+.page-preview.tablet .banner-contents.p-slides .banner-calorie-co2 .value span,
+.page-preview.tablet .banner-contents.p-slides .banner-calorie-co2 .content span {
+  font-size: 1.3vw;
+}
+.page-preview.tablet .banner-contents.p-slides .banner-calorie-co2 .value {
+  font-family: var(--sliderivymodefont);
+}
+.page-preview.tablet .banner-right .banner-img {
+  width: 26vw;
+  height: 28vw;
+  background-position: 40px 0;
+}
+.page-preview.tablet .banner-main-bg .banner-contents .banner-left {
+  min-width: 60%;
+}
+.page-preview.tablet .bottom-station-name {
+  padding-bottom: 15px;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+.page-preview.tablet .banner-main-bg .banner-left .banner-menu {
+  font-size: 2.25vw;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+}
+.page-preview.tablet .banner-contents .banner-left .banner-allergen,
+.page-preview.tablet .banner-contents .banner-left .banner-dietary {
+  font-size: 22px;
+  margin-top: 1.25rem;
+}
+.page-preview.tablet .banner-contents .banner-left .banner-allergen span,
+.page-preview.tablet .banner-contents .banner-left .banner-dietary span {
+  font-weight: 600;
+}
+.page-preview .tab-preview .banner-left .station-name,
+.station-banner-preview .full-content .banner-left .station-name {
+  font-size: 32px;
+}
+.page-preview .tab-preview .banner-left .banner-menu,
+.station-banner-preview .full-content .banner-left .banner-menu {
+  font-size: 42px;
+  line-height: normal;
+  font-weight: 500;
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+.page-preview .tab-preview .banner-left .banner-allergen,
+.page-preview .tab-preview .banner-left .banner-dietary {
+  padding: 5px 0 15px;
+  font-size: 28px;
+}
+.page-preview .tab-preview .banner-right .banner-img {
+  width: 34vw;
+  height: 36vw;
+  background-position: 120px -100px;
+}
+.station-banner-preview .carousel .slide .banner-right .banner-img {
+  width: 20vw;
+  height: 20vw;
+  background-position: 60px -85px;
+}
+.station-banner-preview .full-content {
+  justify-content: start;
+  margin-left: 0;
+  max-width: 76%;
+}
+.station-banner-preview .banner-img {
+  width: 300px;
+  height: 146px;
+}
+.station-banner-preview .full-content .banner-left .banner-allergen,
+.station-banner-preview .full-content .banner-left .banner-dietary {
+  padding: 5px 0;
+  font-size: 26px;
+}
+.tab-preview .content-area {
+  max-width: 80%;
+  padding-right: 0;
+}
+.slider-wrapper .tab-preview .content-area {
+  max-width: 72%;
+  padding-right: 0;
+}
+.footer-icon-img {
+  max-width: 150px;
+}
+.banner-main-bg .main-title h1 {
+  font-size: 70px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.page-preview .banner-main-bg.lunch-content .banner-bg .info-text {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  max-width: calc(100% - 8rem);
+}
+.page-preview .tab-preview .banner-calorie-co2 .go-green {
+  grid-column: span 3/span 3;
+}
+@media (min-width: 2001px) {
+  .page-preview .banner-main-bg.lunch-content .banner-bg {
+    min-height: 85vh;
+    max-height: 85vh;
+    overflow: hidden;
+  }
+}
+@media (min-width: 1900px) {
+  .page-preview .banner-main-bg.lunch-content .banner-contents .text-section {
+    min-width: 74%;
+    max-width: 74%;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-contents .co2-section {
+    min-width: 26%;
+    max-width: 26%;
+    padding-left: 3%;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-contents .co2-section .circle {
+    width: 7vw;
+    height: 7vw;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-contents .co2-section .circle .value {
+    font-size: 1.5vw;
+    line-height: normal;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-contents .co2-section .circle .unit {
+    font-size: 1.3vw;
+    line-height: normal;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-contents .co2-section .co2-text {
+    font-size: 1.4vw;
+    text-align: left;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-bg .banner-contents .menu-contents {
+    gap: 3vw;
+  }
+  .page-preview .banner-main-bg.lunch-content .menu-logo .banner-img {
+    max-width: 40vw;
+    max-height: 20vw;
+  }
+}
+@media (max-width: 1199px) {
+  .page-preview .tab-preview .banner-right .banner-img {
+    width: 54vw;
+    height: 54vw;
+    background-position: 80px -110px;
+  }
+  .page-preview .tab-preview .banner-calorie-co2 .go-green {
+    grid-column: span 6/span 6;
+  }
+}
+@media only screen and (min-height: 1900px) {
+  .page-preview .banner-main-bg.lunch-content .banner-contents .menu-title {
+    font-size: 2.25vw;
+    line-height: normal;
+    margin-bottom: 5px;
+  }
+  .page-preview .banner-main-bg.lunch-content .banner-bg {
+    max-width: 900px;
+    min-width: 900px;
+    min-height: 1580px;
+    max-height: 1580px;
+    margin: 100px auto;
+  }
+  .page-preview .banner-main-bg {
+    align-items: flex-start;
+  }
+}

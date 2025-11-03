@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../app/routes/login/index.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction Login() {\n    return (\n        <div className='flex h-full items-center justify-center max-w-[600px] mx-auto p-6'>\n            <h1 className=\"text-3xl font-bold text-blue-600\">Hello Tailwind + Remix!</h1>\n            <div className=' flex flex-col justify-center '>\n\n            </div>\n        </div>\n    )\n}\n\nexport default Login\n"],
+  "mappings": ";;;;;;;AAAA,mBAAkB;AAKN;AAHZ,SAAS,QAAQ;AACb,SACI,mDAAC,SAAI,WAAU,qEACX;AAAA,uDAAC,QAAG,WAAU,oCAAmC,uCAAjD;AAAA;AAAA;AAAA;AAAA,WAAwE;AAAA,IACxE,mDAAC,SAAI,WAAU,oCAAf;AAAA;AAAA;AAAA;AAAA,WAEA;AAAA,OAJJ;AAAA;AAAA;AAAA;AAAA,SAKA;AAER;AAEA,IAAO,gBAAQ;",
+  "names": []
+}
