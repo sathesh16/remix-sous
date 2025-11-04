@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../app/routes/admin.index.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction Dashboard() {\n  return (\n    <div>\n      This is admin page\n    </div>\n  )\n}\n\nexport default Dashboard\n"],
+  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,YAAY;AACnB,SACE,mDAAC,SAAI,kCAAL;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,sBAAQ;",
+  "names": []
+}

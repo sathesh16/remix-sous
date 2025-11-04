@@ -1,0 +1,13 @@
+/* app/styles/style.css */
+:root {
+  --primary-color: #000022;
+}
+[data-testid=tabs] > ul > button {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+[data-testid=tabs] > ul > button[aria-selected=true] {
+  background-color: var(--primary-color);
+  color: #fff;
+  opacity: .9;
+}

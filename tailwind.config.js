@@ -2,10 +2,11 @@
 module.exports = {
   content: [
     "./app/**/*.{js,jsx,ts,tsx}", // remix routes, components, etc.
+    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 }
 

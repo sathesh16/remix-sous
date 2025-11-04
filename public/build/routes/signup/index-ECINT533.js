@@ -1,0 +1,325 @@
+import {
+  Input_default
+} from "/build/_shared/chunk-WKCUV6SN.js";
+import {
+  Button
+} from "/build/_shared/chunk-TOP7EFOP.js";
+import {
+  __toESM,
+  require_jsx_dev_runtime,
+  require_react
+} from "/build/_shared/chunk-EETRBLDB.js";
+
+// app/routes/signup/index.jsx
+var import_react2 = __toESM(require_react());
+
+// app/components/ImagesUpload.jsx
+var import_react = __toESM(require_react());
+var import_jsx_dev_runtime = __toESM(require_jsx_dev_runtime());
+function ImagesUpload() {
+  const [images, setImages] = (0, import_react.useState)([]);
+  const [error, setError] = (0, import_react.useState)("");
+  const [isDragging, setIsDragging] = (0, import_react.useState)(false);
+  const maxSize = 2 * 1024 * 1024;
+  const handleFiles = (files) => {
+    const fileArray = Array.from(files);
+    const validFiles = fileArray.filter((file) => {
+      if (file.size > maxSize) {
+        setError(`${file.name} is larger than 2 MB`);
+        return false;
+      }
+      return true;
+    });
+    const newImages = validFiles.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+    setImages((prev) => [...prev, ...newImages]);
+  };
+  const handleImageChange = (e) => {
+    handleFiles(e.target.files);
+  };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    handleFiles(e.dataTransfer.files);
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+  (0, import_react.useEffect)(() => {
+    return () => images.forEach((img) => URL.revokeObjectURL(img.preview));
+  }, [images]);
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "p-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
+      "div",
+      {
+        onDrop: handleDrop,
+        onDragOver: handleDragOver,
+        onDragLeave: handleDragLeave,
+        style: { padding: "40px", display: "flex", flexDirection: "column", gap: "20px", border: isDragging ? "2px dashed red" : "1px solid #000", margin: "10px auto", maxWidth: "500px" },
+        children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { className: "text-gray-600", children: [
+          "Drag & Drop your images here or",
+          " ",
+          /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("label", { className: "text-blue-600 cursor-pointer underline", children: [
+            "click to browse",
+            /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
+              "input",
+              {
+                type: "file",
+                multiple: true,
+                accept: ".jpg, .png",
+                onChange: handleImageChange,
+                className: "hidden"
+              },
+              void 0,
+              false,
+              {
+                fileName: "app/components/ImagesUpload.jsx",
+                lineNumber: 73,
+                columnNumber: 25
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "app/components/ImagesUpload.jsx",
+            lineNumber: 71,
+            columnNumber: 21
+          }, this)
+        ] }, void 0, true, {
+          fileName: "app/components/ImagesUpload.jsx",
+          lineNumber: 69,
+          columnNumber: 17
+        }, this)
+      },
+      void 0,
+      false,
+      {
+        fileName: "app/components/ImagesUpload.jsx",
+        lineNumber: 60,
+        columnNumber: 13
+      },
+      this
+    ),
+    error && /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { className: "text-red-500 mt-2", children: error }, void 0, false, {
+      fileName: "app/components/ImagesUpload.jsx",
+      lineNumber: 85,
+      columnNumber: 23
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { style: { display: "flex", gap: "20px", flexWrap: "wrap" }, children: images.map((img, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "relative", style: { display: "flex", gap: "20px", flexDirection: "column" }, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
+        "img",
+        {
+          src: img.preview,
+          alt: `preview ${index}`,
+          style: { width: "100px", height: "100px", objectFit: "cover" }
+        },
+        void 0,
+        false,
+        {
+          fileName: "app/components/ImagesUpload.jsx",
+          lineNumber: 91,
+          columnNumber: 25
+        },
+        this
+      ),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
+        "button",
+        {
+          onClick: () => setImages(images.filter((_, i) => i !== index)),
+          children: "Remove"
+        },
+        void 0,
+        false,
+        {
+          fileName: "app/components/ImagesUpload.jsx",
+          lineNumber: 97,
+          columnNumber: 25
+        },
+        this
+      )
+    ] }, index, true, {
+      fileName: "app/components/ImagesUpload.jsx",
+      lineNumber: 90,
+      columnNumber: 21
+    }, this)) }, void 0, false, {
+      fileName: "app/components/ImagesUpload.jsx",
+      lineNumber: 88,
+      columnNumber: 13
+    }, this)
+  ] }, void 0, true, {
+    fileName: "app/components/ImagesUpload.jsx",
+    lineNumber: 58,
+    columnNumber: 9
+  }, this);
+}
+
+// app/routes/signup/index.jsx
+var import_jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime());
+function SignUp() {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
+      "SignUp",
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 13,
+        columnNumber: 17
+      }, this)
+    ] }, void 0, true, {
+      fileName: "app/routes/signup/index.jsx",
+      lineNumber: 11,
+      columnNumber: 13
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Input_default, { type: "name", name: "first-name", placeholder: "Enter your first name" }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 18,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Input_default, { type: "name", name: "last-name", placeholder: "Enter your last name" }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 20,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Input_default, { type: "email", required: true, name: "email", placeholder: "Email" }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 22,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(ImagesUpload, {}, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 24,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "relative", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(
+          Input_default,
+          {
+            type: showPassword ? "text" : "password",
+            placeholder: "Enter your password",
+            name: "password"
+          },
+          void 0,
+          false,
+          {
+            fileName: "app/routes/signup/index.jsx",
+            lineNumber: 27,
+            columnNumber: 21
+          },
+          this
+        ),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(
+          "button",
+          {
+            type: "button",
+            onClick: () => setShowPassword(!showPassword),
+            className: "absolute inset-y-0 right-2 flex items-center text-gray-500",
+            children: showPassword ? /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(EyeOff, { size: 20 }, void 0, false, {
+              fileName: "app/routes/signup/index.jsx",
+              lineNumber: 36,
+              columnNumber: 41
+            }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Eye, { size: 20 }, void 0, false, {
+              fileName: "app/routes/signup/index.jsx",
+              lineNumber: 36,
+              columnNumber: 64
+            }, this)
+          },
+          void 0,
+          false,
+          {
+            fileName: "app/routes/signup/index.jsx",
+            lineNumber: 31,
+            columnNumber: 21
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 26,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "relative", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(
+          Input_default,
+          {
+            type: showPassword ? "text" : "password",
+            placeholder: "Confirm your password",
+            name: "password"
+          },
+          void 0,
+          false,
+          {
+            fileName: "app/routes/signup/index.jsx",
+            lineNumber: 41,
+            columnNumber: 21
+          },
+          this
+        ),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(
+          "button",
+          {
+            type: "button",
+            onClick: () => setShowPassword(!showPassword),
+            className: "absolute inset-y-0 right-2 flex items-center text-gray-500",
+            children: showPassword ? /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(EyeOff, { size: 20 }, void 0, false, {
+              fileName: "app/routes/signup/index.jsx",
+              lineNumber: 50,
+              columnNumber: 41
+            }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Eye, { size: 20 }, void 0, false, {
+              fileName: "app/routes/signup/index.jsx",
+              lineNumber: 50,
+              columnNumber: 64
+            }, this)
+          },
+          void 0,
+          false,
+          {
+            fileName: "app/routes/signup/index.jsx",
+            lineNumber: 45,
+            columnNumber: 21
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 40,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "text-right", children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("a", { href: "#", children: "Forgot Password?" }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 54,
+        columnNumber: 45
+      }, this) }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 54,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Button, { type: "submit", disabled: transition.state === "submitting", children: transition.state === "submitting" ? "Logging in..." : "Login" }, void 0, false, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 56,
+        columnNumber: 17
+      }, this)
+    ] }, void 0, true, {
+      fileName: "app/routes/signup/index.jsx",
+      lineNumber: 16,
+      columnNumber: 13
+    }, this)
+  ] }, void 0, true, {
+    fileName: "app/routes/signup/index.jsx",
+    lineNumber: 9,
+    columnNumber: 9
+  }, this);
+}
+var signup_default = SignUp;
+export {
+  signup_default as default
+};
+//# sourceMappingURL=/build/routes/signup/index-ECINT533.js.map

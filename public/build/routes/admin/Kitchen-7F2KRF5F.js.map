@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/admin/Kitchen.jsx"],
+  "sourcesContent": ["import React from 'react'\nimport AdminLayout from '../../components/AdminLayout'\n\nfunction Kitchen() {\n    return (\n        <AdminLayout>\n             <div className=\"p-6\">\n      <h1 className=\"text-2xl font-semibold mb-4\">User Management</h1>\n\n      <Tabs aria-label=\"Tabs with underline\" style=\"underline\">\n        <TabItem title=\"Overview\">\n          <p>Overview content here</p>\n        </TabItem>\n\n        <TabItem title=\"Add User\">\n          <p>Form for adding users here</p>\n        </TabItem>\n\n        <TabItem title=\"Permissions\">\n          <p>Manage user roles here</p>\n        </TabItem>\n      </Tabs>\n    </div>\n        </AdminLayout>\n    )\n}\n\nexport default Kitchen\n"],
+  "mappings": ";;;;;;;;;;;;;AAAA,mBAAkB;AAOZ;AAJN,SAAS,UAAU;AACf,SACI,mDAAC,eACI,6DAAC,SAAI,WAAU,OACtB;AAAA,uDAAC,QAAG,WAAU,+BAA8B,+BAA5C;AAAA;AAAA;AAAA;AAAA,WAA2D;AAAA,IAE3D,mDAAC,QAAK,cAAW,uBAAsB,OAAM,aAC3C;AAAA,yDAAC,WAAQ,OAAM,YACb,6DAAC,OAAE,qCAAH;AAAA;AAAA;AAAA;AAAA,aAAwB,KAD1B;AAAA;AAAA;AAAA;AAAA,aAEA;AAAA,MAEA,mDAAC,WAAQ,OAAM,YACb,6DAAC,OAAE,0CAAH;AAAA;AAAA;AAAA;AAAA,aAA6B,KAD/B;AAAA;AAAA;AAAA;AAAA,aAEA;AAAA,MAEA,mDAAC,WAAQ,OAAM,eACb,6DAAC,OAAE,sCAAH;AAAA;AAAA;AAAA;AAAA,aAAyB,KAD3B;AAAA;AAAA;AAAA;AAAA,aAEA;AAAA,SAXF;AAAA;AAAA;AAAA;AAAA,WAYA;AAAA,OAfO;AAAA;AAAA;AAAA;AAAA,SAgBT,KAjBI;AAAA;AAAA;AAAA;AAAA,SAkBA;AAER;AAEA,IAAO,kBAAQ;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/admin/_layout.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction AdminLayout() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default AdminLayout\n"],
+  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,cAAc;AACrB,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,iBAAQ;",
+  "names": []
+}

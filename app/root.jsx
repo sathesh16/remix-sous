@@ -9,10 +9,11 @@ import { MetaFunction, LinksFunction } from "@remix-run/node";
 
 import styles from './styles/app.css'
 import Header from "./components/Header";
+import style from './styles/style.css'
 
 
 
-export const links = () => [{ rel: "stylesheet", href: styles }];
+export const links = () => [{ rel: "stylesheet", href: styles },{rel:"stylesheet", href:style}];
 
 export const meta = () => ({
   charset: "utf-8",

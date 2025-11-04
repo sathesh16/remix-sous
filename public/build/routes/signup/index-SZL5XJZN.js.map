@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/signup/index.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction SignUp() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default SignUp\n"],
+  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,SAAS;AAChB,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,iBAAQ;",
+  "names": []
+}

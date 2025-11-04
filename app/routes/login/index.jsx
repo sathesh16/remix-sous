@@ -1,11 +1,12 @@
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useTransition, useLoaderData } from "@remix-run/react";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { getSession, commitSession } from "../../sessions.server.js";
 import Button from "../../components/Button.jsx";
 import { Eye, EyeOff } from "lucide-react";
 import Input from "../../components/Input.jsx";
-// import { Eye, EyeOff } from "lucide-react";
+import PasswordInput from "../../components/PasswordInput.jsx";
+import { API_BASE_URL } from "../../utils/constants.js";
 
 // 🧠 Loader — kick out logged-in users
 export async function loader({ request }) {
@@ -17,7 +18,7 @@ export async function loader({ request }) {
 
 // 🔹 Function to hit your external login API
 async function loginToExternalApi({ email, password }) {
-    const response = await fetch("http://192.168.1.51:8056/auth/login", {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -62,7 +63,6 @@ export async function action({ request }) {
 export default function LoginPage() {
     const actionData = useActionData();
     const transition = useTransition();
-    const [showPassword, setShowPassword] = useState(false);
 
     // // Show error toast
     // useEffect(() => {
@@ -84,21 +84,7 @@ export default function LoginPage() {
 
                 <Input type="email" required name="email" placeholder="Email" />
 
-                <div className="relative">
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter password"
-                        className="w-full pr-10 pl-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                    <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute inset-y-0 right-2 flex items-center text-gray-500"
-                    >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                </div>
+                <PasswordInput placeholder="Enter password" name="password" />
 
                 <div className="text-right"><a href="#">Forgot Password?</a></div>
 
