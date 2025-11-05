@@ -2,6 +2,57 @@
     --primary-color: #000022;
 }
 
+@font-face {
+    font-family: 'DM Sans 9pt';
+    src: url('/fonts/DMSans-9ptRegular.woff2') format('woff2'),
+        url('/fonts/DMSans-9ptRegular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'LEGO Typewell';
+    src: url('/fonts/LEGOTypewell-Bold.woff2') format('woff2'),
+        url('/fonts/LEGOTypewell-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'LEGO Typewell';
+    src: url('/fonts/LEGOTypewell-Light.woff2') format('woff2'),
+        url('/fonts/LEGOTypewell-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'LEGO Typewell';
+    src: url('/fonts/LEGOTypewell-Regular.woff2') format('woff2'),
+        url('/fonts/LEGOTypewell-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Tailwind layer for custom utility classes */
+@layer utilities {
+    .bold-text {
+        @apply font-lego font-bold;
+    }
+
+    .medium-text {
+        @apply font-lego font-normal;
+    }
+
+    .light-text {
+        @apply font-lego font-light;
+    }
+}
+
 [data-testid="tabs"]>ul>button {
     background-color: var(--primary-color);
     color: white;
@@ -12,4 +63,21 @@
     color: white;
     opacity: 0.9;
     /* optional visual tweak */
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease forwards;
 }

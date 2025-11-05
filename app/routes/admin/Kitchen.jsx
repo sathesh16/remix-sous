@@ -16,12 +16,12 @@ function Kitchen() {
 
 
                 {/* Use `variant` instead of `style` */}
-                <Tabs aria-label="Tabs with underline" variant="pills" color="purple" >
-                    <TabItem active title="Cafe" className='bg-[var(--primary-color)] text-white'>
+                <Tabs aria-label="Pills" variant="pills" color="purple" >
+                    <TabItem active title="Cafe" className='!bg-[var(--primary-color)] !text-white'>
                         <ProductsGrid />
                     </TabItem>
 
-                    <TabItem title="Food Waste" className='bg-[var(--primary-color)] text-white'>
+                    <TabItem title="Food Waste" className='bg-[var(--primary-color)] !text-white'>
                         <p>Dashboard tab content</p>
                     </TabItem>
                 </Tabs>

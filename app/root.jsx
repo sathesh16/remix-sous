@@ -13,7 +13,7 @@ import style from './styles/style.css'
 
 
 
-export const links = () => [{ rel: "stylesheet", href: styles },{rel:"stylesheet", href:style}];
+export const links = () => [{ rel: "stylesheet", href: styles }, { rel: "stylesheet", href: style }];
 
 export const meta = () => ({
   charset: "utf-8",
@@ -28,8 +28,8 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <Header/>
+      <body class="font-dm9pt">
+        <Header />
         <Outlet />
         <ScrollRestoration />
         <Scripts />

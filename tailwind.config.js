@@ -5,7 +5,17 @@ module.exports = {
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        dm9pt: ["'DM Sans 9pt'", "sans-serif"],
+        lego: ["'LEGO Typewell'", "sans-serif"],
+      },
+      fontWeight: {
+        light: "300",
+        normal: "400",
+        bold: "700",
+      },
+    },
   },
   plugins: [require("flowbite/plugin")],
 }

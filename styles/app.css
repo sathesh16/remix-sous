@@ -3,19 +3,6 @@
 @tailwind utilities;
 
 
-@font-face {
-  font-family: 'DM Sans 9pt';
-  src: url('/fonts/DMSans-9ptRegular.woff2') format('woff2'),
-    url('/fonts/DMSans-9ptRegular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-body {
-  font-family: 'DM Sans 9pt' !important;
-}
-
 .App {
   /* font-family: sans-serif; */
   text-align: center;

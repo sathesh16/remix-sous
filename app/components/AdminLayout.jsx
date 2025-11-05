@@ -14,7 +14,7 @@ export default function AdminLayout({ children }) {
             >
 
                 <div className="flex justify-between">
-                    <img src="/images/iss_logo.webp" alt="" width="50px" className="logo" />
+                    <img src="/images/iss_logo.webp" alt="iss logo" width="50px" className="logo" />
                     {/* <Button type="submit" variant="danger" onClick={()=>}>Logout</Button> */}
                     <Link to="/logout" className="block px-3 py-2 hover:bg-gray-700">
                         Logout
@@ -45,6 +45,13 @@ export default function AdminLayout({ children }) {
                         Settings {/* no icon → defaults to Settings icon automatically */}
                     </AdminPanelLink>
                 </nav>
+                <div className="flex justify-between">
+                    <img src="/images/sous-chef-white.svg" alt="sous-chef logo" width="70px" className="logo" />
+                    <div className="flex flex-col gap-y-2">
+                        <div>Need support?</div>
+                        <a href="#" className="font-bold">Click here</a>
+                    </div>
+                </div>
             </aside>
 
             <main className="flex-1 p-6 overflow-y-auto max-w-none ml-[16rem] mt-[0]">{children}</main>
