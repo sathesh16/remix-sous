@@ -5,6 +5,7 @@ import Button from "./Button";
 import Toast from "./Toast";
 import ConfirmDialog from "./ConfirmDialog";
 import { useLocation, useNavigate, useTransition } from "@remix-run/react";
+import PreviewModal from "./PreviewModal";
 
 export default function ProductsTable() {
     const [showExitDialog, setShowExitDialog] = useState(false);  //for dialog
@@ -70,26 +71,37 @@ export default function ProductsTable() {
     const [updates, setUpdates] = useState({}); //tracking all the updates
     const [toast, setToast] = useState(null);
     const hasUnsavedChanges = Object.keys(updates).length > 0;
+    // const blocker = unstable_useBlocker(hasUnsavedChanges);
     const transition = useTransition();
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!hasUnsavedChanges) return;
+    // ✅ Detect navigation attempt
 
-        // When Remix is trying to navigate
+    useEffect(() => {
+        if (!hasUnsavedChanges) { alert("check"); return; } // When Remix is trying to navigate
         if (transition.state === "loading") {
             const nextUrl = transition.location?.pathname;
-
             if (nextUrl && nextUrl !== location.pathname) {
-                setShowExitDialog(true);
-                setNextLocation(nextUrl);
-
-                // Stop the navigation **by navigating back to current**
+                setShowExitDialog(true); setNextLocation(nextUrl); alert("next link")
+                // Stop the navigation **by navigating back to current** 
                 navigate(location.pathname, { replace: true });
             }
         }
     }, [transition.state, hasUnsavedChanges]);
+
+    // ✅ Confirm leave
+    function handleLeave() {
+        setShowExitDialog(false);
+        navigate(nextLocation); // allow navigation
+    }
+
+    // ✅ Stay on page
+    function handleStay() {
+        setShowExitDialog(false);
+        setNextLocation(null);
+    }
+
     // useEffect(() => {
     //     const handler = (e) => {
     //         if (!hasUnsavedChanges) return;
@@ -158,15 +170,44 @@ export default function ProductsTable() {
         }
     }
 
+    //for preview modal. Getting data from toggle and filtering out the products
+    const [showPreviewModal, setShowPreviewModal] = useState(false);
+    const [previewScreen, setPreviewScreen] = useState("screen1"); //screen1 or screen2
+
+    function getPreviewData(screen) {
+        return categories
+            .map(cat => {
+                const filteredProducts = products.filter(p =>
+                    cat.product_list.includes(p.id) &&
+                    (screen === "screen1" ? p.display_on_screen_1 : p.display_on_screen_2)
+                );
+
+                return filteredProducts.length > 0
+                    ? { category: cat.name, products: filteredProducts }
+                    : null;
+            })
+            .filter(Boolean);
+    }
+
+    const previewData = getPreviewData(previewScreen); //pass it to component
+
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="flex justify-between mb-6">
-                <h1 className="text-2xl font-bold ">Products Overview</h1>
+                <p className="text-2xl">Products Overview</p>
                 <Button onClick={saveAllUpdates} variant="primary">Update</Button>
             </div>
 
             <div className="flex justify-end items-center mb-6">
-                <Button variant="secondary">Preview</Button>
+                <Button
+                    variant="secondary"
+                    onClick={() => {
+                        setPreviewScreen("screen1");
+                        setShowPreviewModal(true);
+                    }}
+                >
+                    Preview
+                </Button>
             </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-300">
@@ -184,11 +225,12 @@ export default function ProductsTable() {
                             <th
                                 onClick={() => handleSort('name')}
                                 className="p-3 border border-gray-300 text-left"
+
                             >
                                 Product Name{" "}
                                 {sortBy === "name" && (sortDirection === "asc" ? "↑" : "↓")}
                             </th>
-                            <th className="p-3 border border-gray-300 text-left">Description</th>
+                            <th className="p-3 border border-gray-300 text-left" >Description</th>
                             <th className="p-3 border border-gray-300 text-left">Price</th>
                             <th className="p-3 border border-gray-300 text-left">Display Screen 1</th>
                             <th className="p-3 border border-gray-300 text-left">Display Screen 2</th>
@@ -230,7 +272,7 @@ export default function ProductsTable() {
                                     </td>
 
                                     {/* ✅ Description (Textarea) */}
-                                    <td className="p-3">
+                                    <td className="p-3" >
                                         <div className="flex flex-col gap-y-4">
                                             <textarea
                                                 value={product.description || ""}
@@ -240,7 +282,7 @@ export default function ProductsTable() {
                                                         description: e.target.value
                                                     })
                                                 }
-                                                className="w-full border-none px-2 py-1 h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full border-none px-2 py-1 h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 no-scrollbar"
                                             />
                                             <div className="text-gray-600">Upto 250 characters</div>
                                         </div>
@@ -310,6 +352,14 @@ export default function ProductsTable() {
                     await saveAllUpdates();
                     window.location.href = nextLocation;
                 }}
+            />
+            <PreviewModal
+                open={showPreviewModal}
+                onClose={() => setShowPreviewModal(false)}
+                data={previewData}               // ✅ sending data
+                screen={previewScreen}           // ✅ sending screen name
+                setScreen={setPreviewScreen}     // ✅ allow screen switching inside modal
+                screenNumber={previewScreen === "screen1" ? 1 : 2}
             />
         </div>
     );

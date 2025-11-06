@@ -1,5 +1,8 @@
 :root {
     --primary-color: #000022;
+    --banner-text-color: #23295a;
+    --banner-bg-color: #a2cce5;
+
 }
 
 @font-face {
@@ -38,20 +41,35 @@
     font-display: swap;
 }
 
-/* Tailwind layer for custom utility classes */
-@layer utilities {
-    .bold-text {
-        @apply font-lego font-bold;
-    }
-
-    .medium-text {
-        @apply font-lego font-normal;
-    }
-
-    .light-text {
-        @apply font-lego font-light;
-    }
+.bold-text {
+    font-family: 'LEGO Typewell';
+    font-weight: 700;
 }
+
+.regular-text {
+    font-family: 'LEGO Typewell';
+    font-weight: 500;
+}
+
+.light-text {
+    font-family: 'LEGO Typewell';
+    font-weight: 300;
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
 
 [data-testid="tabs"]>ul>button {
     background-color: var(--primary-color);
@@ -80,4 +98,10 @@
 
 .animate-fade-in {
     animation: fade-in 0.3s ease forwards;
+}
+
+
+.svg-bg {
+    background-image: url('/images/preview-top-right.svg');
+    background-size: cover;
 }

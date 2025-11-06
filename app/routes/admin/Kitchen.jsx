@@ -11,7 +11,7 @@ function Kitchen() {
         <AdminLayout>
             <div className="p-6">
                 <div className="flex justify-between">
-                    <h1 className="text-2xl font-semibold mb-4 text-black">User Management</h1>
+                    <h1 className="text-2xl font-semibold mb-4 text-[--primary-color]">Kitchen</h1>
                 </div>
 
 
@@ -26,6 +26,9 @@ function Kitchen() {
                     </TabItem>
                 </Tabs>
             </div>
+            <h1 class="bold-text text-3xl">Bold LEGO Heading</h1>
+            <p class="regular-text ">Regular LEGO Text</p>
+            <span class="light-text">Light LEGO Caption</span>
         </AdminLayout>
     )
 }

@@ -7,9 +7,9 @@ export default function AdminLayout({ children }) {
     const [open, setOpen] = useState(true);
 
     return (
-        <div className="min-h-screen flex bg-gray-100">
+        <div className="min-h-screen flex bg-gray-100 relative">
             <aside
-                className={`bg-[var(--primary-color)] absolute p-4 top-0 h-full text-white transition-all duration-300 ${open ? "w-64" : "w-64"
+                className={`bg-[var(--primary-color)] sticky p-4 top-0 h-[100vh] text-white transition-all duration-300 ${open ? "w-64" : "w-64"
                     }`}
             >
 
@@ -45,7 +45,7 @@ export default function AdminLayout({ children }) {
                         Settings {/* no icon → defaults to Settings icon automatically */}
                     </AdminPanelLink>
                 </nav>
-                <div className="flex justify-between">
+                <div className="flex mt-auto justify-between">
                     <img src="/images/sous-chef-white.svg" alt="sous-chef logo" width="70px" className="logo" />
                     <div className="flex flex-col gap-y-2">
                         <div>Need support?</div>
@@ -54,7 +54,7 @@ export default function AdminLayout({ children }) {
                 </div>
             </aside>
 
-            <main className="flex-1 p-6 overflow-y-auto max-w-none ml-[16rem] mt-[0]">{children}</main>
+            <main className="flex-1 p-6 overflow-y-auto max-w-none mt-[0]">{children}</main>
         </div>
     );
 }
