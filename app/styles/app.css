@@ -1651,6 +1651,10 @@ input:checked + .toggle-bg {
   margin-bottom: 1.5rem;
 }
 
+.mr-4 {
+  margin-right: 1rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -1723,8 +1727,28 @@ input:checked + .toggle-bg {
   height: 1920px;
 }
 
+.h-\[\] {
+  height: ;
+}
+
+.h-\[100px\] {
+  height: 100px;
+}
+
+.h-\[150px\] {
+  height: 150px;
+}
+
+.h-\[10px\] {
+  height: 10px;
+}
+
 .max-h-\[80vh\] {
   max-height: 80vh;
+}
+
+.min-h-\[70vh\] {
+  min-height: 70vh;
 }
 
 .min-h-screen {
@@ -1769,6 +1793,14 @@ input:checked + .toggle-bg {
 
 .w-full {
   width: 100%;
+}
+
+.w-\[400px\] {
+  width: 400px;
+}
+
+.w-\[300px\] {
+  width: 300px;
 }
 
 .min-w-full {
@@ -2058,6 +2090,10 @@ input:checked + .toggle-bg {
   background-color: var(--banner-bg-color);
 }
 
+.bg-\[var\(--banner-text-color\)\] {
+  background-color: var(--banner-text-color);
+}
+
 .bg-\[var\(--primary-color\)\] {
   background-color: var(--primary-color);
 }
@@ -2241,6 +2277,10 @@ input:checked + .toggle-bg {
   padding-top: 0.5rem;
 }
 
+.pt-32 {
+  padding-top: 8rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2264,11 +2304,6 @@ input:checked + .toggle-bg {
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
 }
 
 .text-4xl {
@@ -2321,6 +2356,10 @@ input:checked + .toggle-bg {
 
 .text-\[transparent\] {
   color: transparent;
+}
+
+.text-\[var\(--banner-bg-color\)\] {
+  color: var(--banner-bg-color);
 }
 
 .text-\[var\(--banner-text-color\)\] {

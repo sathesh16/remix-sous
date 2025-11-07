@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "@remix-run/react";
 import { MetaFunction, LinksFunction } from "@remix-run/node";
 
@@ -17,7 +18,7 @@ export const links = () => [{ rel: "stylesheet", href: styles }, { rel: "stylesh
 
 export const meta = () => ({
   charset: "utf-8",
-  title: "My Remix App",
+  title: "Sous chef",
   viewport: "width=device-width, initial-scale=1",
 });
 
@@ -49,5 +50,20 @@ export function ErrorBoundary({ error }) {
       </body>
     </html>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  if (caught.status === 404) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-4xl font-bold">404</h1>
+        <p className="text-lg">Page Not Found</p>
+      </div>
+    );
+  }
+
+  return <h1>Error: {caught.status}</h1>;
 }
 

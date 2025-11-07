@@ -1,7 +1,7 @@
 import { API_BASE_URL } from "../utils/constants";
 
 
-async function fetchCategoriesAndProducts() {
+export async function fetchCategoriesAndProducts() {
     const [catRes, prodRes] = await Promise.all([
         fetch(`${API_BASE_URL}/items/Products`).then(res => res.json()),
         fetch(`${API_BASE_URL}/items/Product_list`).then(res => res.json()),

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../utils/constants";
 import Toggle from "./Toggle";
 import Button from "./Button";
@@ -8,9 +8,6 @@ import { useLocation, useNavigate, useTransition } from "@remix-run/react";
 import PreviewModal from "./PreviewModal";
 
 export default function ProductsTable() {
-    const [showExitDialog, setShowExitDialog] = useState(false);  //for dialog
-    const [nextLocation, setNextLocation] = useState(null);
-
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
 
@@ -22,8 +19,17 @@ export default function ProductsTable() {
                     fetch(`${API_BASE_URL}/items/Product_list`).then((res) => res.json()),
                 ]);
 
-                setCategories(catRes.data || []);
-                setProducts(prodRes.data || []);
+                const categoriesData = (catRes.data || []).sort(
+                    (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
+                );
+
+                const productsData = (prodRes.data || []).sort(
+                    (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
+                );
+
+                setCategories(categoriesData);
+                setProducts(productsData);
+
             } catch (error) {
                 console.error("Error fetching:", error);
             }
@@ -32,86 +38,20 @@ export default function ProductsTable() {
         fetchData();
     }, []);
 
-    const [sortBy, setSortBy] = useState(null); // "category" | "name"
-    const [sortDirection, setSortDirection] = useState("asc");
-
-    function handleSort(field) {
-        // toggling direction if field already selected
-        const newDirection = sortBy === field && sortDirection === "asc" ? "desc" : "asc";
-
-        setSortBy(field);
-        setSortDirection(newDirection);
-
-        // If sorting category → sort category state permanently
-        if (field === "category") {
-            setCategories((prev) =>
-                [...prev].sort((a, b) => {
-                    const res = a.name.localeCompare(b.name);
-                    return newDirection === "asc" ? res : -res;
-                })
-            );
-        }
-    }
-
     // Sort categories
     const sortedCategories = categories;
 
     // Sort products (within each category)
     function sortedProducts(category) {
-        const list = products.filter((p) => category.product_list.includes(p.id));
-
-        return sortBy === "name"     //enter sorting when sortby is set to name
-            ? [...list].sort((a, b) => {
-                const res = a.name.localeCompare(b.name);
-                return sortDirection === "asc" ? res : -res;
-            })
-            : list; // leave product order as-is when sorting category
+        return products.filter((p) => category.product_list.includes(p.id));
     }
 
     const [updates, setUpdates] = useState({}); //tracking all the updates
     const [toast, setToast] = useState(null);
-    const hasUnsavedChanges = Object.keys(updates).length > 0;
-    // const blocker = unstable_useBlocker(hasUnsavedChanges);
-    const transition = useTransition();
-    const location = useLocation();
-    const navigate = useNavigate();
 
-    // ✅ Detect navigation attempt
 
-    useEffect(() => {
-        if (!hasUnsavedChanges) { alert("check"); return; } // When Remix is trying to navigate
-        if (transition.state === "loading") {
-            const nextUrl = transition.location?.pathname;
-            if (nextUrl && nextUrl !== location.pathname) {
-                setShowExitDialog(true); setNextLocation(nextUrl); alert("next link")
-                // Stop the navigation **by navigating back to current** 
-                navigate(location.pathname, { replace: true });
-            }
-        }
-    }, [transition.state, hasUnsavedChanges]);
 
-    // ✅ Confirm leave
-    function handleLeave() {
-        setShowExitDialog(false);
-        navigate(nextLocation); // allow navigation
-    }
 
-    // ✅ Stay on page
-    function handleStay() {
-        setShowExitDialog(false);
-        setNextLocation(null);
-    }
-
-    // useEffect(() => {
-    //     const handler = (e) => {
-    //         if (!hasUnsavedChanges) return;
-    //         e.preventDefault();
-    //         e.returnValue = "";
-    //     };
-
-    //     window.addEventListener("beforeunload", handler);
-    //     return () => window.removeEventListener("beforeunload", handler);
-    // }, [hasUnsavedChanges]);
 
     function showToast(message, type = "success") {
         setToast({ message, type });
@@ -175,26 +115,43 @@ export default function ProductsTable() {
     const [previewScreen, setPreviewScreen] = useState("screen1"); //screen1 or screen2
 
     function getPreviewData(screen) {
-        return categories
+        const filtered = categories
             .map(cat => {
                 const filteredProducts = products.filter(p =>
                     cat.product_list.includes(p.id) &&
                     (screen === "screen1" ? p.display_on_screen_1 : p.display_on_screen_2)
                 );
 
-                return filteredProducts.length > 0
-                    ? { category: cat.name, products: filteredProducts }
-                    : null;
+                if (filteredProducts.length === 0) return null;
+
+                return {
+                    category: cat.name,
+                    products: filteredProducts
+                };
             })
-            .filter(Boolean);
+            .filter(Boolean); // remove nulls
+
+        // ✅ If no categories found, return error array
+        if (filtered.length === 0) {
+            return [
+                {
+                    error: true,
+                    message: "No products found for this screen.",
+                    category: null,
+                    products: []
+                }
+            ];
+        }
+
+        return filtered;
     }
 
     const previewData = getPreviewData(previewScreen); //pass it to component
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
-            <div className="flex justify-between mb-6">
-                <p className="text-2xl">Products Overview</p>
+            <div className="flex justify-end items-center mb-6 pos-top">
+                <p className="mr-4">Remember to update before leaving</p>
                 <Button onClick={saveAllUpdates} variant="primary">Update</Button>
             </div>
 
@@ -217,18 +174,14 @@ export default function ProductsTable() {
                         <tr>
                             <th
                                 className="p-3 border border-gray-300 text-left"
-                                onClick={() => handleSort('category')}
                             >
                                 Category{" "}
-                                {sortBy === "category" && (sortDirection === "asc" ? "↑" : "↓")}
                             </th>
                             <th
-                                onClick={() => handleSort('name')}
                                 className="p-3 border border-gray-300 text-left"
 
                             >
                                 Product Name{" "}
-                                {sortBy === "name" && (sortDirection === "asc" ? "↑" : "↓")}
                             </th>
                             <th className="p-3 border border-gray-300 text-left" >Description</th>
                             <th className="p-3 border border-gray-300 text-left">Price</th>
@@ -257,23 +210,24 @@ export default function ProductsTable() {
 
                                     {/* ✅ Product Name (Input) */}
                                     <td className="p-3 font-medium">
-                                        <div className="flex flex-col gap-y-4">
-                                            <input
-                                                type="text"
-                                                value={product.name}
+                                        <div className="flex flex-col gap-y-4 w-[300px] h-[150px] justify-between">
+                                            <textarea
+                                                value={product.name || ""}
                                                 maxLength={250}
                                                 onChange={(e) =>
-                                                    handleProductUpdate(product.id, { name: e.target.value })
+                                                    handleProductUpdate(product.id, {
+                                                        name: e.target.value
+                                                    })
                                                 }
-                                                className="w-full border-none px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full border-none px-2 py-1 h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 no-scrollbar h-[100px]"
                                             />
-                                            <div className="text-gray-600">Upto 250 characters</div>
+                                            <div className="text-gray-600">Upto {product.name?.length || 0} / 250 characters</div>
                                         </div>
                                     </td>
 
                                     {/* ✅ Description (Textarea) */}
                                     <td className="p-3" >
-                                        <div className="flex flex-col gap-y-4">
+                                        <div className="flex flex-col gap-y-4 w-[300px] h-[150px] justify-between">
                                             <textarea
                                                 value={product.description || ""}
                                                 maxLength={250}
@@ -282,9 +236,9 @@ export default function ProductsTable() {
                                                         description: e.target.value
                                                     })
                                                 }
-                                                className="w-full border-none px-2 py-1 h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 no-scrollbar"
+                                                className="w-full border-none px-2 py-1 h-16 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 no-scrollbar h-[100px]"
                                             />
-                                            <div className="text-gray-600">Upto 250 characters</div>
+                                            <div className="text-gray-600">Upto {product.description?.length || 0} /     250 characters</div>
                                         </div>
 
                                     </td>
@@ -338,21 +292,15 @@ export default function ProductsTable() {
                     onClose={() => setToast(null)}
                 />
             )}
-            <ConfirmDialog
+            {/* <ConfirmDialog
                 open={showExitDialog}
                 title="Unsaved Changes"
                 message="You have unsaved changes. Do you want to save before leaving?"
                 cancelLabel="Discard Changes"
                 confirmLabel="Save & Leave"
-                onCancel={() => {
-                    setUpdates({});
-                    window.location.href = nextLocation;
-                }}
-                onConfirm={async () => {
-                    await saveAllUpdates();
-                    window.location.href = nextLocation;
-                }}
-            />
+                // onCancel={handleDialogCancel}
+                // onConfirm={handleDialogConfirm}
+            /> */}
             <PreviewModal
                 open={showPreviewModal}
                 onClose={() => setShowPreviewModal(false)}

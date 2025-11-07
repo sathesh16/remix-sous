@@ -9,7 +9,7 @@ export default function AdminLayout({ children }) {
     return (
         <div className="min-h-screen flex bg-gray-100 relative">
             <aside
-                className={`bg-[var(--primary-color)] sticky p-4 top-0 h-[100vh] text-white transition-all duration-300 ${open ? "w-64" : "w-64"
+                className={`bg-[var(--primary-color)] sticky p-4 top-0 h-[100vh] flex flex-col text-white transition-all duration-300 ${open ? "w-64" : "w-64"
                     }`}
             >
 

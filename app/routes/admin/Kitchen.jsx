@@ -26,9 +26,6 @@ function Kitchen() {
                     </TabItem>
                 </Tabs>
             </div>
-            <h1 class="bold-text text-3xl">Bold LEGO Heading</h1>
-            <p class="regular-text ">Regular LEGO Text</p>
-            <span class="light-text">Light LEGO Caption</span>
         </AdminLayout>
     )
 }

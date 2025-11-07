@@ -105,3 +105,10 @@
     background-image: url('/images/preview-top-right.svg');
     background-size: cover;
 }
+
+.pos-top {
+    position: absolute;
+    top: 48px;
+    left: auto;
+    right: 52px;
+}
