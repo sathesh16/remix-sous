@@ -1,158 +1,47 @@
-import { useEffect, useRef, useState } from "react";
-import { API_BASE_URL } from "../utils/constants";
+import { useMemo, useState } from "react";
 import Toggle from "./Toggle";
 import Button from "./Button";
 import Toast from "./Toast";
-import ConfirmDialog from "./ConfirmDialog";
-import { useLocation, useNavigate, useTransition } from "@remix-run/react";
 import PreviewModal from "./PreviewModal";
+import useProductsTable from "../hooks/useProductsTable";
 
 export default function ProductsTable() {
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
+    const {
+        categories,
+        getProductsForCategory,
+        handleProductUpdate,
+        saveAllUpdates,
+        toast,
+        dismissToast,
+        loading,
+        error,
+        isSaving,
+        previewDataForScreen,
+    } = useProductsTable();
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const [catRes, prodRes] = await Promise.all([
-                    fetch(`${API_BASE_URL}/items/Products`).then((res) => res.json()),
-                    fetch(`${API_BASE_URL}/items/Product_list`).then((res) => res.json()),
-                ]);
-
-                const categoriesData = (catRes.data || []).sort(
-                    (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
-                );
-
-                const productsData = (prodRes.data || []).sort(
-                    (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
-                );
-
-                setCategories(categoriesData);
-                setProducts(productsData);
-
-            } catch (error) {
-                console.error("Error fetching:", error);
-            }
-        }
-
-        fetchData();
-    }, []);
-
-    // Sort categories
-    const sortedCategories = categories;
-
-    // Sort products (within each category)
-    function sortedProducts(category) {
-        return products.filter((p) => category.product_list.includes(p.id));
-    }
-
-    const [updates, setUpdates] = useState({}); //tracking all the updates
-    const [toast, setToast] = useState(null);
-
-
-
-
-
-    function showToast(message, type = "success") {
-        setToast({ message, type });
-    }
-
-
-    function handleProductUpdate(productId, updatedFields) {
-        // Update products in UI
-        setProducts(prev =>
-            prev.map(p => (p.id === productId ? { ...p, ...updatedFields } : p))
-        );
-
-        // Track changes for save later
-        setUpdates(prev => ({
-            ...prev,
-            [productId]: {
-                ...(prev[productId] || {}),
-                ...updatedFields
-            }
-        }));
-    }
-
-
-    async function saveAllUpdates() {
-        const payload = Object.entries(updates).map(([id, data]) => ({
-            id,
-            ...data
-        }));
-
-        if (payload.length === 0) {
-            console.log("No changes to save");
-            showToast("Kindly change any value to update", "warning")
-            return;
-        }
-
-        console.log("Sending batch update:", payload);
-
-        try {
-            const res = await fetch(`${API_BASE_URL}/items/Product_list`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            const result = await res.json();
-            console.log("✅ Saved Successfully:", result);
-
-            showToast("✅ Changes saved successfully!");
-
-
-            // Reset updates since everything is saved
-            setUpdates({});
-        } catch (error) {
-            showToast("❌ Failed to save changes.", "error");
-            console.error("❌ Save failed:", error);
-        }
-    }
-
-    //for preview modal. Getting data from toggle and filtering out the products
     const [showPreviewModal, setShowPreviewModal] = useState(false);
     const [previewScreen, setPreviewScreen] = useState("screen1"); //screen1 or screen2
 
-    function getPreviewData(screen) {
-        const filtered = categories
-            .map(cat => {
-                const filteredProducts = products.filter(p =>
-                    cat.product_list.includes(p.id) &&
-                    (screen === "screen1" ? p.display_on_screen_1 : p.display_on_screen_2)
-                );
+    const previewData = useMemo(
+        () => previewDataForScreen(previewScreen),
+        [previewDataForScreen, previewScreen]
+    );
 
-                if (filteredProducts.length === 0) return null;
-
-                return {
-                    category: cat.name,
-                    products: filteredProducts
-                };
-            })
-            .filter(Boolean); // remove nulls
-
-        // ✅ If no categories found, return error array
-        if (filtered.length === 0) {
-            return [
-                {
-                    error: true,
-                    message: "No products found for this screen.",
-                    category: null,
-                    products: []
-                }
-            ];
-        }
-
-        return filtered;
+    if (loading) {
+        return <div className="p-6">Loading products…</div>;
     }
 
-    const previewData = getPreviewData(previewScreen); //pass it to component
+    if (error) {
+        return <div className="p-6 text-red-600">{error}</div>;
+    }
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="flex justify-end items-center mb-6 pos-top">
                 <p className="mr-4">Remember to update before leaving</p>
-                <Button onClick={saveAllUpdates} variant="primary">Update</Button>
+                <Button onClick={saveAllUpdates} variant="primary" disabled={isSaving}>
+                    {isSaving ? "Saving..." : "Update"}
+                </Button>
             </div>
 
             <div className="flex justify-end items-center mb-6">
@@ -192,8 +81,8 @@ export default function ProductsTable() {
 
                     {/* Table Body */}
                     <tbody className="divide-y divide-gray-200">
-                        {sortedCategories.map((category) => {
-                            const categoryProducts = sortedProducts(category);
+                        {categories.map((category) => {
+                            const categoryProducts = getProductsForCategory(category);
 
                             return categoryProducts.map((product, index) => (
                                 <tr key={product.id} className="border-b hover:bg-gray-50">
@@ -289,7 +178,7 @@ export default function ProductsTable() {
                 <Toast
                     message={toast.message}
                     type={toast.type}
-                    onClose={() => setToast(null)}
+                    onClose={dismissToast}
                 />
             )}
             {/* <ConfirmDialog

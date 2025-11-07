@@ -57,7 +57,7 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_node = require("@remix-run/node");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-2SQH7UM4.css";
+var app_default = "/build/_assets/app-NIQPFFMV.css";
 
 // app/styles/style.css
 var style_default = "/build/_assets/style-7JKWMMXY.css";
@@ -572,7 +572,7 @@ var import_react19 = require("react");
 var import_flowbite_react = require("flowbite-react");
 
 // app/components/ProductGrid.jsx
-var import_react17 = require("react");
+var import_react18 = require("react");
 
 // app/components/Toggle.jsx
 var import_react11 = require("react"), import_jsx_dev_runtime9 = require("react/jsx-dev-runtime");
@@ -661,40 +661,70 @@ function Toast({ message, type = "success", onClose }) {
   }, this);
 }
 
-// app/components/ProductGrid.jsx
-var import_react18 = require("@remix-run/react");
-
 // app/components/PreviewModal.jsx
 var import_react15 = require("@remix-run/react"), import_react16 = require("react");
 
 // app/components/CopyLinkButton.jsx
-var import_react13 = require("react"), import_react14 = require("@remix-run/react"), import_jsx_dev_runtime11 = require("react/jsx-dev-runtime"), getFullUrlToCopy = (baseUrl, relativePath) => new URL(relativePath, baseUrl).href;
+var import_react14 = require("react");
+
+// app/hooks/useClipboard.js
+var import_react13 = require("react"), DEFAULT_RESET_DELAY = 2e3;
+function useClipboard({ resetDelay = DEFAULT_RESET_DELAY } = {}) {
+  let [status, setStatus] = (0, import_react13.useState)("idle"), [error, setError] = (0, import_react13.useState)(null), reset = (0, import_react13.useCallback)(() => {
+    setStatus("idle"), setError(null);
+  }, []);
+  return {
+    copy: (0, import_react13.useCallback)(
+      async (text) => {
+        if (!!text)
+          try {
+            await navigator.clipboard.writeText(text), setStatus("success"), setError(null);
+          } catch (err) {
+            console.error("Failed to copy text:", err), setStatus("error"), setError(err instanceof Error ? err.message : "Unknown error");
+          } finally {
+            resetDelay > 0 && window.setTimeout(reset, resetDelay);
+          }
+      },
+      [reset, resetDelay]
+    ),
+    status,
+    error,
+    reset,
+    isSuccess: status === "success",
+    isError: status === "error"
+  };
+}
+var useClipboard_default = useClipboard;
+
+// app/utils/url.js
+function buildAbsoluteUrl(relativePath, baseUrl) {
+  if (!relativePath)
+    throw new Error("relativePath is required to build an absolute URL");
+  if (!baseUrl)
+    throw new Error("baseUrl is required to build an absolute URL");
+  return new URL(relativePath, baseUrl).href;
+}
+
+// app/components/CopyLinkButton.jsx
+var import_jsx_dev_runtime11 = require("react/jsx-dev-runtime");
 function CopyLinkButton({ screenNumber }) {
-  let baseUrl = window.location.origin, relativePath = `/banner/product/1/${screenNumber}`, [copyStatus, setCopyStatus] = (0, import_react13.useState)("Copy Link"), handleCopy = (0, import_react13.useCallback)(async () => {
-    let fullUrl = getFullUrlToCopy(baseUrl, relativePath);
-    try {
-      await navigator.clipboard.writeText(fullUrl), setCopyStatus("Copied!"), setTimeout(() => {
-        setCopyStatus("Copy Link");
-      }, 2e3);
-    } catch (err) {
-      console.error("Failed to copy text: ", err), setCopyStatus("Failed to copy, check console"), setTimeout(() => {
-        setCopyStatus("Copy Link");
-      }, 2e3);
-    }
-  }, [baseUrl, relativePath]);
+  let clipboard = useClipboard_default({ resetDelay: 2e3 }), linkToCopy = (0, import_react14.useMemo)(() => {
+    let { origin } = window.location;
+    return buildAbsoluteUrl(`/banner/product/1/${screenNumber}`, origin);
+  }, [screenNumber]), label = clipboard.status === "success" ? "Copied!" : clipboard.status === "error" ? "Failed to copy" : "Copy Link";
   return /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
     "button",
     {
-      onClick: handleCopy,
+      onClick: () => clipboard.copy(linkToCopy),
       className: "bg-[var(--banner-text-color)] text-[var(--banner-bg-color)] text-sm p-2",
-      disabled: copyStatus.includes("Copied"),
-      children: copyStatus
+      disabled: clipboard.status === "success",
+      children: label
     },
     void 0,
     !1,
     {
       fileName: "app/components/CopyLinkButton.jsx",
-      lineNumber: 40,
+      lineNumber: 21,
       columnNumber: 9
     },
     this
@@ -830,39 +860,102 @@ function PreviewModal({ open, onClose, data, screen, setScreen, screenNumber }) 
   );
 }
 
-// app/components/ProductGrid.jsx
-var import_jsx_dev_runtime13 = require("react/jsx-dev-runtime");
-function ProductsTable() {
-  let [categories, setCategories] = (0, import_react17.useState)([]), [products, setProducts] = (0, import_react17.useState)([]);
+// app/hooks/useProductsTable.js
+var import_react17 = require("react");
+
+// app/lib/products.js
+async function fetchCategoriesAndProducts2() {
+  let [categoriesResponse, productsResponse] = await Promise.all([
+    fetch(`${API_BASE_URL}/items/Products`),
+    fetch(`${API_BASE_URL}/items/Product_list`)
+  ]);
+  if (!categoriesResponse.ok || !productsResponse.ok)
+    throw new Error("Failed to fetch product data.");
+  let [categories, products] = await Promise.all([
+    categoriesResponse.json(),
+    productsResponse.json()
+  ]), categoriesData = (categories.data || []).slice().sort(
+    (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
+  ), productsData = (products.data || []).slice().sort(
+    (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
+  );
+  return {
+    categories: categoriesData,
+    products: productsData
+  };
+}
+async function patchProducts(payload) {
+  let response = await fetch(`${API_BASE_URL}/items/Product_list`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok) {
+    let error = await response.text();
+    throw new Error(error || "Failed to save products.");
+  }
+  return response.json();
+}
+
+// app/utils/preview.js
+function buildPreviewData(categories = [], products = [], screen = "screen1") {
+  if (!Array.isArray(categories) || !Array.isArray(products))
+    return [
+      {
+        error: !0,
+        message: "Invalid data supplied.",
+        category: null,
+        products: []
+      }
+    ];
+  let screenKey = screen === "screen2" ? "display_on_screen_2" : "display_on_screen_1", filtered = categories.map((category) => {
+    let categoryProductIds = new Set((category == null ? void 0 : category.product_list) || []), filteredProducts = products.filter(
+      (product) => categoryProductIds.has(product.id) && Boolean(product == null ? void 0 : product[screenKey])
+    );
+    return filteredProducts.length === 0 ? null : {
+      category: category.name,
+      products: filteredProducts
+    };
+  }).filter(Boolean);
+  return filtered.length === 0 ? [
+    {
+      error: !0,
+      message: "No products found for this screen.",
+      category: null,
+      products: []
+    }
+  ] : filtered;
+}
+
+// app/hooks/useProductsTable.js
+function useProductsTable() {
+  let [categories, setCategories] = (0, import_react17.useState)([]), [products, setProducts] = (0, import_react17.useState)([]), [updates, setUpdates] = (0, import_react17.useState)({}), [toast, setToast] = (0, import_react17.useState)(null), [loading, setLoading] = (0, import_react17.useState)(!1), [error, setError] = (0, import_react17.useState)(null), [isSaving, setIsSaving] = (0, import_react17.useState)(!1);
   (0, import_react17.useEffect)(() => {
-    async function fetchData() {
+    let isMounted = !0;
+    async function loadData() {
+      setLoading(!0);
       try {
-        let [catRes, prodRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/items/Products`).then((res) => res.json()),
-          fetch(`${API_BASE_URL}/items/Product_list`).then((res) => res.json())
-        ]), categoriesData = (catRes.data || []).sort(
-          (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
-        ), productsData = (prodRes.data || []).sort(
-          (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
-        );
-        setCategories(categoriesData), setProducts(productsData);
-      } catch (error) {
-        console.error("Error fetching:", error);
+        let data = await fetchCategoriesAndProducts2();
+        if (!isMounted)
+          return;
+        setCategories(data.categories), setProducts(data.products);
+      } catch (err) {
+        console.error("Error fetching products:", err), isMounted && setError(err instanceof Error ? err.message : "Unknown error");
+      } finally {
+        isMounted && setLoading(!1);
       }
     }
-    fetchData();
+    return loadData(), () => {
+      isMounted = !1;
+    };
   }, []);
-  let sortedCategories = categories;
-  function sortedProducts(category) {
-    return products.filter((p) => category.product_list.includes(p.id));
-  }
-  let [updates, setUpdates] = (0, import_react17.useState)({}), [toast, setToast] = (0, import_react17.useState)(null);
-  function showToast(message, type = "success") {
+  let showToast = (0, import_react17.useCallback)((message, type = "success") => {
     setToast({ message, type });
-  }
-  function handleProductUpdate(productId, updatedFields) {
+  }, []), dismissToast = (0, import_react17.useCallback)(() => setToast(null), []), handleProductUpdate = (0, import_react17.useCallback)((productId, updatedFields) => {
     setProducts(
-      (prev) => prev.map((p) => p.id === productId ? { ...p, ...updatedFields } : p)
+      (prev) => prev.map(
+        (product) => product.id === productId ? { ...product, ...updatedFields } : product
+      )
     ), setUpdates((prev) => ({
       ...prev,
       [productId]: {
@@ -870,64 +963,94 @@ function ProductsTable() {
         ...updatedFields
       }
     }));
-  }
-  async function saveAllUpdates() {
+  }, []), saveAllUpdates = (0, import_react17.useCallback)(async () => {
     let payload = Object.entries(updates).map(([id, data]) => ({
       id,
       ...data
     }));
     if (payload.length === 0) {
-      console.log("No changes to save"), showToast("Kindly change any value to update", "warning");
+      showToast("Kindly change any value to update", "warning");
       return;
     }
-    console.log("Sending batch update:", payload);
+    setIsSaving(!0);
     try {
-      let result = await (await fetch(`${API_BASE_URL}/items/Product_list`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      })).json();
-      console.log("\u2705 Saved Successfully:", result), showToast("\u2705 Changes saved successfully!"), setUpdates({});
-    } catch (error) {
-      showToast("\u274C Failed to save changes.", "error"), console.error("\u274C Save failed:", error);
+      await patchProducts(payload), showToast("\u2705 Changes saved successfully!"), setUpdates({});
+    } catch (err) {
+      console.error("Failed to save products:", err), showToast("\u274C Failed to save changes.", "error");
+    } finally {
+      setIsSaving(!1);
     }
-  }
-  let [showPreviewModal, setShowPreviewModal] = (0, import_react17.useState)(!1), [previewScreen, setPreviewScreen] = (0, import_react17.useState)("screen1");
-  function getPreviewData2(screen) {
-    let filtered = categories.map((cat) => {
-      let filteredProducts = products.filter(
-        (p) => cat.product_list.includes(p.id) && (screen === "screen1" ? p.display_on_screen_1 : p.display_on_screen_2)
-      );
-      return filteredProducts.length === 0 ? null : {
-        category: cat.name,
-        products: filteredProducts
-      };
-    }).filter(Boolean);
-    return filtered.length === 0 ? [
-      {
-        error: !0,
-        message: "No products found for this screen.",
-        category: null,
-        products: []
-      }
-    ] : filtered;
-  }
-  let previewData = getPreviewData2(previewScreen);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "p-6 bg-gray-50 min-h-screen", children: [
+  }, [showToast, updates]), getProductsForCategory = (0, import_react17.useCallback)(
+    (category) => {
+      if (!category)
+        return [];
+      let productIds = new Set(category.product_list || []);
+      return products.filter((product) => productIds.has(product.id));
+    },
+    [products]
+  ), previewDataForScreen = (0, import_react17.useCallback)(
+    (screen) => buildPreviewData(categories, products, screen),
+    [categories, products]
+  ), hasPendingUpdates = (0, import_react17.useMemo)(() => Object.keys(updates).length > 0, [updates]);
+  return {
+    categories,
+    products,
+    getProductsForCategory,
+    handleProductUpdate,
+    saveAllUpdates,
+    toast,
+    showToast,
+    dismissToast,
+    loading,
+    error,
+    isSaving,
+    hasPendingUpdates,
+    previewDataForScreen
+  };
+}
+var useProductsTable_default = useProductsTable;
+
+// app/components/ProductGrid.jsx
+var import_jsx_dev_runtime13 = require("react/jsx-dev-runtime");
+function ProductsTable() {
+  let {
+    categories,
+    getProductsForCategory,
+    handleProductUpdate,
+    saveAllUpdates,
+    toast,
+    dismissToast,
+    loading,
+    error,
+    isSaving,
+    previewDataForScreen
+  } = useProductsTable_default(), [showPreviewModal, setShowPreviewModal] = (0, import_react18.useState)(!1), [previewScreen, setPreviewScreen] = (0, import_react18.useState)("screen1"), previewData = (0, import_react18.useMemo)(
+    () => previewDataForScreen(previewScreen),
+    [previewDataForScreen, previewScreen]
+  );
+  return loading ? /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "p-6", children: "Loading products\u2026" }, void 0, !1, {
+    fileName: "app/components/ProductGrid.jsx",
+    lineNumber: 31,
+    columnNumber: 16
+  }, this) : error ? /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "p-6 text-red-600", children: error }, void 0, !1, {
+    fileName: "app/components/ProductGrid.jsx",
+    lineNumber: 35,
+    columnNumber: 16
+  }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "p-6 bg-gray-50 min-h-screen", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex justify-end items-center mb-6 pos-top", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("p", { className: "mr-4", children: "Remember to update before leaving" }, void 0, !1, {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 154,
+        lineNumber: 41,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(Button, { onClick: saveAllUpdates, variant: "primary", children: "Update" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(Button, { onClick: saveAllUpdates, variant: "primary", disabled: isSaving, children: isSaving ? "Saving..." : "Update" }, void 0, !1, {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 155,
+        lineNumber: 42,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/components/ProductGrid.jsx",
-      lineNumber: 153,
+      lineNumber: 40,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex justify-end items-center mb-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
@@ -943,13 +1066,13 @@ function ProductsTable() {
       !1,
       {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 159,
+        lineNumber: 48,
         columnNumber: 17
       },
       this
     ) }, void 0, !1, {
       fileName: "app/components/ProductGrid.jsx",
-      lineNumber: 158,
+      lineNumber: 47,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "bg-white rounded-lg shadow overflow-hidden border border-gray-300", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("table", { className: "min-w-full border-collapse text-sm", children: [
@@ -967,7 +1090,7 @@ function ProductsTable() {
           !0,
           {
             fileName: "app/components/ProductGrid.jsx",
-            lineNumber: 175,
+            lineNumber: 64,
             columnNumber: 29
           },
           this
@@ -985,42 +1108,42 @@ function ProductsTable() {
           !0,
           {
             fileName: "app/components/ProductGrid.jsx",
-            lineNumber: 180,
+            lineNumber: 69,
             columnNumber: 29
           },
           this
         ),
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("th", { className: "p-3 border border-gray-300 text-left", children: "Description" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
-          lineNumber: 186,
+          lineNumber: 75,
           columnNumber: 29
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("th", { className: "p-3 border border-gray-300 text-left", children: "Price" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
-          lineNumber: 187,
+          lineNumber: 76,
           columnNumber: 29
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("th", { className: "p-3 border border-gray-300 text-left", children: "Display Screen 1" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
-          lineNumber: 188,
+          lineNumber: 77,
           columnNumber: 29
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("th", { className: "p-3 border border-gray-300 text-left", children: "Display Screen 2" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
-          lineNumber: 189,
+          lineNumber: 78,
           columnNumber: 29
         }, this)
       ] }, void 0, !0, {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 174,
+        lineNumber: 63,
         columnNumber: 25
       }, this) }, void 0, !1, {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 173,
+        lineNumber: 62,
         columnNumber: 21
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("tbody", { className: "divide-y divide-gray-200", children: sortedCategories.map((category) => {
-        let categoryProducts = sortedProducts(category);
+      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("tbody", { className: "divide-y divide-gray-200", children: categories.map((category) => {
+        let categoryProducts = getProductsForCategory(category);
         return categoryProducts.map((product, index) => {
           var _a, _b;
           return /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("tr", { className: "border-b hover:bg-gray-50", children: [
@@ -1035,7 +1158,7 @@ function ProductsTable() {
               !1,
               {
                 fileName: "app/components/ProductGrid.jsx",
-                lineNumber: 203,
+                lineNumber: 92,
                 columnNumber: 41
               },
               this
@@ -1055,7 +1178,7 @@ function ProductsTable() {
                 !1,
                 {
                   fileName: "app/components/ProductGrid.jsx",
-                  lineNumber: 214,
+                  lineNumber: 103,
                   columnNumber: 45
                 },
                 this
@@ -1066,16 +1189,16 @@ function ProductsTable() {
                 " / 250 characters"
               ] }, void 0, !0, {
                 fileName: "app/components/ProductGrid.jsx",
-                lineNumber: 224,
+                lineNumber: 113,
                 columnNumber: 45
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 213,
+              lineNumber: 102,
               columnNumber: 41
             }, this) }, void 0, !1, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 212,
+              lineNumber: 101,
               columnNumber: 37
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("td", { className: "p-3", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex flex-col gap-y-4 w-[300px] h-[150px] justify-between", children: [
@@ -1093,7 +1216,7 @@ function ProductsTable() {
                 !1,
                 {
                   fileName: "app/components/ProductGrid.jsx",
-                  lineNumber: 231,
+                  lineNumber: 120,
                   columnNumber: 45
                 },
                 this
@@ -1104,16 +1227,16 @@ function ProductsTable() {
                 " /     250 characters"
               ] }, void 0, !0, {
                 fileName: "app/components/ProductGrid.jsx",
-                lineNumber: 241,
+                lineNumber: 130,
                 columnNumber: 45
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 230,
+              lineNumber: 119,
               columnNumber: 41
             }, this) }, void 0, !1, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 229,
+              lineNumber: 118,
               columnNumber: 37
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("td", { className: "p-3 font-medium", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex flex-col gap-y-4", children: [
@@ -1132,23 +1255,23 @@ function ProductsTable() {
                 !1,
                 {
                   fileName: "app/components/ProductGrid.jsx",
-                  lineNumber: 249,
+                  lineNumber: 138,
                   columnNumber: 45
                 },
                 this
               ),
               /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "text-gray-600", children: 'Only numbers, "," and "-" are allowed' }, void 0, !1, {
                 fileName: "app/components/ProductGrid.jsx",
-                lineNumber: 258,
+                lineNumber: 147,
                 columnNumber: 45
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 248,
+              lineNumber: 137,
               columnNumber: 41
             }, this) }, void 0, !1, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 247,
+              lineNumber: 136,
               columnNumber: 37
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("td", { className: "p-3", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
@@ -1161,13 +1284,13 @@ function ProductsTable() {
               !1,
               {
                 fileName: "app/components/ProductGrid.jsx",
-                lineNumber: 264,
+                lineNumber: 153,
                 columnNumber: 41
               },
               this
             ) }, void 0, !1, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 263,
+              lineNumber: 152,
               columnNumber: 37
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("td", { className: "p-3", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
@@ -1180,33 +1303,33 @@ function ProductsTable() {
               !1,
               {
                 fileName: "app/components/ProductGrid.jsx",
-                lineNumber: 274,
+                lineNumber: 163,
                 columnNumber: 41
               },
               this
             ) }, void 0, !1, {
               fileName: "app/components/ProductGrid.jsx",
-              lineNumber: 273,
+              lineNumber: 162,
               columnNumber: 37
             }, this)
           ] }, product.id, !0, {
             fileName: "app/components/ProductGrid.jsx",
-            lineNumber: 199,
+            lineNumber: 88,
             columnNumber: 33
           }, this);
         });
       }) }, void 0, !1, {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 194,
+        lineNumber: 83,
         columnNumber: 21
       }, this)
     ] }, void 0, !0, {
       fileName: "app/components/ProductGrid.jsx",
-      lineNumber: 171,
+      lineNumber: 60,
       columnNumber: 17
     }, this) }, void 0, !1, {
       fileName: "app/components/ProductGrid.jsx",
-      lineNumber: 170,
+      lineNumber: 59,
       columnNumber: 13
     }, this),
     toast && /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
@@ -1214,13 +1337,13 @@ function ProductsTable() {
       {
         message: toast.message,
         type: toast.type,
-        onClose: () => setToast(null)
+        onClose: dismissToast
       },
       void 0,
       !1,
       {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 289,
+        lineNumber: 178,
         columnNumber: 17
       },
       this
@@ -1239,14 +1362,14 @@ function ProductsTable() {
       !1,
       {
         fileName: "app/components/ProductGrid.jsx",
-        lineNumber: 304,
+        lineNumber: 193,
         columnNumber: 13
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/components/ProductGrid.jsx",
-    lineNumber: 152,
+    lineNumber: 39,
     columnNumber: 9
   }, this);
 }
@@ -1349,25 +1472,78 @@ function Input({ children, type = "text", className = "", ...props }) {
 }
 var Input_default = Input;
 
-// app/components/ImagesUpload.jsx
-var import_react22 = require("react"), import_jsx_dev_runtime17 = require("react/jsx-dev-runtime");
-function ImagesUpload({ name = "default-name" }) {
-  let [images, setImages] = (0, import_react22.useState)([]), [error, setError] = (0, import_react22.useState)(""), [isDragging, setIsDragging] = (0, import_react22.useState)(!1), maxSize = 2 * 1024 * 1024, handleFiles = (files) => {
-    let newImages = Array.from(files).filter((file) => file.size > maxSize ? (setError(`${file.name} is larger than 2 MB`), !1) : !0).map((file) => ({
-      file,
-      preview: URL.createObjectURL(file)
-    }));
-    setImages((prev) => [...prev, ...newImages]);
-  }, handleImageChange = (e) => {
-    handleFiles(e.target.files);
-  }, handleDrop = (e) => {
-    e.preventDefault(), e.stopPropagation(), setIsDragging(!1), handleFiles(e.dataTransfer.files);
-  }, handleDragOver = (e) => {
-    e.preventDefault(), e.stopPropagation(), setIsDragging(!0);
-  }, handleDragLeave = (e) => {
-    e.preventDefault(), e.stopPropagation(), setIsDragging(!1);
+// app/hooks/useImageUpload.js
+var import_react22 = require("react"), DEFAULT_MAX_SIZE = 2 * 1024 * 1024;
+function useImageUpload({ maxSize = DEFAULT_MAX_SIZE } = {}) {
+  let [images, setImages] = (0, import_react22.useState)([]), [error, setError] = (0, import_react22.useState)(""), [isDragging, setIsDragging] = (0, import_react22.useState)(!1), resetError = (0, import_react22.useCallback)(() => setError(""), []), addFiles = (0, import_react22.useCallback)(
+    (fileList) => {
+      if (!fileList || fileList.length === 0)
+        return;
+      let files = Array.from(fileList), validFiles = [], rejectedMessages = [];
+      files.forEach((file) => {
+        if (file.size > maxSize) {
+          rejectedMessages.push(`${file.name} is larger than ${Math.round(maxSize / (1024 * 1024))} MB`);
+          return;
+        }
+        validFiles.push({
+          file,
+          preview: URL.createObjectURL(file)
+        });
+      }), rejectedMessages.length > 0 ? setError(rejectedMessages.join(`
+`)) : resetError(), validFiles.length > 0 && setImages((prev) => [...prev, ...validFiles]);
+    },
+    [maxSize, resetError]
+  ), handleInputChange = (0, import_react22.useCallback)(
+    (event) => {
+      addFiles(event.target.files), event.target.value = "";
+    },
+    [addFiles]
+  ), handleDrop = (0, import_react22.useCallback)(
+    (event) => {
+      event.preventDefault(), event.stopPropagation(), setIsDragging(!1), addFiles(event.dataTransfer.files);
+    },
+    [addFiles]
+  ), handleDragOver = (0, import_react22.useCallback)((event) => {
+    event.preventDefault(), event.stopPropagation(), setIsDragging(!0);
+  }, []), handleDragLeave = (0, import_react22.useCallback)((event) => {
+    event.preventDefault(), event.stopPropagation(), setIsDragging(!1);
+  }, []), removeImage = (0, import_react22.useCallback)((index) => {
+    setImages((prev) => {
+      let next = [...prev], [removed] = next.splice(index, 1);
+      return removed && URL.revokeObjectURL(removed.preview), next;
+    });
+  }, []);
+  return (0, import_react22.useEffect)(() => () => {
+    images.forEach((img) => URL.revokeObjectURL(img.preview));
+  }, [images]), {
+    images,
+    error,
+    isDragging,
+    addFiles,
+    handleInputChange,
+    handleDrop,
+    handleDragOver,
+    handleDragLeave,
+    removeImage,
+    resetError
   };
-  return (0, import_react22.useEffect)(() => () => images.forEach((img) => URL.revokeObjectURL(img.preview)), [images]), /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "p-4", children: [
+}
+var useImageUpload_default = useImageUpload;
+
+// app/components/ImagesUpload.jsx
+var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime");
+function ImagesUpload({ name = "default-name", maxSize }) {
+  let {
+    images,
+    error,
+    isDragging,
+    handleInputChange,
+    handleDrop,
+    handleDragOver,
+    handleDragLeave,
+    removeImage
+  } = useImageUpload_default({ maxSize });
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "p-4", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
       "div",
       {
@@ -1395,26 +1571,26 @@ function ImagesUpload({ name = "default-name" }) {
                 name,
                 multiple: !0,
                 accept: ".jpg, .png",
-                onChange: handleImageChange,
+                onChange: handleInputChange,
                 className: "hidden"
               },
               void 0,
               !1,
               {
                 fileName: "app/components/ImagesUpload.jsx",
-                lineNumber: 78,
+                lineNumber: 36,
                 columnNumber: 25
               },
               this
             )
           ] }, void 0, !0, {
             fileName: "app/components/ImagesUpload.jsx",
-            lineNumber: 76,
+            lineNumber: 34,
             columnNumber: 21
           }, this)
         ] }, void 0, !0, {
           fileName: "app/components/ImagesUpload.jsx",
-          lineNumber: 74,
+          lineNumber: 32,
           columnNumber: 17
         }, this)
       },
@@ -1422,14 +1598,14 @@ function ImagesUpload({ name = "default-name" }) {
       !1,
       {
         fileName: "app/components/ImagesUpload.jsx",
-        lineNumber: 60,
+        lineNumber: 18,
         columnNumber: 13
       },
       this
     ),
     error && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("p", { className: "text-red-500 mt-2", children: error }, void 0, !1, {
       fileName: "app/components/ImagesUpload.jsx",
-      lineNumber: 91,
+      lineNumber: 49,
       columnNumber: 23
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { style: { display: "flex", gap: "20px", flexWrap: "wrap" }, children: images.map((img, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
@@ -1449,7 +1625,7 @@ function ImagesUpload({ name = "default-name" }) {
             !1,
             {
               fileName: "app/components/ImagesUpload.jsx",
-              lineNumber: 101,
+              lineNumber: 59,
               columnNumber: 25
             },
             this
@@ -1458,14 +1634,14 @@ function ImagesUpload({ name = "default-name" }) {
             "button",
             {
               type: "button",
-              onClick: () => setImages(images.filter((_, i) => i !== index)),
+              onClick: () => removeImage(index),
               children: "Remove"
             },
             void 0,
             !1,
             {
               fileName: "app/components/ImagesUpload.jsx",
-              lineNumber: 106,
+              lineNumber: 64,
               columnNumber: 25
             },
             this
@@ -1476,18 +1652,18 @@ function ImagesUpload({ name = "default-name" }) {
       !0,
       {
         fileName: "app/components/ImagesUpload.jsx",
-        lineNumber: 96,
+        lineNumber: 54,
         columnNumber: 21
       },
       this
     )) }, void 0, !1, {
       fileName: "app/components/ImagesUpload.jsx",
-      lineNumber: 94,
+      lineNumber: 52,
       columnNumber: 13
     }, this)
   ] }, void 0, !0, {
     fileName: "app/components/ImagesUpload.jsx",
-    lineNumber: 58,
+    lineNumber: 16,
     columnNumber: 9
   }, this);
 }
@@ -1790,7 +1966,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "88eec89d", entry: { module: "/build/entry.client-SCGJ3G3O.js", imports: ["/build/_shared/chunk-YUXSH7CW.js", "/build/_shared/chunk-EETRBLDB.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-7CPB2EQE.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/Kitchen": { id: "routes/admin/Kitchen", parentId: "root", path: "admin/Kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/Kitchen-YV6Z7A3H.js", imports: ["/build/_shared/chunk-XZPJ6YBW.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/Settings": { id: "routes/admin/Settings", parentId: "root", path: "admin/Settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/Settings-3IF4POAH.js", imports: ["/build/_shared/chunk-XZPJ6YBW.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-WA3WH7GG.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-4VYUMQQB.js", imports: ["/build/_shared/chunk-ZEWRAVBQ.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-XT2L5O37.js", imports: ["/build/_shared/chunk-LGZYD3MN.js", "/build/_shared/chunk-EQAQK25Y.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-IKVLO5B6.js", imports: ["/build/_shared/chunk-LGZYD3MN.js", "/build/_shared/chunk-EQAQK25Y.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-7G6HEEZD.js", imports: ["/build/_shared/chunk-ZEWRAVBQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-KME2E3AU.js", imports: ["/build/_shared/chunk-EQAQK25Y.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-88EEC89D.js" };
+var assets_manifest_default = { version: "1b16c5cc", entry: { module: "/build/entry.client-SCGJ3G3O.js", imports: ["/build/_shared/chunk-YUXSH7CW.js", "/build/_shared/chunk-EETRBLDB.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-PBUF7QWN.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/Kitchen": { id: "routes/admin/Kitchen", parentId: "root", path: "admin/Kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/Kitchen-JH3OGDAD.js", imports: ["/build/_shared/chunk-XZPJ6YBW.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/Settings": { id: "routes/admin/Settings", parentId: "root", path: "admin/Settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/Settings-3IF4POAH.js", imports: ["/build/_shared/chunk-XZPJ6YBW.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-WA3WH7GG.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-4VYUMQQB.js", imports: ["/build/_shared/chunk-ZEWRAVBQ.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-XT2L5O37.js", imports: ["/build/_shared/chunk-LGZYD3MN.js", "/build/_shared/chunk-EQAQK25Y.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-IKVLO5B6.js", imports: ["/build/_shared/chunk-LGZYD3MN.js", "/build/_shared/chunk-EQAQK25Y.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-7G6HEEZD.js", imports: ["/build/_shared/chunk-ZEWRAVBQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-W74WVE7P.js", imports: ["/build/_shared/chunk-EQAQK25Y.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-NNKHU6BE.js", "/build/_shared/chunk-TOP7EFOP.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-1B16C5CC.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

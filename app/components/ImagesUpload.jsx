@@ -1,58 +1,16 @@
-import { useState, useEffect } from "react";
+import useImageUpload from "../hooks/useImageUpload";
 
-export default function ImagesUpload({ name = "default-name" }) {
-    const [images, setImages] = useState([]);
-    const [error, setError] = useState("");
-    const [isDragging, setIsDragging] = useState(false);
-
-    const maxSize = 2 * 1024 * 1024; // 2 MB
-
-    // Handle both file input and drag-drop
-    const handleFiles = (files) => {
-        const fileArray = Array.from(files);
-
-        const validFiles = fileArray.filter((file) => {
-            if (file.size > maxSize) {
-                setError(`${file.name} is larger than 2 MB`);
-                return false;
-            }
-            return true;
-        });
-
-        const newImages = validFiles.map((file) => ({
-            file,
-            preview: URL.createObjectURL(file),
-        }));
-
-        setImages((prev) => [...prev, ...newImages]);
-    };
-
-    const handleImageChange = (e) => {
-        handleFiles(e.target.files);
-    };
-
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(false);
-        handleFiles(e.dataTransfer.files);
-    };
-
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(true);
-    };
-
-    const handleDragLeave = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(false);
-    };
-
-    useEffect(() => {
-        return () => images.forEach((img) => URL.revokeObjectURL(img.preview));
-    }, [images]);
+export default function ImagesUpload({ name = "default-name", maxSize }) {
+    const {
+        images,
+        error,
+        isDragging,
+        handleInputChange,
+        handleDrop,
+        handleDragOver,
+        handleDragLeave,
+        removeImage,
+    } = useImageUpload({ maxSize });
 
     return (
         <div className="p-4">
@@ -80,7 +38,7 @@ export default function ImagesUpload({ name = "default-name" }) {
                             name={name}              // 👈 dynamic name
                             multiple
                             accept=".jpg, .png"
-                            onChange={handleImageChange}
+                            onChange={handleInputChange}
                             className="hidden"
                         />
                     </label>
@@ -105,9 +63,7 @@ export default function ImagesUpload({ name = "default-name" }) {
                         />
                         <button
                             type="button"
-                            onClick={() =>
-                                setImages(images.filter((_, i) => i !== index))
-                            }
+                            onClick={() => removeImage(index)}
                         >
                             Remove
                         </button>
