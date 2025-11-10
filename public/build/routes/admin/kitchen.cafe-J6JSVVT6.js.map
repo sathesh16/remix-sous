@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/admin/kitchen.cafe.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction Cafe() {\n    return (\n        <ProductsGri />\n    )\n}\n\nexport default Cafe\n"],
+  "mappings": ";;;;;;;AAAA,mBAAkB;AAIV;AAFR,SAAS,OAAO;AACZ,SACI,mDAAC,iBAAD;AAAA;AAAA;AAAA;AAAA,SAAa;AAErB;AAEA,IAAO,uBAAQ;",
+  "names": []
+}

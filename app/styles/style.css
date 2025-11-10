@@ -112,3 +112,7 @@
     left: auto;
     right: 52px;
 }
+
+.Spreadsheet.w-full .Spreadsheet__table {
+    width: 100%;
+}

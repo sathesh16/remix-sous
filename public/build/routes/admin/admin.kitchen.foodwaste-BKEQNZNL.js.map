@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/admin/admin.kitchen.foodwaste.jsx"],
+  "sourcesContent": ["import React from 'react'\n\nfunction FoodWaste() {\n    return (\n        <div>\n            this is food\n        </div>\n    )\n}\n\nexport default FoodWaste\n"],
+  "mappings": ";;;;;;;;;AAAA,mBAAkB;AAIV;AAFR,SAAS,YAAY;AACjB,SACI,mDAAC,SAAI,4BAAL;AAAA;AAAA;AAAA;AAAA,SAEA;AAER;AAEA,IAAO,kCAAQ;",
+  "names": []
+}

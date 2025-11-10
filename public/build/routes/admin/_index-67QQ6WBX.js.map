@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/admin/_index.jsx"],
+  "sourcesContent": ["import React from 'react'\nimport AdminLayout from '../../components/AdminLayout'\nimport { Outlet } from '@remix-run/react'\n\nfunction Admin() {\n  return (\n    <AdminLayout>\n      <Outlet />\n    </AdminLayout>\n  )\n}\n\nexport default Admin\n"],
+  "mappings": ";;;;;;;;;;;;;;;AAAA,mBAAkB;AAOZ;AAHN,SAAS,QAAQ;AACf,SACE,mDAAC,eACC,6DAAC,YAAD;AAAA;AAAA;AAAA;AAAA,SAAQ,KADV;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,gBAAQ;",
+  "names": []
+}

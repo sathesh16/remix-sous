@@ -45,7 +45,7 @@ export default function AdminLayout({ children }) {
                         Settings {/* no icon → defaults to Settings icon automatically */}
                     </AdminPanelLink>
                 </nav>
-                <div className="flex mt-auto justify-between">
+                <div className="flex mt-auto justify-between pt-4">
                     <img src="/images/sous-chef-white.svg" alt="sous-chef logo" width="70px" className="logo" />
                     <div className="flex flex-col gap-y-2">
                         <div>Need support?</div>

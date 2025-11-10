@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../app/routes/dashboard/index.jsx"],
+  "sourcesContent": ["import { json } from \"@remix-run/node\";\nimport { useLoaderData, Form, useActionData } from \"@remix-run/react\";\nimport { getSession, requireUserSession } from \"../../sessions.server\";\nimport Button from \"../../components/Button\";\n// import { requireUserSession } from \"../sessions.server\";\n\n\nexport async function loader({ request }) {\n    const user = await requireUserSession(request);\n    return json({ user });\n}\n\nexport default function Dashboard() {\n    const { user } = useLoaderData();\n    const action = useActionData();\n\n    return (\n        <div className=\"p-6\">\n            <h1 className=\"text-2xl font-bold\">Welcome, {user.email || \"User\"} \uD83D\uDC4B</h1>\n\n            <Form method=\"post\" action=\"/logout\" reloadDocument>\n                <Button type=\"submit\" variant=\"danger\">Logout</Button>\n            </Form>\n        </div>\n    );\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;AAEA,sBAA+C;AAgBnC;AANG,SAAR,YAA6B;AAChC,QAAM,EAAE,KAAK,IAAI,cAAc;AAC/B,QAAM,SAAS,cAAc;AAE7B,SACI,mDAAC,SAAI,WAAU,OACX;AAAA,uDAAC,QAAG,WAAU,sBAAqB;AAAA;AAAA,MAAU,KAAK,SAAS;AAAA,MAAO;AAAA,SAAlE;AAAA;AAAA;AAAA;AAAA,WAAqE;AAAA,IAErE,mDAAC,QAAK,QAAO,QAAO,QAAO,WAAU,gBAAc,MAC/C,6DAAC,UAAO,MAAK,UAAS,SAAQ,UAAS,sBAAvC;AAAA;AAAA;AAAA;AAAA,WAA6C,KADjD;AAAA;AAAA;AAAA;AAAA,WAEA;AAAA,OALJ;AAAA;AAAA;AAAA;AAAA,SAMA;AAER;",
+  "names": []
+}
