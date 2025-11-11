@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/test.jsx"],
-  "sourcesContent": ["\nconst rows = [\n    { id: 1, name: 'Data Grid', description: 'the Community version' },\n    { id: 2, name: 'Data Grid Pro', description: 'the Pro version' },\n    { id: 3, name: 'Data Grid Premium', description: 'the Premium version' },\n];\n\nconst columns = [\n    { field: 'name', headerName: 'Product Name', width: 200 },\n    { field: 'description', headerName: 'Description', width: 300 },\n];\n\nexport default function RenderComponent() {\n    return (\n        <div style={{ height: 300, width: '100%' }}>\n            <DataGrid rows={rows} columns={columns} />\n        </div>\n    );\n}"],
-  "mappings": ";;;;;;;;AAeY;AAdZ,IAAM,OAAO;AAAA,EACT,EAAE,IAAI,GAAG,MAAM,aAAa,aAAa,wBAAwB;AAAA,EACjE,EAAE,IAAI,GAAG,MAAM,iBAAiB,aAAa,kBAAkB;AAAA,EAC/D,EAAE,IAAI,GAAG,MAAM,qBAAqB,aAAa,sBAAsB;AAC3E;AAEA,IAAM,UAAU;AAAA,EACZ,EAAE,OAAO,QAAQ,YAAY,gBAAgB,OAAO,IAAI;AAAA,EACxD,EAAE,OAAO,eAAe,YAAY,eAAe,OAAO,IAAI;AAClE;AAEe,SAAR,kBAAmC;AACtC,SACI,mDAAC,SAAI,OAAO,EAAE,QAAQ,KAAK,OAAO,OAAO,GACrC,6DAAC,YAAS,MAAY,WAAtB;AAAA;AAAA;AAAA;AAAA,SAAwC,KAD5C;AAAA;AAAA;AAAA;AAAA,SAEA;AAER;",
-  "names": []
-}

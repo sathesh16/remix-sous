@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["browser-route-module:routes/admin/kitchen.foodwaste.jsx?browser"],
-  "sourcesContent": ["export { default } from \"./routes/admin/kitchen.foodwaste.jsx\";"],
-  "mappings": ";;;;;;;;AAAA,+BAAwB;",
-  "names": []
-}

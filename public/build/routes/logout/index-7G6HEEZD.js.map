@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/logout/index.jsx"],
-  "sourcesContent": ["import React from 'react'\nimport { destroySession, getSession } from '../../sessions.server';\nimport { redirect } from '@remix-run/node';\n\n// Runs when <Form method=\"post\" action=\"/logout\" /> is submitted\nexport async function action({ request }) {\n    // \u2705 Pass the full request object, not just the cookie string\n    const session = await getSession(request);\n\n    return redirect(\"/login\", {\n        headers: {\n            \"Set-Cookie\": await destroySession(session),\n        },\n    });\n}\nexport async function loader() {\n    return redirect(\"/dashboard\");\n}\n\nfunction Logout() {\n    return (\n        <div>\n            You have been logged out\n        </div>\n    )\n}\n\nexport default Logout\n"],
-  "mappings": ";;;;;;;;;;AAAA,mBAAkB;AAClB,sBAA2C;AAoBnC;AAFR,SAAS,SAAS;AACd,SACI,mDAAC,SAAI,wCAAL;AAAA;AAAA;AAAA;AAAA,SAEA;AAER;AAEA,IAAO,iBAAQ;",
-  "names": []
-}

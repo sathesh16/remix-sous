@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/Kitchen.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Kitchen() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default Kitchen\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,UAAU;AACjB,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,kBAAQ;",
-  "names": []
-}

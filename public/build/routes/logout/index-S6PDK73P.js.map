@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/logout/index.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Logout() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default Logout\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,SAAS;AAChB,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,iBAAQ;",
-  "names": []
-}

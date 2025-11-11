@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../app/components/loader.jsx"],
-  "sourcesContent": ["import React from 'react'\nimport spinnerImg from \"~/assets/images/spinner.gif\"\n\nexport default function Loader(prop) {\n    return (\n        <>\n            <div className=\"loader\">\n                <img src={spinnerImg} alt=\"my-gif\" style={{ width: 200, height: 200, margin: \"0 auto\" }} />\n            </div>\n        </>\n    )\n}"],
-  "mappings": ";;;;;;;;;AAAA,mBAAkB;;;;;;AAAlB;AAGe,SAAR,OAAwB,MAAM;AACjC,SACI;AAAA,IACI,6DAAC;AAAA,MAAI,WAAU;AAAA,MACX,6DAAC;AAAA,QAAI,KAAK;AAAA,QAAY,KAAI;AAAA,QAAS,OAAO,EAAE,OAAO,KAAK,QAAQ,KAAK,QAAQ,SAAS;AAAA,SAAtF;AAAA;AAAA;AAAA;AAAA,aAAyF;AAAA,OAD7F;AAAA;AAAA;AAAA;AAAA,WAEA;AAAA,KAHJ;AAAA;AAAA;AAAA;AAAA,SAIA;AAER;",
-  "names": []
-}

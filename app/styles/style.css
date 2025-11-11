@@ -116,3 +116,16 @@
 .Spreadsheet.w-full .Spreadsheet__table {
     width: 100%;
 }
+
+/* .foodwaste-sheet tbody tr:first-child {
+    background-color: var(--primary-color);
+    color: white !important;
+} */
+
+.foodwaste-sheet .Spreadsheet__header {}
+
+.food-waste-hr-bg {
+    background-image: url('/images/foodWasteHR.jpg');
+    background-size: cover;
+    
+}

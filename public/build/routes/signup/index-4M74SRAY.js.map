@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/signup/index.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Sign() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default Sign\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,OAAO;AACd,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,iBAAQ;",
-  "names": []
-}

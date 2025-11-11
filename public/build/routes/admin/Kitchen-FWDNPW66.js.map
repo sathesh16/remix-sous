@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/Kitchen.jsx", "browser-route-module:routes/admin/Kitchen.jsx?browser"],
-  "sourcesContent": ["", "export { default } from \"./routes/admin/Kitchen.jsx\";"],
-  "mappings": ";;;;;;AAAA;AAAA;AAAA;AAAA;;;ACAA,qBAAwB;",
-  "names": []
-}

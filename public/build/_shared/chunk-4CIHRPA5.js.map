@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../app/routes/login/index.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Login() {\n    return (\n        <div className='flex h-full items-center justify-center max-w-[600px] mx-auto p-6'>\n            <div className='flex flex-col justify-center gap-6'>\n                <img src='/images/sous-chef.svg' alt='sous-logo' />\n                <div className=\"flex justify-between gap-x-4 mt-4\">\n                    Login Account \n                    <img src=\"/images/iss_logo.webp\" alt=\"iss-logo\"/>\n                </div>\n            </div>\n        </div>\n    )\n}\n\nexport default Login\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAMF;AAJhB,SAAS,QAAQ;AACb,SACI,mDAAC,SAAI,WAAU,qEACX,6DAAC,SAAI,WAAU,sCACX;AAAA,uDAAC,SAAI,KAAI,yBAAwB,KAAI,eAArC;AAAA;AAAA;AAAA;AAAA,WAAiD;AAAA,IACjD,mDAAC,SAAI,WAAU,qCAAoC;AAAA;AAAA,MAE/C,mDAAC,SAAI,KAAI,yBAAwB,KAAI,cAArC;AAAA;AAAA;AAAA;AAAA,aAA+C;AAAA,SAFnD;AAAA;AAAA;AAAA;AAAA,WAGA;AAAA,OALJ;AAAA;AAAA;AAAA;AAAA,SAMA,KAPJ;AAAA;AAAA;AAAA;AAAA,SAQA;AAER;AAEA,IAAO,gBAAQ;",
-  "names": []
-}

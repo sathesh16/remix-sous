@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@syncfusion/ej2-base/styles/material.css";
+@import "@syncfusion/ej2-react-spreadsheet/styles/material.css";
+
 
 .App {
   /* font-family: sans-serif; */

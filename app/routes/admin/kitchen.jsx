@@ -16,9 +16,9 @@ function Kitchen() {
 
     const setTab = (tab) => setSearchParams({ tab });
 
-    const tabBase = "px-4 py-2 rounded-md font-medium transition-colors border";
-    const tabActive = "bg-[var(--primary-color)] text-white border-[var(--primary-color)]";
-    const tabInactive = "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200";
+    const tabBase = "px-6 py-4 pl-0 font-medium transition-colors";
+    const tabActive = "text-[var(--primary-color)] border-b-2 border-b-[var(--primary-color)]";
+    const tabInactive = "text-gray-700";
 
     return (
         <AdminLayout>
@@ -27,7 +27,7 @@ function Kitchen() {
                     <h1 className="text-2xl font-semibold mb-4 text-[--primary-color]">Kitchen</h1>
                 </div>
 
-                <div role="tablist" aria-label="Kitchen sections" className="flex gap-2 mb-6">
+                <div role="tablist" aria-label="Kitchen sections" className="flex gap-6 mb-4 border-b border-gray-200">
                     <button
                         role="tab"
                         aria-selected={activeTab === 'cafe'}

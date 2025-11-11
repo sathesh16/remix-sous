@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/kitchen.cafe.jsx"],
-  "sourcesContent": ["import React from 'react'\nimport ProductsTable from '../../components/ProductGrid'\n\nfunction Cafe() {\n    return (\n        <ProductsTable />\n    )\n}\n\nexport default Cafe\n"],
-  "mappings": ";;;;;;;;;;;;;;AAAA,mBAAkB;AAKV;AAFR,SAAS,OAAO;AACZ,SACI,mDAAC,mBAAD;AAAA;AAAA;AAAA;AAAA,SAAe;AAEvB;AAEA,IAAO,uBAAQ;",
-  "names": []
-}

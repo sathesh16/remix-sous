@@ -1,21 +1,34 @@
-import { Link } from '@remix-run/react';
-import { Settings } from 'lucide-react';
-import React from 'react'
+// AdminPanelLink.jsx
+import { Link, useLocation } from "@remix-run/react";
+import { Settings } from "lucide-react";
+import clsx from "clsx";
 
 export default function AdminPanelLink({
     to,
-    icon: Icon = Settings, // 👈 Default icon (Settings)
+    icon: Icon = Settings,
     children,
+    className,
     ...props
 }) {
+    const { pathname } = useLocation();
+    const isActive = pathname === to;
+
+    // If user passes icon="none", treat as no icon
+    const showIcon = Icon !== "none";
+
     return (
         <Link
             to={to}
-            className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors duration-200"
+            className={clsx(
+                "flex items-center gap-3 px-6 py-4 transition-colors duration-200",
+                isActive ? "border-l border-gray-300 text-white" : "text-gray-300 hover:bg-gray-700",
+                className
+            )}
             {...props}
         >
-            <Icon className="w-5 h-5 text-gray-300" /> {/* dynamic or default */}
-            <span className="text-white">{children}</span>
+            {showIcon && <Icon className="w-5 h-5" />}
+            <span>{children}</span>
         </Link>
     );
 }
+

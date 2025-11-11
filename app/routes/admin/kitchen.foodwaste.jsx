@@ -6,6 +6,10 @@ import Button from '../../components/Button';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
+import FoodWastePreview from '../../components/FoodWastePreview';
+import CopyLinkButton from '../../components/CopyLinkButton';
+import { Eye } from 'lucide-react';
+
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
@@ -27,6 +31,7 @@ function FoodWaste() {
     const {
         week,
         setWeek,
+        allRecords,
         filteredRecords,
         handleUpdate,
         getPendingValue,
@@ -41,6 +46,8 @@ function FoodWaste() {
     const [isClient, setIsClient] = useState(false);
     const [Spreadsheet, setSpreadsheet] = useState(null);
     const [sheetData, setSheetData] = useState([]);
+    const [showPreview, setShowPreview] = useState(false);
+    const [previewData, setPreviewData] = useState(null);
 
     useEffect(() => {
         setIsClient(true);
@@ -97,8 +104,8 @@ function FoodWaste() {
         setSheetData(next);
     }, [rowModels]);
 
-    const columnLabels = useMemo(() => ["Users", "Food Waste (g)", "Total Waste (g)"], []);
-    const rowLabels = useMemo(() => WEEKDAYS, []);
+    const columnLabels = useMemo(() => ["No of Users this Day", "Plate Waste", "Total Waste"], []);
+    const rowLabels = useMemo(() => WEEKDAYS.map((d, idx) => `${d} ${mondayOfWeek.add(idx, 'day').format('DD/MM/YYYY')}`), [mondayOfWeek]);
 
     const handleSheetChange = useCallback((newData) => {
         const maxRows = Math.min(newData.length, rowModels.length);
@@ -120,11 +127,55 @@ function FoodWaste() {
         setSheetData(newData);
     }, [sheetData, rowModels, handleUpdate]);
 
+    // Build preview dataset from last week and last 12 weeks
+    const buildPreviewData = useCallback(() => {
+        const targetWeek = dayjs().week(Number(week) - 1);
+        const targetWeekNum = targetWeek.week();
+        const isWeek = (r, wn) => dayjs(r.date).week() === wn;
+
+        function weeklyPerGuestAverages(weekNum) {
+            const days = allRecords.filter((r) => isWeek(r, weekNum));
+            const plate = [];
+            const total = [];
+            days.forEach((d) => {
+                const users = Number(d.number_of_users) || 0;
+                if (users > 0) {
+                    if (d.food_waste != null) plate.push(Number(d.food_waste) / users);
+                    if (d.total_waste != null) total.push(Number(d.total_waste) / users);
+                }
+            });
+            const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+            return { plateAvg: avg(plate), totalAvg: avg(total) };
+        }
+
+        const lastWeek = weeklyPerGuestAverages(targetWeekNum);
+
+        const plateSeries = [];
+        const totalSeries = [];
+        for (let i = 12; i >= 1; i--) {
+            const wn = dayjs().week(Number(week) - i).week();
+            const { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
+            plateSeries.push(Math.round(plateAvg));
+            totalSeries.push(Math.round(totalAvg));
+        }
+        const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+
+        return {
+            weekLabel: `Week ${targetWeekNum}`,
+            plateWasteLastWeek: lastWeek.plateAvg,
+            totalWasteLastWeek: lastWeek.totalAvg,
+            plateWasteWeeklyAvg: avg(plateSeries),
+            totalWasteWeeklyAvg: avg(totalSeries),
+            plateSeries,
+            totalSeries,
+        };
+    }, [allRecords, week]);
+
     return (
         <div className="p-6">
             <div className="flex justify-between gap-4 mb-4">
                 <div className="flex gap-4 items-center">
-                    <h3 className="font-semibold">
+                    <h3>
                         <span className='text-[var(--primary-color)] text-2xl'>Week {week} /</span> {start} - {end}
                     </h3>
                     <div className="flex gap-2">
@@ -142,6 +193,23 @@ function FoodWaste() {
                             →
                         </button>
                     </div>
+
+                </div>
+                <div className="flex gap-2">
+
+
+
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            const data = buildPreviewData();
+                            setPreviewData(data);
+                            setShowPreview(true);
+                        }}
+                        className="flex gap-[10px] items-center"
+                    >
+                        <Eye size={20} /> Preview
+                    </Button>
                 </div>
 
 
@@ -164,17 +232,32 @@ function FoodWaste() {
             {loading ? (
                 <p>Loading…</p>
             ) : isClient && Spreadsheet ? (
-                <div className="border border-gray-300 rounded overflow-hidden w-full" style={{ width: '100%' }}>
+                <div className="rounded overflow-hidden w-full" style={{ width: '100%' }}>
                     <Spreadsheet
                         data={sheetData}
                         onChange={handleSheetChange}
                         columnLabels={columnLabels}
                         rowLabels={rowLabels}
-                        className="w-full"
+                        className="w-full foodwaste-sheet"
                         style={{ width: '100%' }}
                     />
                 </div>
             ) : null}
+            {showPreview && previewData && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowPreview(false)}>
+                    <div className="bg-white rounded-md w-[960px]" onClick={(e) => e.stopPropagation()}>
+                        <FoodWastePreview
+                            weekLabel={previewData.weekLabel}
+                            plateWasteLastWeek={previewData.plateWasteLastWeek}
+                            plateWasteWeeklyAvg={previewData.plateWasteWeeklyAvg}
+                            totalWasteLastWeek={previewData.totalWasteLastWeek}
+                            totalWasteWeeklyAvg={previewData.totalWasteWeeklyAvg}
+                            plateSeries={previewData.plateSeries}
+                            totalSeries={previewData.totalSeries}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/dashboard/index.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Dashboard() {\n    return (\n        <div>\n            Hello world you have logged in\n        </div>\n    )\n}\n\nexport default Dashboard\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAIV;AAFR,SAAS,YAAY;AACjB,SACI,mDAAC,SAAI,8CAAL;AAAA;AAAA;AAAA;AAAA,SAEA;AAER;AAEA,IAAO,oBAAQ;",
-  "names": []
-}

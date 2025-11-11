@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/admin.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction admin() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default admin\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,QAAQ;AACf,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,gBAAQ;",
-  "names": []
-}

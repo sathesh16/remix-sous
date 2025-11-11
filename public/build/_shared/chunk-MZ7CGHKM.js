@@ -1,1 +1,0 @@
-import{a}from"/build/_shared/chunk-TYFUAS6F.js";import{d as u}from"/build/_shared/chunk-W6WK5VNR.js";var t=u(a()),e=!0;function n(){let[r,d]=(0,t.useState)(()=>!e);return(0,t.useEffect)(function(){e=!1,d(!0)},[]),r}export{n as a};

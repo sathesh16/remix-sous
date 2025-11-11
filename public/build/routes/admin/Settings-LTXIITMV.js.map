@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/Settings.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Settings() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default Settings\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAId;AAFJ,SAAS,WAAW;AAClB,SACE,mDAAC,WAAD;AAAA;AAAA;AAAA;AAAA,SAEA;AAEJ;AAEA,IAAO,mBAAQ;",
-  "names": []
-}

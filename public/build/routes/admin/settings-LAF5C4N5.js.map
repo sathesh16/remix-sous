@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/settings.jsx"],
-  "sourcesContent": ["import React from 'react'\nimport AdminLayout from '../../components/AdminLayout'\n\nfunction Settings() {\n    return (\n        <AdminLayout>\n            <div>\n                This is setting\n            </div>\n        </AdminLayout>\n\n    )\n}\n\nexport default Settings\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;AAAA,mBAAkB;AAMN;AAHZ,SAAS,WAAW;AAChB,SACI,mDAAC,eACG,6DAAC,SAAI,+BAAL;AAAA;AAAA;AAAA;AAAA,SAEA,KAHJ;AAAA;AAAA;AAAA;AAAA,SAIA;AAGR;AAEA,IAAO,mBAAQ;",
-  "names": []
-}

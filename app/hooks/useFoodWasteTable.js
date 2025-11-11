@@ -101,6 +101,7 @@ export default function useFoodWasteTable() {
     return {
         week,
         setWeek,
+        allRecords: records,
         filteredRecords,
         handleUpdate,
         getPendingValue,

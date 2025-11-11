@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../app/routes/admin/test.jsx"],
-  "sourcesContent": ["// import { DataGrid } from \"@mui/x-data-grid\";\n\n\nconst rows = [\n    { id: 1, name: 'Data Grid', description: 'the Community version' },\n    { id: 2, name: 'Data Grid Pro', description: 'the Pro version' },\n    { id: 3, name: 'Data Grid Premium', description: 'the Premium version' },\n];\n\nconst columns = [\n    { field: 'name', headerName: 'Product Name', width: 200 },\n    { field: 'description', headerName: 'Description', width: 300 },\n];\n\nexport default function RenderComponent() {\n    return (\n        <div style={{ height: 300, width: '100%' }}>\n            {/* <DataGrid rows={rows} columns={columns} /> */}\n        </div>\n    );\n}"],
-  "mappings": ";;;;;;;;AAgBQ;AAFO,SAAR,kBAAmC;AACtC,SACI,mDAAC,SAAI,OAAO,EAAE,QAAQ,KAAK,OAAO,OAAO,KAAzC;AAAA;AAAA;AAAA;AAAA,SAEA;AAER;",
-  "names": []
-}

@@ -3,16 +3,16 @@ export default function Button({
     children,
     variant = "primary",
     className = "",
-    type="button",
+    type = "button",
     ...props
 }) {
     // Define base styles
     const baseStyles =
-        "px-4 py-2 rounded-lg font-medium focus:outline-none focus:ring transition";
+        "px-7 py-2 rounded-lg font-medium focus:outline-none focus:ring transition";
 
     // Define color variants
     const variants = {
-        primary: "bg-[#000022] text-white hover:bg-blue-700 focus:ring-blue-300",
+        primary: "bg-[#000022] text-white",
         secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400",
         danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-300",
         outline:

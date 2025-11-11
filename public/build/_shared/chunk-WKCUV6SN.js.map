@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../app/components/Input.jsx"],
-  "sourcesContent": ["import React from 'react'\n\nfunction Input({children,type=\"text\", className = \"\", ...props}) {\n    const baseStyles = \"w-full pr-10 pl-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500\";\n    // Combine all styles\n    const styles = `${baseStyles} ${className}`;\n  return (\n    <input type={type} className={styles} {...props}/>  //spread props(other input attributes)\n  )\n}\n\nexport default Input\n"],
-  "mappings": ";;;;;;;AAAA,mBAAkB;AAOd;AALJ,SAAS,MAAM,EAAC,UAAS,OAAK,QAAQ,YAAY,OAAO,MAAK,GAAG;AAC7D,QAAM,aAAa;AAEnB,QAAM,SAAS,GAAG,cAAc;AAClC,SACE,mDAAC,WAAM,MAAY,WAAW,QAAS,GAAG,SAA1C;AAAA;AAAA;AAAA;AAAA,SAAgD;AAEpD;AAEA,IAAO,gBAAQ;",
-  "names": []
-}
