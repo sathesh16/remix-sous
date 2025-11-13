@@ -13,6 +13,7 @@ export async function loader({ request }) {
 export default function Dashboard() {
     const { user } = useLoaderData();
     const action = useActionData();
+    console.log(user)
 
     return (
         <div className="p-6">

@@ -1,92 +1,172 @@
-import React, { useMemo } from "react";
+import React, { lazy, Suspense, useMemo } from "react";
 import CopyLinkButton from "./CopyLinkButton";
+import ClientApexChart from "./ApexChart";
+import { ArrowBigDown, } from "lucide-react";
+import clsx from "clsx";
+import useClipboard from "../hooks/useClipboard";
+import buildAbsoluteUrl from "../utils/url";
 
-function Sparkline({ data = [], color = "#CBD5E1" }) {
-    const path = useMemo(() => {
-        if (!data.length) return "";
-        const max = Math.max(...data, 1);
-        const min = Math.min(...data, 0);
-        const range = Math.max(max - min, 1);
-        const width = 160;
-        const height = 40;
-        const step = width / (data.length - 1 || 1);
-        return data
-            .map((v, i) => {
-                const x = i * step;
-                const y = height - ((v - min) / range) * height;
-                return `${i === 0 ? "M" : "L"}${x},${y}`;
-            })
-            .join(" ");
-    }, [data]);
-    return (
-        <svg width="180" height="44" aria-hidden="true">
-            <path d={path} fill="none" stroke={color} strokeWidth="2" />
-        </svg>
-    );
-}
+
+
+// import TestChart from "./ApexChart";
+// const TestChart = lazy(() => import("./ApexChart"));
 
 export default function FoodWastePreview({
-    weekLabel,
-    plateWasteLastWeek,
+    currentWeek,
+    orientation,
+    plateWasteCurrentWeek,
     plateWasteWeeklyAvg,
-    totalWasteLastWeek,
+    totalWasteCurrentWeek,
     totalWasteWeeklyAvg,
     plateSeries = [],
     totalSeries = [],
-    shareUrl,
+    isIncreasePlate,
+    isIncreaseTotal
+
 }) {
+
+    // const isIncreasePlate = isIncreasePlate; // condition
+    const textColorPlate = isIncreasePlate ? "text-[#8B4513]" : "text-[#24361F]"; // brown if higher, dark green otherwise
+    const arrowIconPlate = isIncreasePlate ? "/images/arrow-up.svg" : "/images/arrow-down.svg"; // path to public folder svg
+
+    // const isIncraeseTotalAvg = totalWasteLastWeek >= totalWasteWeeklyAvg;
+    const textColorAvg = isIncreaseTotal ? "text-[#8B4513]" : "text-[#24361F]"; // brown if higher, dark green otherwise
+    const arrowIconAvg = isIncreaseTotal ? "/images/arrow-up.svg" : "/images/arrow-down.svg"; // path to public folder svg
+
+    //for copy btn
+    const clipboard = useClipboard({ resetDelay: 2000 });
+
+    // build link dynamically (you can modify this route pattern as needed)
+    const linkToCopy = useMemo(() => {
+        const { origin } = window.location;
+        return buildAbsoluteUrl(`/banner/${currentWeek}/foodwaste/${orientation}`, origin);
+    }, [orientation]);
+
+    const label = clipboard.status === "success"
+        ? "Copied!"
+        : clipboard.status === "error"
+            ? "Failed to copy"
+            : "Copy Link";
+
+    const handleCopy = () => clipboard.copy(linkToCopy);
+
     return (
-        <div className="bg-[#E6EFE6] p-6 rounded-md food-waste-hr-bg">
+        <div className={clsx("bg-[#E6EFE6] py-8 px-12 rounded-md", orientation === "landscape" ? "food-waste-hr-bg" : "food-waste-vr-bg")}>
+            <h1 className={clsx("mb-10 font-semibold text-3xl", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>Food Waste</h1>
             <div className="grid gap-8">
-                <section className="flex gap-4 items-center">
-                    <div>
-                        <h3 className="text-xl font-semibold text-[#24361F] mb-1">Plate Waste</h3>
-                        <p className="text-sm text-[#24361F] opacity-80 mb-4">pr. Guest / Day</p>
+                <section className={clsx("flex", orientation === "landscape" ? "gap-12 items-center" : "flex-col items-start gap-4")}>
+                    <div className={clsx(orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black")}>
+                        <h3 className="text-xl font-semibold mb-1">
+                            Plate Waste
+                        </h3>
+                        <p className="text-sm font-semibold opacity-80 mb-4">
+                            pr. Guest / Day
+                        </p>
+                        <p className="text-sm opacity-80 mb-4">
+                            Good food thrown in the trash
+                        </p>
                     </div>
 
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-12">
                         <div className="text-center">
-                            <div className="w-28 h-28 rounded-full border border-white/60 flex items-center justify-center text-3xl font-semibold text-[#24361F]">
-                                {Math.round(plateWasteLastWeek)}
+                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                                Last Week
                             </div>
-                            <div className="mt-2 text-xs text-[#24361F] opacity-80">grams</div>
-                            <div className="mt-1 text-xs text-[#24361F] opacity-70 text-center">Last Week</div>
+                            <div className={`w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorPlate}`}>
+                                <div className="flex gap-2">
+                                    {Math.round(plateWasteCurrentWeek)}
+                                    <img src={arrowIconPlate} width="20px" height="20px" />
+                                </div>
+
+                                <div className="mt-2 text-xs opacity-80">grams</div>
+                            </div>
                         </div>
                         <div className="text-center">
-                            <div className="w-28 h-28 rounded-full border border-white/60 flex items-center justify-center text-3xl font-semibold text-[#24361F]">
+                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                                Weekly Average*
+                            </div>
+                            <div className="w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white">
+
                                 {Math.round(plateWasteWeeklyAvg)}
+
+                                <div className="mt-2 text-xs text-white opacity-80">grams</div>
                             </div>
-                            <div className="mt-2 text-xs text-[#24361F] opacity-80">grams</div>
-                            <div className="mt-1 text-xs text-[#24361F] opacity-70">Weekly Average*</div>
                         </div>
-                        <Sparkline data={plateSeries} />
+
+                        <div className={clsx("flex flex-col gap-2", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                            {/* 👇 Replaced Sparkline */}
+                            <ClientApexChart data={plateSeries} color="#CBD5E1" />
+                            Weekly Average *
+                            <br />
+                            (Based on last three months *)
+                        </div>
+
+
                     </div>
                 </section>
-                <section className="flex gap-4 items-center">
-                    <div>
-                        <h3 className="text-xl font-semibold text-[#24361F] mb-1">Total Waste</h3>
-                        <p className="text-sm text-[#24361F] opacity-80 mb-4">pr. Guest / Day</p>
+
+                <section className={clsx("flex", orientation === "landscape" ? "gap-12 items-center" : "flex-col items-start gap-4")}>
+                    <div className={clsx(orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black")}>
+                        <h3 className="text-xl font-semibold mb-1">
+                            Total Waste
+                        </h3>
+                        <p className="text-sm  font-semibold opacity-80 mb-4">
+                            pr. Guest / Day
+                        </p>
+                        <p className="text-sm opacity-80 mb-4">
+                            Plate Waste + Production Waste + Buffet waste
+                        </p>
                     </div>
 
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-12">
                         <div className="text-center">
-                            <div className="w-28 h-28 rounded-full border border-white/60 flex items-center justify-center text-3xl font-semibold text-[#24361F]">
-                                {Math.round(totalWasteLastWeek)}
+                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                                Last Week
                             </div>
-                            <div className="mt-2 text-xs text-[#24361F] opacity-80">grams</div>
-                            <div className="mt-1 text-xs text-[#24361F] opacity-70">Last Week</div>
+                            <div className={`w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorAvg}`}>
+                                <div className="flex gap-2">
+                                    {Math.round(totalWasteCurrentWeek)}
+                                    <img src={arrowIconAvg} width="20px" height="20px" />
+                                </div>
+                                <div className="mt-2 text-xs opacity-80">grams</div>
+                            </div>
                         </div>
                         <div className="text-center">
-                            <div className="w-28 h-28 rounded-full border border-white/60 flex items-center justify-center text-3xl font-semibold text-[#24361F]">
+                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                                Weekly Average*
+                            </div>
+                            <div className="w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white">
                                 {Math.round(totalWasteWeeklyAvg)}
+                                <div className="mt-2 text-xs text-white opacity-80">grams</div>
                             </div>
-                            <div className="mt-2 text-xs text-[#24361F] opacity-80">grams</div>
-                            <div className="mt-1 text-xs text-[#24361F] opacity-70">Weekly Average*</div>
                         </div>
-                        <Sparkline data={totalSeries} />
+
+                        <div className={clsx("flex flex-col gap-2 ", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                            {/* 👇 Replaced Sparkline */}
+                            <ClientApexChart data={totalSeries} color="#CBD5E1" />
+                            Weekly Average *
+                            <br />
+                            (Based on last three months *)
+                        </div>
+
+
                     </div>
-                    {/* <div className="mt-2 text-[10px] text-[#24361F] opacity-70">*based on last three months</div> */}
                 </section>
+            </div>
+            <div className="flex justify-center mt-4">
+                <button
+                    onClick={handleCopy}
+                    disabled={clipboard.status === "success"}
+                    className={clsx(
+                        "px-4 py-2 text-sm rounded-md transition-colors duration-200",
+                        "border border-[#24361F]",
+                        orientation === "landscape"
+                            ? "text-[#24361F] hover:bg-[#24361F] hover:text-white"
+                            : "text-black hover:bg-black hover:text-white"
+                    )}
+                >
+                    {label}
+                </button>
             </div>
         </div>
     );

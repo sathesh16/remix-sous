@@ -9,6 +9,7 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import FoodWastePreview from '../../components/FoodWastePreview';
 import CopyLinkButton from '../../components/CopyLinkButton';
 import { Eye } from 'lucide-react';
+import OrientationToggle from '../../components/OrientationToggle';
 
 
 dayjs.extend(weekday);
@@ -48,6 +49,7 @@ function FoodWaste() {
     const [sheetData, setSheetData] = useState([]);
     const [showPreview, setShowPreview] = useState(false);
     const [previewData, setPreviewData] = useState(null);
+    const [orientation, setOrientation] = useState("landscape");
 
     useEffect(() => {
         setIsClient(true);
@@ -128,9 +130,52 @@ function FoodWaste() {
     }, [sheetData, rowModels, handleUpdate]);
 
     // Build preview dataset from last week and last 12 weeks
+    // const buildPreviewData = useCallback(() => {
+    //     const targetWeek = dayjs().week(Number(week) - 1);
+    //     const targetWeekNum = targetWeek.week();
+    //     const isWeek = (r, wn) => dayjs(r.date).week() === wn;
+
+    //     function weeklyPerGuestAverages(weekNum) {
+    //         const days = allRecords.filter((r) => isWeek(r, weekNum));
+    //         const plate = [];
+    //         const total = [];
+    //         days.forEach((d) => {
+    //             const users = Number(d.number_of_users) || 0;
+    //             if (users > 0) {
+    //                 if (d.food_waste != null) plate.push(Number(d.food_waste) / users);
+    //                 if (d.total_waste != null) total.push(Number(d.total_waste) / users);
+    //             }
+    //         });
+    //         const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+    //         return { plateAvg: avg(plate), totalAvg: avg(total) };
+    //     }
+
+    //     const lastWeek = weeklyPerGuestAverages(targetWeekNum);
+
+    //     const plateSeries = [];
+    //     const totalSeries = [];
+    //     for (let i = 12; i >= 1; i--) {
+    //         const wn = dayjs().week(Number(week) - i).week();
+    //         const { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
+    //         plateSeries.push(Math.round(plateAvg));
+    //         totalSeries.push(Math.round(totalAvg));
+    //     }
+    //     const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+
+    //     return {
+    //         lastWeek: targetWeekNum,
+    //         weekLabel: `Week ${targetWeekNum}`,
+    //         plateWasteLastWeek: lastWeek.plateAvg,
+    //         totalWasteLastWeek: lastWeek.totalAvg,
+
+    //         plateSeries,
+    //         totalSeries,
+    //     };
+    // }, [allRecords, week]);
     const buildPreviewData = useCallback(() => {
-        const targetWeek = dayjs().week(Number(week) - 1);
-        const targetWeekNum = targetWeek.week();
+        const currentWeekNum = Number(week);
+        const lastWeekNum = currentWeekNum - 1;
+
         const isWeek = (r, wn) => dayjs(r.date).week() === wn;
 
         function weeklyPerGuestAverages(weekNum) {
@@ -148,22 +193,31 @@ function FoodWaste() {
             return { plateAvg: avg(plate), totalAvg: avg(total) };
         }
 
-        const lastWeek = weeklyPerGuestAverages(targetWeekNum);
+        const currentWeek = weeklyPerGuestAverages(currentWeekNum);
+        const lastWeek = weeklyPerGuestAverages(lastWeekNum);
 
+        // for trend (increase/decrease)
+        const isIncreasePlate = currentWeek.plateAvg > lastWeek.plateAvg;
+        const isIncreaseTotal = currentWeek.totalAvg > lastWeek.totalAvg;
+
+        // generate series for sparkline
         const plateSeries = [];
         const totalSeries = [];
         for (let i = 12; i >= 1; i--) {
-            const wn = dayjs().week(Number(week) - i).week();
+            const wn = currentWeekNum - i;
             const { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
             plateSeries.push(Math.round(plateAvg));
             totalSeries.push(Math.round(totalAvg));
         }
+        // define avg helper here so it's accessible everywhere
         const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
 
         return {
-            weekLabel: `Week ${targetWeekNum}`,
-            plateWasteLastWeek: lastWeek.plateAvg,
-            totalWasteLastWeek: lastWeek.totalAvg,
+            currentWeek: currentWeekNum,
+            plateWasteCurrentWeek: currentWeek.plateAvg,
+            totalWasteCurrentWeek: currentWeek.totalAvg,
+            isIncreasePlate,
+            isIncreaseTotal,
             plateWasteWeeklyAvg: avg(plateSeries),
             totalWasteWeeklyAvg: avg(totalSeries),
             plateSeries,
@@ -171,8 +225,9 @@ function FoodWaste() {
         };
     }, [allRecords, week]);
 
+
     return (
-        <div className="p-6">
+        <div className="pt-4">
             <div className="flex justify-between gap-4 mb-4">
                 <div className="flex gap-4 items-center">
                     <h3>
@@ -196,9 +251,7 @@ function FoodWaste() {
 
                 </div>
                 <div className="flex gap-2">
-
-
-
+                    <OrientationToggle onChange={(value) => setOrientation(value)} />
                     <Button
                         variant="secondary"
                         onClick={() => {
@@ -245,15 +298,18 @@ function FoodWaste() {
             ) : null}
             {showPreview && previewData && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowPreview(false)}>
-                    <div className="bg-white rounded-md w-[960px]" onClick={(e) => e.stopPropagation()}>
+                    <div className={`bg-white rounded-md ${orientation === "landscape" ? "w-[1500px]" : "w-[1080px]"}`} onClick={(e) => e.stopPropagation()}>
                         <FoodWastePreview
-                            weekLabel={previewData.weekLabel}
-                            plateWasteLastWeek={previewData.plateWasteLastWeek}
+                            currentWeek={previewData.currentWeek}
+                            orientation={orientation}
+                            plateWasteCurrentWeek={previewData.plateWasteCurrentWeek}
                             plateWasteWeeklyAvg={previewData.plateWasteWeeklyAvg}
-                            totalWasteLastWeek={previewData.totalWasteLastWeek}
+                            totalWasteCurrentWeek={previewData.totalWasteCurrentWeek}
                             totalWasteWeeklyAvg={previewData.totalWasteWeeklyAvg}
                             plateSeries={previewData.plateSeries}
                             totalSeries={previewData.totalSeries}
+                            isIncreasePlate={previewData.isIncreasePlate}
+                            isIncreaseTotal={previewData.isIncreaseTotal}
                         />
                     </div>
                 </div>

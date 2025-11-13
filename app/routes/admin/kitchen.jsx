@@ -2,7 +2,9 @@ import React from 'react'
 import AdminLayout from '../../components/AdminLayout'
 import ProductsGrid from '../../components/ProductGrid'
 import FoodWaste from './kitchen.foodwaste'
-import { useSearchParams } from '@remix-run/react'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { requireUserSession } from '../../sessions.server'
+import { json } from '@remix-run/node'
 
 // export function links() {
 //     return [
@@ -10,7 +12,15 @@ import { useSearchParams } from '@remix-run/react'
 //     ];
 // }
 
+// export async function loader({ request }) {
+//     const user = await requireUserSession(request);
+//     const token = await getToken(request);
+//     return json({ token });
+// }
+
 function Kitchen() {
+    // const { token } = useLoaderData();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const activeTab = searchParams.get('tab') || 'cafe';
 

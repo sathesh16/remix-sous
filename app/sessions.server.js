@@ -29,6 +29,10 @@ export async function destroySession(session) {     //delete session called in l
 export async function requireUserSession(request) {    //validation for pages
     const session = await getSession(request);
     const user = session.get("user");
-    if (!user) throw redirect("/login");
+    if (!user) {
+        const url = new URL(request.url);
+        const redirectTo = url.pathname + url.search;
+        throw redirect(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);  //to redirect to current page
+    }
     return user;
 }
