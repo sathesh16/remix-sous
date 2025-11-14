@@ -1630,6 +1630,10 @@ input:checked + .toggle-bg {
   z-index: 50;
 }
 
+.z-\[10\] {
+  z-index: 10;
+}
+
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -1676,6 +1680,10 @@ input:checked + .toggle-bg {
   margin-top: 1rem;
 }
 
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
 .mt-6 {
   margin-top: 1.5rem;
 }
@@ -1684,12 +1692,12 @@ input:checked + .toggle-bg {
   margin-top: 0;
 }
 
-.mt-\[20px\] {
-  margin-top: 20px;
-}
-
 .mt-auto {
   margin-top: auto;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
 }
 
 .block {
@@ -2283,6 +2291,11 @@ input:checked + .toggle-bg {
 
 .bg-white\/50 {
   background-color: rgb(255 255 255 / 0.5);
+}
+
+.bg-gray-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
 }
 
 .bg-opacity-40 {

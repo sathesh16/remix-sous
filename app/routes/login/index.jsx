@@ -1,20 +1,21 @@
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useTransition, useLoaderData, useSearchParams } from "@remix-run/react";
 // import { useEffect, useState } from "react";
-import { getSession, commitSession } from "../../sessions.server.js";
 import Button from "../../components/Button.jsx";
 import { Eye, EyeOff } from "lucide-react";
 import Input from "../../components/Input.jsx";
 import PasswordInput from "../../components/PasswordInput.jsx";
 import { API_BASE_URL } from "../../utils/constants.js";
+import { commitSession, getSession } from "../../sessionHandler.server.js";
 
 // 🧠 Loader — kick out logged-in users
 export async function loader({ request }) {
     const session = await getSession(request);
     const user = session.get("user");
-    if (user) return redirect("/dashboard");
+    if (user) return redirect("/login");
     return null;
 }
+
 
 // 🔹 Function to hit your external login API
 async function loginToExternalApi({ email, password }) {
@@ -24,13 +25,14 @@ async function loginToExternalApi({ email, password }) {
         body: JSON.stringify({ email, password }),
     });
 
+    const json = await response.json();
+    console.log("🔐 DIRECTUS LOGIN RESPONSE:", json);
+
     if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Login failed: ${err}`);
+        throw new Error(json.errors?.[0]?.message || "Login failed");
     }
 
-    // Example response: { access_token, refresh_token, expires_in, user }
-    return await response.json();
+    return json.data; // ⬅️ Directus always returns the real data here
 }
 
 // 🔹 Remix action for login
@@ -38,26 +40,39 @@ export async function action({ request }) {
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
-    const redirectTo = formData.get("redirectTo") || "/admin";
+    const redirectTo = formData.get("redirectTo") || "/admin/kitchen";
 
     try {
-        const result = await loginToExternalApi({ email, password });
-        const { access_token, refresh_token, expires_in, user } = result;
+        // 1️⃣ Login to Directus
+        const data = await loginToExternalApi({ email, password });
+
+        // Directus login returns:
+        // data.access_token
+        // data.refresh_token
+        // data.expires
+        // data.user (optional, depends on settings)
 
         const session = await getSession(request);
-        session.set("token", access_token);
-        session.set("refresh_token", refresh_token);
-        session.set("expires_in", expires_in);
-        session.set("user", user || { email });
 
+        // 2️⃣ Store tokens properly
+        session.set("token", data.access_token);
+        session.set("refresh_token", data.refresh_token);
+        session.set("expires_in", data.expires);
+
+        // 3️⃣ Store user fallback
+        session.set("user", data.user || { email });
+
+        // 4️⃣ Redirect with cookie
         return redirect(redirectTo, {
             headers: { "Set-Cookie": await commitSession(session) },
         });
+
     } catch (error) {
         console.error("❌ Login error:", error);
         return json({ error: "Invalid email or password" }, { status: 401 });
     }
 }
+
 
 export default function LoginPage() {
     const actionData = useActionData();

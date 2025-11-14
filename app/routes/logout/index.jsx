@@ -1,6 +1,6 @@
 import React from 'react'
-import { destroySession, getSession } from '../../sessions.server';
 import { redirect } from '@remix-run/node';
+import { destroySession, getSession } from '../../sessionHandler.server';
 
 // Runs when <Form method="post" action="/logout" /> is submitted
 export async function action({ request }) {
@@ -14,7 +14,7 @@ export async function action({ request }) {
     });
 }
 export async function loader() {
-    return redirect("/dashboard");
+    return redirect("/login");
 }
 
 function Logout() {

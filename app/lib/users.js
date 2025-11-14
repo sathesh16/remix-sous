@@ -1,39 +1,28 @@
-import { getSession } from "../sessions.server";
+import { getSession, requireAccessToken } from "../sessionHandler.server.js";
 import { API_BASE_URL } from "../utils/constants";
 
-// import { getSession } from "~/sessions";
 
 
-export default async function getToken(request) {
-    const session = await getSession(request);
-    return session?.get("token") || null;
-}
 
-export async function getCurrentUser(token) {
+export async function updateCurrentUser(payload, token) {
     const response = await fetch(`${API_BASE_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!response.ok) throw new Error("Failed to fetch current user.");
-    const result = await response.json();
-    return result.data;
-}
-
-// Update user's selected location
-export async function updateUserLocation(userId, locationId) {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
-        credentials: "include", // ✅ include cookies again
-        body: JSON.stringify({
-            selected_locations: locationId, // adjust this field name if different
-        }),
+        body: JSON.stringify({ data: payload }),
     });
 
-    if (!response.ok) throw new Error("Failed to update user location.");
+    // Parse JSON
+    const json = await response.json();
 
-    const result = await response.json();
-    return result.data || result;
+    // If API returned an error, throw it
+    if (!response.ok) {
+        throw new Error(json?.errors?.[0]?.message || "Failed to update user");
+    }
+
+    console.log("Updated user data:", json);
+
+    return json.data; // return updated user
 }

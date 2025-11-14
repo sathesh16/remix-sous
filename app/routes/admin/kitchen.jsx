@@ -3,8 +3,8 @@ import AdminLayout from '../../components/AdminLayout'
 import ProductsGrid from '../../components/ProductGrid'
 import FoodWaste from './kitchen.foodwaste'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
-import { requireUserSession } from '../../sessions.server'
 import { json } from '@remix-run/node'
+import { getCurrentUser } from '../../sessionHandler.server'
 
 // export function links() {
 //     return [
@@ -12,14 +12,13 @@ import { json } from '@remix-run/node'
 //     ];
 // }
 
-// export async function loader({ request }) {
-//     const user = await requireUserSession(request);
-//     const token = await getToken(request);
-//     return json({ token });
-// }
+export async function loader({ request }) {
+    const { user, token } = await getCurrentUser(request);
+    return json({ user, token });
+}
 
 function Kitchen() {
-    // const { token } = useLoaderData();
+    const { user, token } = useLoaderData();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const activeTab = searchParams.get('tab') || 'cafe';
@@ -31,7 +30,7 @@ function Kitchen() {
     const tabInactive = "text-gray-700";
 
     return (
-        <AdminLayout>
+        <AdminLayout user={user} token={token}>
             <div className="p-6">
                 <div className="flex justify-between">
                     <h1 className="text-2xl font-semibold mb-4 text-[--primary-color]">Kitchen</h1>

@@ -3,11 +3,10 @@ import { useState } from "react";
 import Button from "./Button";
 import AdminPanelLink from "./AdminPanelLink";
 import { HandPlatter } from "lucide-react";
-import { getCurrentUser, updateUserLocation } from "../lib/users";
 import fetchLocations from "../lib/locations";
 import LocationSelector from "./LocationSelector";
 
-export default function AdminLayout({ children }) {
+export default function AdminLayout({ children, user, token }) {
     console.log("entered aminlayout")
     const [open, setOpen] = useState(true);
 
@@ -35,7 +34,7 @@ export default function AdminLayout({ children }) {
                 {/*</button> */}
 
                 {/* 🔽 Location Dropdown */}
-                {/* <LocationSelector token={token} /> */}
+                <LocationSelector user={user} token={token} />
 
                 <nav className="space-y-4">
 
