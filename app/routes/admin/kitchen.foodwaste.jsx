@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useContext } from 'react';
 import useFoodWasteTable from '../../hooks/useFoodWasteTable';
 import { getWeekDateRange } from '../../utils/date';
 import Toast from '../../components/Toast';
@@ -10,6 +10,8 @@ import FoodWastePreview from '../../components/FoodWastePreview';
 import CopyLinkButton from '../../components/CopyLinkButton';
 import { Eye } from 'lucide-react';
 import OrientationToggle from '../../components/OrientationToggle';
+import { SelectedLocationContext } from '../../components/AdminLayout';
+import { updateLocationIsVertical } from '../../lib/locations';
 
 
 dayjs.extend(weekday);
@@ -29,6 +31,7 @@ function coerceDisplayValue(value) {
 }
 
 function FoodWaste() {
+    const selectedLocation = useContext(SelectedLocationContext);
     const {
         week,
         setWeek,
@@ -42,7 +45,7 @@ function FoodWaste() {
         hasPendingUpdates,
         toast,
         dismissToast
-    } = useFoodWasteTable();
+    } = useFoodWasteTable(selectedLocation.selectedLocation);
 
     const [isClient, setIsClient] = useState(false);
     const [Spreadsheet, setSpreadsheet] = useState(null);
@@ -129,49 +132,12 @@ function FoodWaste() {
         setSheetData(newData);
     }, [sheetData, rowModels, handleUpdate]);
 
-    // Build preview dataset from last week and last 12 weeks
-    // const buildPreviewData = useCallback(() => {
-    //     const targetWeek = dayjs().week(Number(week) - 1);
-    //     const targetWeekNum = targetWeek.week();
-    //     const isWeek = (r, wn) => dayjs(r.date).week() === wn;
+    useEffect(() => {
+        if (week) {
+            localStorage.setItem("banner_week", week);
+        }
+    }, [week]);
 
-    //     function weeklyPerGuestAverages(weekNum) {
-    //         const days = allRecords.filter((r) => isWeek(r, weekNum));
-    //         const plate = [];
-    //         const total = [];
-    //         days.forEach((d) => {
-    //             const users = Number(d.number_of_users) || 0;
-    //             if (users > 0) {
-    //                 if (d.food_waste != null) plate.push(Number(d.food_waste) / users);
-    //                 if (d.total_waste != null) total.push(Number(d.total_waste) / users);
-    //             }
-    //         });
-    //         const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
-    //         return { plateAvg: avg(plate), totalAvg: avg(total) };
-    //     }
-
-    //     const lastWeek = weeklyPerGuestAverages(targetWeekNum);
-
-    //     const plateSeries = [];
-    //     const totalSeries = [];
-    //     for (let i = 12; i >= 1; i--) {
-    //         const wn = dayjs().week(Number(week) - i).week();
-    //         const { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
-    //         plateSeries.push(Math.round(plateAvg));
-    //         totalSeries.push(Math.round(totalAvg));
-    //     }
-    //     const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
-
-    //     return {
-    //         lastWeek: targetWeekNum,
-    //         weekLabel: `Week ${targetWeekNum}`,
-    //         plateWasteLastWeek: lastWeek.plateAvg,
-    //         totalWasteLastWeek: lastWeek.totalAvg,
-
-    //         plateSeries,
-    //         totalSeries,
-    //     };
-    // }, [allRecords, week]);
     const buildPreviewData = useCallback(() => {
         const currentWeekNum = Number(week);
         const lastWeekNum = currentWeekNum - 1;
@@ -227,6 +193,7 @@ function FoodWaste() {
 
 
     return (
+
         <div className="pt-4">
             <div className="flex justify-between gap-4 mb-4">
                 <div className="flex gap-4 items-center">
@@ -251,7 +218,18 @@ function FoodWaste() {
 
                 </div>
                 <div className="flex gap-2">
-                    <OrientationToggle onChange={(value) => setOrientation(value)} />
+                    <OrientationToggle
+                        onChange={(value) => {
+                            setOrientation(value);
+                            console.log(value);
+                            // value will be "portrait" or "landscape"
+                            // const isVertical = value === "portrait";
+
+                            updateLocationIsVertical(selectedLocation.selectedLocation, value === "portrait")
+                                .then(() => console.log("Orientation updated"))
+                                .catch(err => console.error(err));
+                        }}
+                    />
                     <Button
                         variant="secondary"
                         onClick={() => {
@@ -310,6 +288,7 @@ function FoodWaste() {
                             totalSeries={previewData.totalSeries}
                             isIncreasePlate={previewData.isIncreasePlate}
                             isIncreaseTotal={previewData.isIncreaseTotal}
+                            selectedLocation={selectedLocation.selectedLocation}
                         />
                     </div>
                 </div>

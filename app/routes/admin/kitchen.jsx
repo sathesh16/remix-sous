@@ -2,7 +2,7 @@ import React from 'react'
 import AdminLayout from '../../components/AdminLayout'
 import ProductsGrid from '../../components/ProductGrid'
 import FoodWaste from './kitchen.foodwaste'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { useLoaderData, useSearchParams, Outlet, NavLink } from '@remix-run/react'
 import { json } from '@remix-run/node'
 import { getCurrentUser } from '../../sessionHandler.server'
 
