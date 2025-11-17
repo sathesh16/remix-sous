@@ -21,7 +21,8 @@ export default function FoodWastePreview({
     plateSeries = [],
     totalSeries = [],
     isIncreasePlate,
-    isIncreaseTotal
+    isIncreaseTotal,
+    selectedLocation
 
 }) {
 
@@ -38,9 +39,10 @@ export default function FoodWastePreview({
 
     // build link dynamically (you can modify this route pattern as needed)
     const linkToCopy = useMemo(() => {
+        if (!selectedLocation) return "";
         const { origin } = window.location;
-        return buildAbsoluteUrl(`/banner/${currentWeek}/foodwaste/${orientation}`, origin);
-    }, [orientation]);
+        return buildAbsoluteUrl(`/banner/foodwaste/${selectedLocation}`, origin);
+    }, [selectedLocation]);
 
     const label = clipboard.status === "success"
         ? "Copied!"

@@ -1,13 +1,17 @@
 import { API_BASE_URL } from "../utils/constants";
 
-export async function fetchFoodWaste() {
-  const response = await fetch(`${API_BASE_URL}/items/Food_waste_information`);
+export async function fetchFoodWaste(locationId) {
+  const url = `${API_BASE_URL}/items/Food_waste_information` +
+    (locationId ? `?filter[location_id][_eq]=${locationId}` : "");
+
+  const response = await fetch(url);
 
   if (!response.ok) throw new Error("Failed to fetch food waste data.");
 
   const result = await response.json();
   return result.data || result;
 }
+
 
 export async function patchFoodWaste(payload) {
   const response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {

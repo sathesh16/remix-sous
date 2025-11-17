@@ -5,6 +5,8 @@ import Button from "../../components/Button";
 import CurrentUserCard from "../../components/CurrentUserCard";
 import UpdateLocation from "../../components/UpdateCurrentUser";
 import { getCurrentUser } from "../../sessionHandler.server";
+import { SelectedLocationContext } from "../../components/AdminLayout";
+import { useContext } from "react";
 // import { requireUserSession } from "../sessions.server";
 
 
@@ -16,12 +18,15 @@ export async function loader({ request }) {
 
 export default function Dashboard() {
     const { user, token, refresh_token, expires_in } = useLoaderData();
+    const { selectedLocation } = useContext(SelectedLocationContext);
 
     console.log("🔐 CLIENT — USER:", user);
 
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold">Welcome, {user.email || "User"} 👋</h1>
+
+            <h1 className="text-2xl font-bold">Your current location: {selectedLocation.selectedLocation}    </h1>
 
             <div className="mb-4 p-3 rounded bg-gray-100">
                 <p><strong>Access Token:</strong> {token}</p>

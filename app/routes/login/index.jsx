@@ -78,7 +78,6 @@ export default function LoginPage() {
     const actionData = useActionData();
     const transition = useTransition();
     const [searchParams] = useSearchParams();
-    const redirectTo = searchParams.get("redirectTo") || "/dashboard";
 
     // // Show error toast
     // useEffect(() => {
@@ -97,7 +96,7 @@ export default function LoginPage() {
             </div>
 
             <Form method="post" className="flex flex-col gap-6 max-w-[400px] w-full">
-                <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") || "/admin"} />
+                <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") || "/admin/kitchen"} />
 
                 <Input type="email" required name="email" placeholder="Email" />
 

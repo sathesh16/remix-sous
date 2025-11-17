@@ -5,9 +5,8 @@ import { updateCurrentUser } from '../lib/users';
 import Toast from './Toast';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 
-function LocationSelector({ user, token }) {
+function LocationSelector({ user, token, selectedLocation, setSelectedLocation }) {
     const [locations, setLocations] = useState([]);
-    const [selectedLocation, setSelectedLocation] = useState("");
     const [userId] = useState(user?.id || null);
 
     // Toast state
@@ -22,11 +21,11 @@ function LocationSelector({ user, token }) {
                 const locs = await fetchLocations();
                 setLocations(locs);
 
-                if (user?.selected_location) {
+                if (user?.selected_locations) {
                     const exists = locs.some(
-                        (loc) => loc.id === user.selected_location
+                        (loc) => loc.id === user.selected_locations
                     );
-                    setSelectedLocation(exists ? user.selected_location : "");
+                    setSelectedLocation(exists ? user.selected_locations : "");
                 } else {
                     setSelectedLocation("");
                 }
@@ -39,8 +38,7 @@ function LocationSelector({ user, token }) {
     }, []);
 
     // Handle update
-    async function handleLocationChange(e) {
-        const value = e.target.value;
+    async function handleLocationChange(value) {
         setSelectedLocation(value);
 
         try {
@@ -60,37 +58,39 @@ function LocationSelector({ user, token }) {
         }
     }
 
+
     return (
         <>
-            <div className="border border-gray-300 px-4 py-2 mt-5 mx-4 mb-16">
-                <select
-                    className="w-full bg-transparent text-white outline-none"
-                    value={selectedLocation}
-                    onChange={handleLocationChange}
-                >
-                    <option value="" disabled>Select Location</option>
-                    {locations.map((loc) => (
-                        <option key={loc.id} value={loc.id}>
-                            {loc.name}
-                        </option>
-                    ))}
-                </select>
-                {/* <Listbox value={selectedLocation} onChange={setSelectedLocation}>
-                    <ListboxButton className="w-full bg-gray-800 text-white px-4 py-2 rounded">
-                        {selectedLocation ? locations.find(l => l.id === selectedLocation).name : "Select Location"}
-                    </ListboxButton>
-                    <ListboxOptions className="bg-gray-700 mt-1 rounded shadow-lg">
-                        {locations.map((loc) => (
-                            <ListboxOption
-                                key={loc.id}
-                                value={loc.id}
-                                className={({ active }) => `px-4 py-2 cursor-pointer ${active ? 'bg-gray-600' : ''}`}
-                            >
-                                {loc.name}
-                            </ListboxOption>
-                        ))}
-                    </ListboxOptions>
-                </Listbox> */}
+            <div className="mt-5 mx-4 mb-16">
+                <Listbox value={selectedLocation} onChange={handleLocationChange}>
+                    <div className="relative w-full">
+                        <ListboxButton className="w-full border border-gray-300 text-white px-4 py-2 rounded text-left flex justify-between">
+                            <span>
+                                {selectedLocation
+                                    ? locations.find(l => l.id === selectedLocation)?.name
+                                    : "Select Location"}
+                            </span>
+                            {/* ▼ Dropdown Arrow */}
+                            <span className="ml-2 text-white">▼</span>
+
+                        </ListboxButton>
+
+                        <ListboxOptions className="bg-gray-700 mt-1 rounded shadow-lg text-left absolute w-full">
+                            {locations.map((loc) => (
+                                <ListboxOption
+                                    key={loc.id}
+                                    value={loc.id}
+                                    className={({ active }) =>
+                                        `px-4 py-2 cursor-pointer ${active ? "bg-gray-600" : ""}`
+                                    }
+                                >
+                                    {loc.name}
+                                </ListboxOption>
+                            ))}
+                        </ListboxOptions>
+                    </div>
+                </Listbox>
+
             </div>
 
 

@@ -1,84 +1,124 @@
 import { useLoaderData } from '@remix-run/react'
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { fetchFoodWaste } from '../lib/foodWaste';
 import clsx from 'clsx';
 import { json } from '@remix-run/node';
-import dayjs from 'dayjs';
 import ClientApexChart from '../components/ApexChart';
+import fetchLocations from '../lib/locations';
+import dayjs from 'dayjs';
+import weekday from 'dayjs/plugin/weekday';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+
+
+
+dayjs.extend(weekday);
+dayjs.extend(weekOfYear);
 
 export async function loader({ params }) {
-    const { weekno, orientation = "landscape" } = params;
+    const { locationId } = params;
 
+    const locations = await fetchLocations();
+    const location = locations.find(l => Number(l.id) === Number(locationId));
 
-    const allRecords = await fetchFoodWaste();
+    if (!location) throw new Response("Location not found", { status: 404 });
 
-    // helper
-    const isWeek = (r, wn) => dayjs(r.date).week() === wn;
+    const allRecords = await fetchFoodWaste(locationId);
 
-    function weeklyPerGuestAverages(weekNum) {
-        const days = allRecords.filter((r) => isWeek(r, weekNum));
-        const plate = [];
-        const total = [];
-        days.forEach((d) => {
-            const users = Number(d.number_of_users) || 0;
-            if (users > 0) {
-                if (d.food_waste != null) plate.push(Number(d.food_waste) / users);
-                if (d.total_waste != null) total.push(Number(d.total_waste) / users);
-            }
-        });
-        const avg = (arr) =>
-            arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-        return { plateAvg: avg(plate), totalAvg: avg(total) };
-    }
-
-    const lastWeek = weeklyPerGuestAverages(Number(weekno));
-
-    const plateSeries = [];
-    const totalSeries = [];
-    for (let i = 12; i >= 1; i--) {
-        const wn = dayjs().week(Number(weekno) - i).week();
-        const { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
-        plateSeries.push(Math.round(plateAvg));
-        totalSeries.push(Math.round(totalAvg));
-    }
-    const avg = (arr) =>
-        arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-
-    const data = {
-        weekLabel: `Week ${weekno}`,
-        plateWasteLastWeek: lastWeek.plateAvg,
-        totalWasteLastWeek: lastWeek.totalAvg,
-        plateWasteWeeklyAvg: avg(plateSeries),
-        totalWasteWeeklyAvg: avg(totalSeries),
-        plateSeries,
-        totalSeries,
-        orientation,
-    };
-
-    return json(data);
+    return json({
+        allRecords,
+        orientation: location.is_vertical_foodwaste ? "portrait" : "landscape"
+    });
 }
 
 
+
 export default function FoodWasteBanner() {
+
+    const { allRecords, orientation } = useLoaderData();
+
+    function buildPreviewData(allRecords, week) {
+        const currentWeekNum = Number(week);
+        const lastWeekNum = currentWeekNum - 1;
+
+        const isWeek = (r, wn) => dayjs(r.date).week() === wn;
+
+        function weeklyPerGuestAverages(weekNum) {
+            const days = allRecords.filter((r) => isWeek(r, weekNum));
+            const plate = [];
+            const total = [];
+
+            days.forEach((d) => {
+                const users = Number(d.number_of_users) || 0;
+                if (users > 0) {
+                    if (d.food_waste != null)
+                        plate.push(Number(d.food_waste) / users);
+
+                    if (d.total_waste != null)
+                        total.push(Number(d.total_waste) / users);
+                }
+            });
+
+            const avg = (arr) =>
+                arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+            return { plateAvg: avg(plate), totalAvg: avg(total) };
+        }
+
+        const currentWeek = weeklyPerGuestAverages(currentWeekNum);
+        const lastWeek = weeklyPerGuestAverages(lastWeekNum);
+
+        const isIncreasePlate = currentWeek.plateAvg > lastWeek.plateAvg;
+        const isIncreaseTotal = currentWeek.totalAvg > lastWeek.totalAvg;
+
+        const plateSeries = [];
+        const totalSeries = [];
+
+        for (let i = 12; i >= 1; i--) {
+            const wn = currentWeekNum - i;
+            const { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
+            plateSeries.push(Math.round(plateAvg));
+            totalSeries.push(Math.round(totalAvg));
+        }
+
+        const avg = (arr) =>
+            arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+        return {
+            currentWeek: currentWeekNum,
+            plateWasteCurrentWeek: currentWeek.plateAvg,
+            totalWasteCurrentWeek: currentWeek.totalAvg,
+            isIncreasePlate,
+            isIncreaseTotal,
+            plateWasteWeeklyAvg: avg(plateSeries),
+            totalWasteWeeklyAvg: avg(totalSeries),
+            plateSeries,
+            totalSeries
+        };
+    }
+
+    const previewData = useMemo(() => {
+        return buildPreviewData(allRecords, dayjs().week());
+    }, [allRecords]);
+
+    if (!previewData) return null; // <-- IMPORTANT
+
     const {
-        weekLabel,
-        plateWasteLastWeek,
-        totalWasteLastWeek,
+        plateWasteCurrentWeek,
+        totalWasteCurrentWeek,
         plateWasteWeeklyAvg,
         totalWasteWeeklyAvg,
         plateSeries,
         totalSeries,
-        orientation,
-    } = useLoaderData();
+        isIncreasePlate,
+        isIncreaseTotal
+    } = previewData;
 
     // conditions & styles
-    const isIncreasePlate = plateWasteLastWeek >= plateWasteWeeklyAvg;
     const textColorPlate = isIncreasePlate ? "text-[#8B4513]" : "text-[#24361F]";
     const arrowIconPlate = isIncreasePlate
         ? "/images/arrow-up.svg"
         : "/images/arrow-down.svg";
 
-    const isIncreaseTotal = totalWasteLastWeek >= totalWasteWeeklyAvg;
     const textColorTotal = isIncreaseTotal ? "text-[#8B4513]" : "text-[#24361F]";
     const arrowIconTotal = isIncreaseTotal
         ? "/images/arrow-up.svg"
@@ -149,7 +189,7 @@ export default function FoodWasteBanner() {
                                         className={`w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorPlate}`}
                                     >
                                         <div className="flex gap-2">
-                                            {Math.round(plateWasteLastWeek)}
+                                            {Math.round(plateWasteCurrentWeek)}
                                             <img src={arrowIconPlate} width="20" height="20" />
                                         </div>
                                         <div className="mt-2 text-lg opacity-80">grams</div>
@@ -224,7 +264,7 @@ export default function FoodWasteBanner() {
                                         className={`w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorTotal}`}
                                     >
                                         <div className="flex gap-2">
-                                            {Math.round(totalWasteLastWeek)}
+                                            {Math.round(totalWasteCurrentWeek)}
                                             <img src={arrowIconTotal} width="20" height="20" />
                                         </div>
                                         <div className="mt-2 text-lg opacity-80">grams</div>

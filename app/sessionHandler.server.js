@@ -42,7 +42,6 @@ export async function requireUserSession(request) {
     const user = session.get("user");
 
     if (!user) {
-        // Build redirectTo param dynamically
         const url = new URL(request.url);
         const redirectTo = url.pathname + url.search;
 
@@ -59,12 +58,16 @@ export async function requireAccessToken(request) {
     const session = await getSession(request);
     const token = session.get("token");
 
-    if (!token) throw redirect("/login");
+    if (!token) {
+        throw redirect("/login");
+    }
+
     return token;
 }
 
 export async function getCurrentUser(request) {
     const token = await requireAccessToken(request);
+    const session = await getSession(request);
 
     const response = await fetch(`${API_BASE_URL}/users/me`, {
         headers: {
@@ -72,20 +75,25 @@ export async function getCurrentUser(request) {
         },
     });
 
+    // If API returns 401 or invalid token → clear token & redirect
     if (!response.ok) {
-        throw new Error("Failed to fetch current user.");
+        session.unset("token");
+
+        throw redirect("/login", {
+            headers: {
+                "Set-Cookie": await commitSession(session)
+            }
+        });
     }
 
     const result = await response.json();
+
+    // Save user if you want (optional)
+    session.set("user", result.data);
+
     return {
         user: result.data,
-        token,        // <-- ADD THIS
+        token,
     };
 }
 
-
-// export async function updateCurrentUser(id, payload, token) {
-//     return api.patch(`/users/${id}`, payload, {
-//         headers: { Authorization: `Bearer ${token}` },
-//     });
-// }

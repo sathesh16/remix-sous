@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
 
-export default function useFoodWasteTable() {
+export default function useFoodWasteTable(selectedLocation) {
     const [records, setRecords] = useState([]);
     const [updates, setUpdates] = useState({});
     const [week, setWeek] = useState(dayjs().week());
@@ -20,14 +20,14 @@ export default function useFoodWasteTable() {
         async function load() {
             setLoading(true);
             try {
-                const data = await fetchFoodWaste();
+                const data = await fetchFoodWaste(selectedLocation);
                 setRecords(data);
             } finally {
                 setLoading(false);
             }
         }
-        load();
-    }, []);
+        if (selectedLocation) load();
+    }, [selectedLocation]);
 
     // Filter records by selected week
     const filteredRecords = useMemo(() => {

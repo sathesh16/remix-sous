@@ -61,7 +61,7 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_node = require("@remix-run/node");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-AO35AMGM.css";
+var app_default = "/build/_assets/app-35I3WF2N.css";
 
 // app/styles/style.css
 var style_default = "/build/_assets/style-3FMXWEXM.css";
@@ -177,603 +177,16 @@ function CatchBoundary() {
   }, this);
 }
 
-// app/routes/banner.$weekno.foodwaste.$orientation.jsx
-var banner_weekno_foodwaste_orientation_exports = {};
-__export(banner_weekno_foodwaste_orientation_exports, {
-  default: () => FoodWasteBanner,
-  loader: () => loader
-});
-var import_react4 = require("@remix-run/react"), import_react5 = require("react");
-
-// app/utils/constants.js
-var API_BASE_URL = "http://192.168.1.51:8056";
-
-// app/lib/foodWaste.js
-async function fetchFoodWaste() {
-  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`);
-  if (!response.ok)
-    throw new Error("Failed to fetch food waste data.");
-  let result = await response.json();
-  return result.data || result;
-}
-async function patchFoodWaste(payload) {
-  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-  if (!response.ok)
-    throw new Error("Failed to update food waste.");
-  return response.json();
-}
-async function createFoodWaste(items) {
-  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(items)
-  });
-  if (!response.ok)
-    throw new Error("Failed to create food waste.");
-  return response.json();
-}
-
-// app/routes/banner.$weekno.foodwaste.$orientation.jsx
-var import_clsx = __toESM(require("clsx")), import_node2 = require("@remix-run/node"), import_dayjs = __toESM(require("dayjs"));
-
-// app/components/ApexChart.jsx
-var import_react3 = __toESM(require("react")), import_jsx_dev_runtime3 = require("react/jsx-dev-runtime");
-function ClientApexChart({ data = [], color = "#CBD5E1", width = 180, height = 44 }) {
-  let [chartModule, setChartModule] = (0, import_react3.useState)(null);
-  (0, import_react3.useEffect)(() => {
-    let mounted = !0;
-    return (async () => {
-      try {
-        await import("apexcharts");
-        let mod = await import("react-apexcharts");
-        mounted && setChartModule(mod);
-      } catch (err) {
-        console.error("Failed loading apexcharts modules", err), mounted && setChartModule({ __error: err });
-      }
-    })(), () => {
-      mounted = !1;
-    };
-  }, []);
-  let ResolvedComponent = (0, import_react3.useMemo)(() => {
-    if (!chartModule || chartModule.__error)
-      return null;
-    let extract = (m) => {
-      if (!m || typeof m == "function")
-        return m;
-      if (m.default && typeof m.default == "function")
-        return m.default;
-      if (m.ReactApexChart && typeof m.ReactApexChart == "function")
-        return m.ReactApexChart;
-      if (m.ApexChart && typeof m.ApexChart == "function")
-        return m.ApexChart;
-      if (m.default && typeof m.default == "object")
-        return extract(m.default);
-      if (typeof m == "object") {
-        for (let key of ["reactApexCharts", "ReactApexCharts", "ReactApexChart", "ApexChart", "default"])
-          if (m[key]) {
-            let candidate = extract(m[key]);
-            if (candidate)
-              return candidate;
-          }
-      }
-      return null;
-    };
-    return extract(chartModule);
-  }, [chartModule]);
-  if (!ResolvedComponent)
-    return /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { style: { width, height }, children: "Loading chart\u2026" }, void 0, !1, {
-      fileName: "app/components/ApexChart.jsx",
-      lineNumber: 47,
-      columnNumber: 16
-    }, this);
-  let options = {
-    chart: {
-      type: "line",
-      sparkline: { enabled: !0 },
-      toolbar: { show: !1 },
-      animations: { enabled: !1 }
-    },
-    stroke: { curve: "smooth", width: 2 },
-    colors: [color],
-    tooltip: { enabled: !1 },
-    grid: { show: !1 },
-    xaxis: { labels: { show: !1 }, axisBorder: { show: !1 }, axisTicks: { show: !1 } },
-    yaxis: { show: !1 }
-  }, series = [{ data }];
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { style: { width, height }, children: import_react3.default.createElement(ResolvedComponent, {
-    options,
-    series,
-    type: "line",
-    height,
-    width
-  }) }, void 0, !1, {
-    fileName: "app/components/ApexChart.jsx",
-    lineNumber: 68,
-    columnNumber: 9
-  }, this);
-}
-
-// app/routes/banner.$weekno.foodwaste.$orientation.jsx
-var import_jsx_dev_runtime4 = require("react/jsx-dev-runtime");
-async function loader({ params }) {
-  let { weekno, orientation = "landscape" } = params, allRecords = await fetchFoodWaste(), isWeek = (r, wn) => (0, import_dayjs.default)(r.date).week() === wn;
-  function weeklyPerGuestAverages(weekNum) {
-    let days = allRecords.filter((r) => isWeek(r, weekNum)), plate = [], total = [];
-    days.forEach((d) => {
-      let users = Number(d.number_of_users) || 0;
-      users > 0 && (d.food_waste != null && plate.push(Number(d.food_waste) / users), d.total_waste != null && total.push(Number(d.total_waste) / users));
-    });
-    let avg2 = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-    return { plateAvg: avg2(plate), totalAvg: avg2(total) };
-  }
-  let lastWeek = weeklyPerGuestAverages(Number(weekno)), plateSeries = [], totalSeries = [];
-  for (let i = 12; i >= 1; i--) {
-    let wn = (0, import_dayjs.default)().week(Number(weekno) - i).week(), { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
-    plateSeries.push(Math.round(plateAvg)), totalSeries.push(Math.round(totalAvg));
-  }
-  let avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0, data = {
-    weekLabel: `Week ${weekno}`,
-    plateWasteLastWeek: lastWeek.plateAvg,
-    totalWasteLastWeek: lastWeek.totalAvg,
-    plateWasteWeeklyAvg: avg(plateSeries),
-    totalWasteWeeklyAvg: avg(totalSeries),
-    plateSeries,
-    totalSeries,
-    orientation
-  };
-  return (0, import_node2.json)(data);
-}
-function FoodWasteBanner() {
-  let {
-    weekLabel,
-    plateWasteLastWeek,
-    totalWasteLastWeek,
-    plateWasteWeeklyAvg,
-    totalWasteWeeklyAvg,
-    plateSeries,
-    totalSeries,
-    orientation
-  } = (0, import_react4.useLoaderData)(), isIncreasePlate = plateWasteLastWeek >= plateWasteWeeklyAvg, textColorPlate = isIncreasePlate ? "text-[#8B4513]" : "text-[#24361F]", arrowIconPlate = isIncreasePlate ? "/images/arrow-up.svg" : "/images/arrow-down.svg", isIncreaseTotal = totalWasteLastWeek >= totalWasteWeeklyAvg, textColorTotal = isIncreaseTotal ? "text-[#8B4513]" : "text-[#24361F]", arrowIconTotal = isIncreaseTotal ? "/images/arrow-up.svg" : "/images/arrow-down.svg";
-  return console.log(orientation + "Our orientation"), /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-    "div",
-    {
-      className: (0, import_clsx.default)(
-        "flex items-center justify-center mx-auto regular-text"
-      ),
-      children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-        "div",
-        {
-          className: (0, import_clsx.default)(
-            "bg-[#E6EFE6] py-8 px-12 rounded-md mx-auto flex items-center",
-            orientation === "landscape" ? "food-waste-hr-bg w-[1920px] h-[1080px]" : "food-waste-vr-bg w-[1080px] h-[1920px]"
-          ),
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-              "h1",
-              {
-                className: (0, import_clsx.default)(
-                  "mb-10 font-semibold  bold-text",
-                  orientation === "landscape" ? "text-[#24361F] text-6xl" : "text-black text-5xl"
-                ),
-                children: "Food Waste"
-              },
-              void 0,
-              !1,
-              {
-                fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                lineNumber: 103,
-                columnNumber: 21
-              },
-              this
-            ),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "grid gap-24", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                "section",
-                {
-                  className: (0, import_clsx.default)(
-                    "flex",
-                    orientation === "landscape" ? "gap-24 items-center" : "flex-col items-start gap-12"
-                  ),
-                  children: [
-                    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                      "div",
-                      {
-                        className: (0, import_clsx.default)(
-                          orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black"
-                        ),
-                        children: [
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("h3", { className: "text-xl font-semibold mb-1", children: "Plate Waste" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 129,
-                            columnNumber: 33
-                          }, this),
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { className: "text-xl font-semibold opacity-80 mb-4", children: "pr. Guest / Day" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 130,
-                            columnNumber: 33
-                          }, this),
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { className: "text-xl opacity-80 mb-4", children: "Good food thrown in the trash" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 133,
-                            columnNumber: 33
-                          }, this)
-                        ]
-                      },
-                      void 0,
-                      !0,
-                      {
-                        fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                        lineNumber: 122,
-                        columnNumber: 29
-                      },
-                      this
-                    ),
-                    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "flex items-center gap-24", children: [
-                      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "text-center", children: [
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                          "div",
-                          {
-                            className: (0, import_clsx.default)(
-                              "mb-2 text-lg font-semibold",
-                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
-                            ),
-                            children: "Last Week"
-                          },
-                          void 0,
-                          !1,
-                          {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 140,
-                            columnNumber: 37
-                          },
-                          this
-                        ),
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                          "div",
-                          {
-                            className: `w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorPlate}`,
-                            children: [
-                              /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "flex gap-2", children: [
-                                Math.round(plateWasteLastWeek),
-                                /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("img", { src: arrowIconPlate, width: "20", height: "20" }, void 0, !1, {
-                                  fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                                  lineNumber: 153,
-                                  columnNumber: 45
-                                }, this)
-                              ] }, void 0, !0, {
-                                fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                                lineNumber: 151,
-                                columnNumber: 41
-                              }, this),
-                              /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "mt-2 text-lg opacity-80", children: "grams" }, void 0, !1, {
-                                fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                                lineNumber: 155,
-                                columnNumber: 41
-                              }, this)
-                            ]
-                          },
-                          void 0,
-                          !0,
-                          {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 148,
-                            columnNumber: 37
-                          },
-                          this
-                        )
-                      ] }, void 0, !0, {
-                        fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                        lineNumber: 139,
-                        columnNumber: 33
-                      }, this),
-                      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "text-center", children: [
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                          "div",
-                          {
-                            className: (0, import_clsx.default)(
-                              "mb-2 text-lg font-semibold",
-                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
-                            ),
-                            children: "Weekly Average*"
-                          },
-                          void 0,
-                          !1,
-                          {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 160,
-                            columnNumber: 37
-                          },
-                          this
-                        ),
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white", children: [
-                          Math.round(plateWasteWeeklyAvg),
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "mt-2 text-lg text-white opacity-80", children: "grams" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 170,
-                            columnNumber: 41
-                          }, this)
-                        ] }, void 0, !0, {
-                          fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                          lineNumber: 168,
-                          columnNumber: 37
-                        }, this)
-                      ] }, void 0, !0, {
-                        fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                        lineNumber: 159,
-                        columnNumber: 33
-                      }, this),
-                      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                        "div",
-                        {
-                          className: (0, import_clsx.default)(
-                            "flex flex-col gap-2",
-                            orientation === "landscape" ? "text-[#24361F]" : "text-black"
-                          ),
-                          children: [
-                            /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(ClientApexChart, { data: plateSeries, color: "#CBD5E1" }, void 0, !1, {
-                              fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                              lineNumber: 180,
-                              columnNumber: 37
-                            }, this),
-                            "Weekly Average *",
-                            /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("br", {}, void 0, !1, {
-                              fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                              lineNumber: 182,
-                              columnNumber: 37
-                            }, this),
-                            "(Based on last three months *)"
-                          ]
-                        },
-                        void 0,
-                        !0,
-                        {
-                          fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                          lineNumber: 174,
-                          columnNumber: 33
-                        },
-                        this
-                      )
-                    ] }, void 0, !0, {
-                      fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                      lineNumber: 138,
-                      columnNumber: 29
-                    }, this)
-                  ]
-                },
-                void 0,
-                !0,
-                {
-                  fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                  lineNumber: 114,
-                  columnNumber: 25
-                },
-                this
-              ),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                "section",
-                {
-                  className: (0, import_clsx.default)(
-                    "flex",
-                    orientation === "landscape" ? "gap-24 items-center" : "flex-col items-start gap-12"
-                  ),
-                  children: [
-                    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                      "div",
-                      {
-                        className: (0, import_clsx.default)(
-                          orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black"
-                        ),
-                        children: [
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("h3", { className: "text-xl font-semibold mb-1", children: "Total Waste" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 204,
-                            columnNumber: 33
-                          }, this),
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { className: "text-xl font-semibold opacity-80 mb-4", children: "pr. Guest / Day" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 205,
-                            columnNumber: 33
-                          }, this),
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { className: "text-xl opacity-80 mb-4", children: "Plate Waste + Production Waste + Buffet Waste" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 208,
-                            columnNumber: 33
-                          }, this)
-                        ]
-                      },
-                      void 0,
-                      !0,
-                      {
-                        fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                        lineNumber: 197,
-                        columnNumber: 29
-                      },
-                      this
-                    ),
-                    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "flex items-center gap-24", children: [
-                      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "text-center", children: [
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                          "div",
-                          {
-                            className: (0, import_clsx.default)(
-                              "mb-2 text-lg font-semibold",
-                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
-                            ),
-                            children: "Last Week"
-                          },
-                          void 0,
-                          !1,
-                          {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 215,
-                            columnNumber: 37
-                          },
-                          this
-                        ),
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                          "div",
-                          {
-                            className: `w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorTotal}`,
-                            children: [
-                              /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "flex gap-2", children: [
-                                Math.round(totalWasteLastWeek),
-                                /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("img", { src: arrowIconTotal, width: "20", height: "20" }, void 0, !1, {
-                                  fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                                  lineNumber: 228,
-                                  columnNumber: 45
-                                }, this)
-                              ] }, void 0, !0, {
-                                fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                                lineNumber: 226,
-                                columnNumber: 41
-                              }, this),
-                              /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "mt-2 text-lg opacity-80", children: "grams" }, void 0, !1, {
-                                fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                                lineNumber: 230,
-                                columnNumber: 41
-                              }, this)
-                            ]
-                          },
-                          void 0,
-                          !0,
-                          {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 223,
-                            columnNumber: 37
-                          },
-                          this
-                        )
-                      ] }, void 0, !0, {
-                        fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                        lineNumber: 214,
-                        columnNumber: 33
-                      }, this),
-                      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "text-center", children: [
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                          "div",
-                          {
-                            className: (0, import_clsx.default)(
-                              "mb-2 text-lg font-semibold",
-                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
-                            ),
-                            children: "Weekly Average*"
-                          },
-                          void 0,
-                          !1,
-                          {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 235,
-                            columnNumber: 37
-                          },
-                          this
-                        ),
-                        /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white", children: [
-                          Math.round(totalWasteWeeklyAvg),
-                          /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "mt-2 text-lg text-white opacity-80", children: "grams" }, void 0, !1, {
-                            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                            lineNumber: 245,
-                            columnNumber: 41
-                          }, this)
-                        ] }, void 0, !0, {
-                          fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                          lineNumber: 243,
-                          columnNumber: 37
-                        }, this)
-                      ] }, void 0, !0, {
-                        fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                        lineNumber: 234,
-                        columnNumber: 33
-                      }, this),
-                      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
-                        "div",
-                        {
-                          className: (0, import_clsx.default)(
-                            "flex flex-col gap-2",
-                            orientation === "landscape" ? "text-[#24361F]" : "text-black"
-                          ),
-                          children: [
-                            /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(ClientApexChart, { data: totalSeries, color: "#CBD5E1" }, void 0, !1, {
-                              fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                              lineNumber: 255,
-                              columnNumber: 37
-                            }, this),
-                            "Weekly Average *",
-                            /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("br", {}, void 0, !1, {
-                              fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                              lineNumber: 257,
-                              columnNumber: 37
-                            }, this),
-                            "(Based on last three months *)"
-                          ]
-                        },
-                        void 0,
-                        !0,
-                        {
-                          fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                          lineNumber: 249,
-                          columnNumber: 33
-                        },
-                        this
-                      )
-                    ] }, void 0, !0, {
-                      fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                      lineNumber: 213,
-                      columnNumber: 29
-                    }, this)
-                  ]
-                },
-                void 0,
-                !0,
-                {
-                  fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-                  lineNumber: 189,
-                  columnNumber: 25
-                },
-                this
-              )
-            ] }, void 0, !0, {
-              fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-              lineNumber: 112,
-              columnNumber: 21
-            }, this)
-          ] }, void 0, !0, {
-            fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-            lineNumber: 102,
-            columnNumber: 17
-          }, this)
-        },
-        void 0,
-        !1,
-        {
-          fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-          lineNumber: 94,
-          columnNumber: 13
-        },
-        this
-      )
-    },
-    void 0,
-    !1,
-    {
-      fileName: "app/routes/banner.$weekno.foodwaste.$orientation.jsx",
-      lineNumber: 89,
-      columnNumber: 9
-    },
-    this
-  );
-}
-
 // app/routes/banner.product.$productId.$screen.jsx
 var banner_product_productId_screen_exports = {};
 __export(banner_product_productId_screen_exports, {
   default: () => BannerProductPreviewRoute,
-  loader: () => loader2
+  loader: () => loader
 });
-var import_react6 = require("@remix-run/react"), import_react7 = require("react");
+var import_react3 = require("@remix-run/react"), import_react4 = require("react");
+
+// app/utils/constants.js
+var API_BASE_URL = "http://192.168.1.51:8056";
 
 // app/models/banner.server.js
 async function fetchCategoriesAndProducts() {
@@ -807,8 +220,8 @@ async function getPreviewData(screen) {
 }
 
 // app/routes/banner.product.$productId.$screen.jsx
-var import_jsx_dev_runtime5 = require("react/jsx-dev-runtime");
-async function loader2({ params }) {
+var import_jsx_dev_runtime3 = require("react/jsx-dev-runtime");
+async function loader({ params }) {
   let previewData = await getPreviewData(params.screen), { productId, screen } = params;
   if (productId !== "1")
     throw new Response("Not Found", { status: 404 });
@@ -821,43 +234,43 @@ async function loader2({ params }) {
   };
 }
 function BannerProductPreviewRoute() {
-  let { productId, screen, previewData } = (0, import_react6.useLoaderData)(), hasError = previewData.some((item) => item.error);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+  let { productId, screen, previewData } = (0, import_react3.useLoaderData)(), hasError = previewData.some((item) => item.error);
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(
     "div",
     {
       className: "w-[1080px] h-[1920px] mx-auto bg-[var(--banner-bg-color)] svg-bg p-8 overflow-hidden",
-      children: /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "p-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "menu-wrapper p-6 pt-12 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]", children: hasError ? /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(import_jsx_dev_runtime5.Fragment, {}, void 0, !1, {
+      children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "p-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "menu-wrapper p-6 pt-12 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]", children: hasError ? /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(import_jsx_dev_runtime3.Fragment, {}, void 0, !1, {
         fileName: "app/routes/banner.product.$productId.$screen.jsx",
         lineNumber: 40,
         columnNumber: 34
-      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(import_jsx_dev_runtime5.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("h2", { className: "text-4xl bold-text mb-2", children: "THE BRICK" }, void 0, !1, {
+      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(import_jsx_dev_runtime3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("h2", { className: "text-4xl bold-text mb-2", children: "THE BRICK" }, void 0, !1, {
           fileName: "app/routes/banner.product.$productId.$screen.jsx",
           lineNumber: 43,
           columnNumber: 29
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("h6", { className: "text-2xl regular-text mb-6", children: "Lounge & Bar" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("h6", { className: "text-2xl regular-text mb-6", children: "Lounge & Bar" }, void 0, !1, {
           fileName: "app/routes/banner.product.$productId.$screen.jsx",
           lineNumber: 47,
           columnNumber: 29
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "columns-2 gap-x-10 w-full", children: previewData.map(({ category, products, error, message }) => error ? /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "text-center text-red-400 py-10", children: message }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "columns-2 gap-x-10 w-full", children: previewData.map(({ category, products, error, message }) => error ? /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "text-center text-red-400 py-10", children: message }, void 0, !1, {
           fileName: "app/routes/banner.product.$productId.$screen.jsx",
           lineNumber: 52,
           columnNumber: 41
-        }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "category mb-6 break-inside-avoid", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("h3", { className: "bold-text text-lg pb-1 mb-2", children: category }, void 0, !1, {
+        }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "category mb-6 break-inside-avoid", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("h3", { className: "bold-text text-lg pb-1 mb-2", children: category }, void 0, !1, {
             fileName: "app/routes/banner.product.$productId.$screen.jsx",
             lineNumber: 55,
             columnNumber: 45
           }, this),
-          products.map((prod) => /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "flex justify-between items-center py-1", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("span", { children: prod.name }, void 0, !1, {
+          products.map((prod) => /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "flex justify-between items-center py-1", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("span", { children: prod.name }, void 0, !1, {
               fileName: "app/routes/banner.product.$productId.$screen.jsx",
               lineNumber: 58,
               columnNumber: 53
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("span", { children: prod.price }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("span", { children: prod.price }, void 0, !1, {
               fileName: "app/routes/banner.product.$productId.$screen.jsx",
               lineNumber: 59,
               columnNumber: 53
@@ -901,33 +314,658 @@ function BannerProductPreviewRoute() {
   );
 }
 
+// app/routes/banner.foodwaste.$locationId.jsx
+var banner_foodwaste_locationId_exports = {};
+__export(banner_foodwaste_locationId_exports, {
+  default: () => FoodWasteBanner,
+  loader: () => loader2
+});
+var import_react6 = require("@remix-run/react"), import_react7 = require("react");
+
+// app/lib/foodWaste.js
+async function fetchFoodWaste(locationId) {
+  let url = `${API_BASE_URL}/items/Food_waste_information` + (locationId ? `?filter[location_id][_eq]=${locationId}` : ""), response = await fetch(url);
+  if (!response.ok)
+    throw new Error("Failed to fetch food waste data.");
+  let result = await response.json();
+  return result.data || result;
+}
+async function patchFoodWaste(payload) {
+  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok)
+    throw new Error("Failed to update food waste.");
+  return response.json();
+}
+async function createFoodWaste(items) {
+  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(items)
+  });
+  if (!response.ok)
+    throw new Error("Failed to create food waste.");
+  return response.json();
+}
+
+// app/routes/banner.foodwaste.$locationId.jsx
+var import_clsx = __toESM(require("clsx")), import_node2 = require("@remix-run/node");
+
+// app/components/ApexChart.jsx
+var import_react5 = __toESM(require("react")), import_jsx_dev_runtime4 = require("react/jsx-dev-runtime");
+function ClientApexChart({ data = [], color = "#CBD5E1", width = 180, height = 44 }) {
+  let [chartModule, setChartModule] = (0, import_react5.useState)(null);
+  (0, import_react5.useEffect)(() => {
+    let mounted = !0;
+    return (async () => {
+      try {
+        await import("apexcharts");
+        let mod = await import("react-apexcharts");
+        mounted && setChartModule(mod);
+      } catch (err) {
+        console.error("Failed loading apexcharts modules", err), mounted && setChartModule({ __error: err });
+      }
+    })(), () => {
+      mounted = !1;
+    };
+  }, []);
+  let ResolvedComponent = (0, import_react5.useMemo)(() => {
+    if (!chartModule || chartModule.__error)
+      return null;
+    let extract = (m) => {
+      if (!m || typeof m == "function")
+        return m;
+      if (m.default && typeof m.default == "function")
+        return m.default;
+      if (m.ReactApexChart && typeof m.ReactApexChart == "function")
+        return m.ReactApexChart;
+      if (m.ApexChart && typeof m.ApexChart == "function")
+        return m.ApexChart;
+      if (m.default && typeof m.default == "object")
+        return extract(m.default);
+      if (typeof m == "object") {
+        for (let key of ["reactApexCharts", "ReactApexCharts", "ReactApexChart", "ApexChart", "default"])
+          if (m[key]) {
+            let candidate = extract(m[key]);
+            if (candidate)
+              return candidate;
+          }
+      }
+      return null;
+    };
+    return extract(chartModule);
+  }, [chartModule]);
+  if (!ResolvedComponent)
+    return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { style: { width, height }, children: "Loading chart\u2026" }, void 0, !1, {
+      fileName: "app/components/ApexChart.jsx",
+      lineNumber: 47,
+      columnNumber: 16
+    }, this);
+  let options = {
+    chart: {
+      type: "line",
+      sparkline: { enabled: !0 },
+      toolbar: { show: !1 },
+      animations: { enabled: !1 }
+    },
+    stroke: { curve: "smooth", width: 2 },
+    colors: [color],
+    tooltip: { enabled: !1 },
+    grid: { show: !1 },
+    xaxis: { labels: { show: !1 }, axisBorder: { show: !1 }, axisTicks: { show: !1 } },
+    yaxis: { show: !1 }
+  }, series = [{ data }];
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { style: { width, height }, children: import_react5.default.createElement(ResolvedComponent, {
+    options,
+    series,
+    type: "line",
+    height,
+    width
+  }) }, void 0, !1, {
+    fileName: "app/components/ApexChart.jsx",
+    lineNumber: 68,
+    columnNumber: 9
+  }, this);
+}
+
+// app/lib/locations.js
+async function fetchLocations() {
+  let response = await fetch(`${API_BASE_URL}/items/Locations/`);
+  if (!response.ok)
+    throw new Error("Failed to fetch locations.");
+  let result = await response.json();
+  return result.data || result;
+}
+async function updateLocationIsVertical(id, isVertical) {
+  let payload = {
+    is_vertical_foodwaste: isVertical
+  }, response = await fetch(`${API_BASE_URL}/items/Locations/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok)
+    throw new Error("Failed to update location.");
+  return response.json();
+}
+
+// app/routes/banner.foodwaste.$locationId.jsx
+var import_dayjs = __toESM(require("dayjs")), import_weekday = __toESM(require("dayjs/plugin/weekday")), import_weekOfYear = __toESM(require("dayjs/plugin/weekOfYear")), import_jsx_dev_runtime5 = require("react/jsx-dev-runtime");
+import_dayjs.default.extend(import_weekday.default);
+import_dayjs.default.extend(import_weekOfYear.default);
+async function loader2({ params }) {
+  let { locationId } = params, location = (await fetchLocations()).find((l) => Number(l.id) === Number(locationId));
+  if (!location)
+    throw new Response("Location not found", { status: 404 });
+  let allRecords = await fetchFoodWaste(locationId);
+  return (0, import_node2.json)({
+    allRecords,
+    orientation: location.is_vertical_foodwaste ? "portrait" : "landscape"
+  });
+}
+function FoodWasteBanner() {
+  let { allRecords, orientation } = (0, import_react6.useLoaderData)();
+  function buildPreviewData2(allRecords2, week) {
+    let currentWeekNum = Number(week), lastWeekNum = currentWeekNum - 1, isWeek = (r, wn) => (0, import_dayjs.default)(r.date).week() === wn;
+    function weeklyPerGuestAverages(weekNum) {
+      let days = allRecords2.filter((r) => isWeek(r, weekNum)), plate = [], total = [];
+      days.forEach((d) => {
+        let users = Number(d.number_of_users) || 0;
+        users > 0 && (d.food_waste != null && plate.push(Number(d.food_waste) / users), d.total_waste != null && total.push(Number(d.total_waste) / users));
+      });
+      let avg2 = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+      return { plateAvg: avg2(plate), totalAvg: avg2(total) };
+    }
+    let currentWeek = weeklyPerGuestAverages(currentWeekNum), lastWeek = weeklyPerGuestAverages(lastWeekNum), isIncreasePlate2 = currentWeek.plateAvg > lastWeek.plateAvg, isIncreaseTotal2 = currentWeek.totalAvg > lastWeek.totalAvg, plateSeries2 = [], totalSeries2 = [];
+    for (let i = 12; i >= 1; i--) {
+      let wn = currentWeekNum - i, { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
+      plateSeries2.push(Math.round(plateAvg)), totalSeries2.push(Math.round(totalAvg));
+    }
+    let avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+    return {
+      currentWeek: currentWeekNum,
+      plateWasteCurrentWeek: currentWeek.plateAvg,
+      totalWasteCurrentWeek: currentWeek.totalAvg,
+      isIncreasePlate: isIncreasePlate2,
+      isIncreaseTotal: isIncreaseTotal2,
+      plateWasteWeeklyAvg: avg(plateSeries2),
+      totalWasteWeeklyAvg: avg(totalSeries2),
+      plateSeries: plateSeries2,
+      totalSeries: totalSeries2
+    };
+  }
+  let previewData = (0, import_react7.useMemo)(() => buildPreviewData2(allRecords, (0, import_dayjs.default)().week()), [allRecords]);
+  if (!previewData)
+    return null;
+  let {
+    plateWasteCurrentWeek,
+    totalWasteCurrentWeek,
+    plateWasteWeeklyAvg,
+    totalWasteWeeklyAvg,
+    plateSeries,
+    totalSeries,
+    isIncreasePlate,
+    isIncreaseTotal
+  } = previewData, textColorPlate = isIncreasePlate ? "text-[#8B4513]" : "text-[#24361F]", arrowIconPlate = isIncreasePlate ? "/images/arrow-up.svg" : "/images/arrow-down.svg", textColorTotal = isIncreaseTotal ? "text-[#8B4513]" : "text-[#24361F]", arrowIconTotal = isIncreaseTotal ? "/images/arrow-up.svg" : "/images/arrow-down.svg";
+  return console.log(orientation + "Our orientation"), /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+    "div",
+    {
+      className: (0, import_clsx.default)(
+        "flex items-center justify-center mx-auto regular-text"
+      ),
+      children: /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+        "div",
+        {
+          className: (0, import_clsx.default)(
+            "bg-[#E6EFE6] py-8 px-12 rounded-md mx-auto flex items-center",
+            orientation === "landscape" ? "food-waste-hr-bg w-[1920px] h-[1080px]" : "food-waste-vr-bg w-[1080px] h-[1920px]"
+          ),
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+              "h1",
+              {
+                className: (0, import_clsx.default)(
+                  "mb-10 font-semibold  bold-text",
+                  orientation === "landscape" ? "text-[#24361F] text-6xl" : "text-black text-5xl"
+                ),
+                children: "Food Waste"
+              },
+              void 0,
+              !1,
+              {
+                fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                lineNumber: 143,
+                columnNumber: 21
+              },
+              this
+            ),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "grid gap-24", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                "section",
+                {
+                  className: (0, import_clsx.default)(
+                    "flex",
+                    orientation === "landscape" ? "gap-24 items-center" : "flex-col items-start gap-12"
+                  ),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                      "div",
+                      {
+                        className: (0, import_clsx.default)(
+                          orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black"
+                        ),
+                        children: [
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("h3", { className: "text-xl font-semibold mb-1", children: "Plate Waste" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 169,
+                            columnNumber: 33
+                          }, this),
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("p", { className: "text-xl font-semibold opacity-80 mb-4", children: "pr. Guest / Day" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 170,
+                            columnNumber: 33
+                          }, this),
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("p", { className: "text-xl opacity-80 mb-4", children: "Good food thrown in the trash" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 173,
+                            columnNumber: 33
+                          }, this)
+                        ]
+                      },
+                      void 0,
+                      !0,
+                      {
+                        fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                        lineNumber: 162,
+                        columnNumber: 29
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "flex items-center gap-24", children: [
+                      /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "text-center", children: [
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                          "div",
+                          {
+                            className: (0, import_clsx.default)(
+                              "mb-2 text-lg font-semibold",
+                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
+                            ),
+                            children: "Last Week"
+                          },
+                          void 0,
+                          !1,
+                          {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 180,
+                            columnNumber: 37
+                          },
+                          this
+                        ),
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                          "div",
+                          {
+                            className: `w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorPlate}`,
+                            children: [
+                              /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "flex gap-2", children: [
+                                Math.round(plateWasteCurrentWeek),
+                                /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("img", { src: arrowIconPlate, width: "20", height: "20" }, void 0, !1, {
+                                  fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                                  lineNumber: 193,
+                                  columnNumber: 45
+                                }, this)
+                              ] }, void 0, !0, {
+                                fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                                lineNumber: 191,
+                                columnNumber: 41
+                              }, this),
+                              /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "mt-2 text-lg opacity-80", children: "grams" }, void 0, !1, {
+                                fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                                lineNumber: 195,
+                                columnNumber: 41
+                              }, this)
+                            ]
+                          },
+                          void 0,
+                          !0,
+                          {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 188,
+                            columnNumber: 37
+                          },
+                          this
+                        )
+                      ] }, void 0, !0, {
+                        fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                        lineNumber: 179,
+                        columnNumber: 33
+                      }, this),
+                      /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "text-center", children: [
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                          "div",
+                          {
+                            className: (0, import_clsx.default)(
+                              "mb-2 text-lg font-semibold",
+                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
+                            ),
+                            children: "Weekly Average*"
+                          },
+                          void 0,
+                          !1,
+                          {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 200,
+                            columnNumber: 37
+                          },
+                          this
+                        ),
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white", children: [
+                          Math.round(plateWasteWeeklyAvg),
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "mt-2 text-lg text-white opacity-80", children: "grams" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 210,
+                            columnNumber: 41
+                          }, this)
+                        ] }, void 0, !0, {
+                          fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                          lineNumber: 208,
+                          columnNumber: 37
+                        }, this)
+                      ] }, void 0, !0, {
+                        fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                        lineNumber: 199,
+                        columnNumber: 33
+                      }, this),
+                      /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                        "div",
+                        {
+                          className: (0, import_clsx.default)(
+                            "flex flex-col gap-2",
+                            orientation === "landscape" ? "text-[#24361F]" : "text-black"
+                          ),
+                          children: [
+                            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(ClientApexChart, { data: plateSeries, color: "#CBD5E1" }, void 0, !1, {
+                              fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                              lineNumber: 220,
+                              columnNumber: 37
+                            }, this),
+                            "Weekly Average *",
+                            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("br", {}, void 0, !1, {
+                              fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                              lineNumber: 222,
+                              columnNumber: 37
+                            }, this),
+                            "(Based on last three months *)"
+                          ]
+                        },
+                        void 0,
+                        !0,
+                        {
+                          fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                          lineNumber: 214,
+                          columnNumber: 33
+                        },
+                        this
+                      )
+                    ] }, void 0, !0, {
+                      fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                      lineNumber: 178,
+                      columnNumber: 29
+                    }, this)
+                  ]
+                },
+                void 0,
+                !0,
+                {
+                  fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                  lineNumber: 154,
+                  columnNumber: 25
+                },
+                this
+              ),
+              /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                "section",
+                {
+                  className: (0, import_clsx.default)(
+                    "flex",
+                    orientation === "landscape" ? "gap-24 items-center" : "flex-col items-start gap-12"
+                  ),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                      "div",
+                      {
+                        className: (0, import_clsx.default)(
+                          orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black"
+                        ),
+                        children: [
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("h3", { className: "text-xl font-semibold mb-1", children: "Total Waste" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 244,
+                            columnNumber: 33
+                          }, this),
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("p", { className: "text-xl font-semibold opacity-80 mb-4", children: "pr. Guest / Day" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 245,
+                            columnNumber: 33
+                          }, this),
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("p", { className: "text-xl opacity-80 mb-4", children: "Plate Waste + Production Waste + Buffet Waste" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 248,
+                            columnNumber: 33
+                          }, this)
+                        ]
+                      },
+                      void 0,
+                      !0,
+                      {
+                        fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                        lineNumber: 237,
+                        columnNumber: 29
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "flex items-center gap-24", children: [
+                      /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "text-center", children: [
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                          "div",
+                          {
+                            className: (0, import_clsx.default)(
+                              "mb-2 text-lg font-semibold",
+                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
+                            ),
+                            children: "Last Week"
+                          },
+                          void 0,
+                          !1,
+                          {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 255,
+                            columnNumber: 37
+                          },
+                          this
+                        ),
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                          "div",
+                          {
+                            className: `w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorTotal}`,
+                            children: [
+                              /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "flex gap-2", children: [
+                                Math.round(totalWasteCurrentWeek),
+                                /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("img", { src: arrowIconTotal, width: "20", height: "20" }, void 0, !1, {
+                                  fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                                  lineNumber: 268,
+                                  columnNumber: 45
+                                }, this)
+                              ] }, void 0, !0, {
+                                fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                                lineNumber: 266,
+                                columnNumber: 41
+                              }, this),
+                              /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "mt-2 text-lg opacity-80", children: "grams" }, void 0, !1, {
+                                fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                                lineNumber: 270,
+                                columnNumber: 41
+                              }, this)
+                            ]
+                          },
+                          void 0,
+                          !0,
+                          {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 263,
+                            columnNumber: 37
+                          },
+                          this
+                        )
+                      ] }, void 0, !0, {
+                        fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                        lineNumber: 254,
+                        columnNumber: 33
+                      }, this),
+                      /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "text-center", children: [
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                          "div",
+                          {
+                            className: (0, import_clsx.default)(
+                              "mb-2 text-lg font-semibold",
+                              orientation === "landscape" ? "text-[#24361F]" : "text-black"
+                            ),
+                            children: "Weekly Average*"
+                          },
+                          void 0,
+                          !1,
+                          {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 275,
+                            columnNumber: 37
+                          },
+                          this
+                        ),
+                        /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white", children: [
+                          Math.round(totalWasteWeeklyAvg),
+                          /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("div", { className: "mt-2 text-lg text-white opacity-80", children: "grams" }, void 0, !1, {
+                            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                            lineNumber: 285,
+                            columnNumber: 41
+                          }, this)
+                        ] }, void 0, !0, {
+                          fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                          lineNumber: 283,
+                          columnNumber: 37
+                        }, this)
+                      ] }, void 0, !0, {
+                        fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                        lineNumber: 274,
+                        columnNumber: 33
+                      }, this),
+                      /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+                        "div",
+                        {
+                          className: (0, import_clsx.default)(
+                            "flex flex-col gap-2",
+                            orientation === "landscape" ? "text-[#24361F]" : "text-black"
+                          ),
+                          children: [
+                            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(ClientApexChart, { data: totalSeries, color: "#CBD5E1" }, void 0, !1, {
+                              fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                              lineNumber: 295,
+                              columnNumber: 37
+                            }, this),
+                            "Weekly Average *",
+                            /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("br", {}, void 0, !1, {
+                              fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                              lineNumber: 297,
+                              columnNumber: 37
+                            }, this),
+                            "(Based on last three months *)"
+                          ]
+                        },
+                        void 0,
+                        !0,
+                        {
+                          fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                          lineNumber: 289,
+                          columnNumber: 33
+                        },
+                        this
+                      )
+                    ] }, void 0, !0, {
+                      fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                      lineNumber: 253,
+                      columnNumber: 29
+                    }, this)
+                  ]
+                },
+                void 0,
+                !0,
+                {
+                  fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+                  lineNumber: 229,
+                  columnNumber: 25
+                },
+                this
+              )
+            ] }, void 0, !0, {
+              fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+              lineNumber: 152,
+              columnNumber: 21
+            }, this)
+          ] }, void 0, !0, {
+            fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+            lineNumber: 142,
+            columnNumber: 17
+          }, this)
+        },
+        void 0,
+        !1,
+        {
+          fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+          lineNumber: 134,
+          columnNumber: 13
+        },
+        this
+      )
+    },
+    void 0,
+    !1,
+    {
+      fileName: "app/routes/banner.foodwaste.$locationId.jsx",
+      lineNumber: 129,
+      columnNumber: 9
+    },
+    this
+  );
+}
+
 // app/routes/admin/kitchen.foodwaste.jsx
 var kitchen_foodwaste_exports = {};
 __export(kitchen_foodwaste_exports, {
   default: () => kitchen_foodwaste_default,
   links: () => links2
 });
-var import_react14 = require("react");
+var import_react20 = require("react");
 
 // app/hooks/useFoodWasteTable.js
 var import_dayjs2 = __toESM(require("dayjs"));
-var import_weekday = __toESM(require("dayjs/plugin/weekday")), import_weekOfYear = __toESM(require("dayjs/plugin/weekOfYear")), import_react8 = require("react");
-import_dayjs2.default.extend(import_weekday.default);
-import_dayjs2.default.extend(import_weekOfYear.default);
-function useFoodWasteTable() {
+var import_weekday2 = __toESM(require("dayjs/plugin/weekday")), import_weekOfYear2 = __toESM(require("dayjs/plugin/weekOfYear")), import_react8 = require("react");
+import_dayjs2.default.extend(import_weekday2.default);
+import_dayjs2.default.extend(import_weekOfYear2.default);
+function useFoodWasteTable(selectedLocation) {
   let [records, setRecords] = (0, import_react8.useState)([]), [updates, setUpdates] = (0, import_react8.useState)({}), [week, setWeek] = (0, import_react8.useState)((0, import_dayjs2.default)().week()), [loading, setLoading] = (0, import_react8.useState)(!1), [isSaving, setIsSaving] = (0, import_react8.useState)(!1), [toast, setToast] = (0, import_react8.useState)(null);
   (0, import_react8.useEffect)(() => {
     async function load() {
       setLoading(!0);
       try {
-        let data = await fetchFoodWaste();
+        let data = await fetchFoodWaste(selectedLocation);
         setRecords(data);
       } finally {
         setLoading(!1);
       }
     }
-    load();
-  }, []);
+    selectedLocation && load();
+  }, [selectedLocation]);
   let filteredRecords = (0, import_react8.useMemo)(() => records.filter((r) => (0, import_dayjs2.default)(r.date).week() === Number(week)), [records, week]), showToast = (0, import_react8.useCallback)((message, type = "success") => {
     setToast({ message, type });
   }, []), dismissToast = (0, import_react8.useCallback)(() => setToast(null), []), handleUpdate = (0, import_react8.useCallback)((id, updatedFields) => {
@@ -1031,7 +1069,7 @@ function Button({
 }
 
 // app/routes/admin/kitchen.foodwaste.jsx
-var import_dayjs3 = __toESM(require("dayjs")), import_weekday2 = __toESM(require("dayjs/plugin/weekday")), import_weekOfYear2 = __toESM(require("dayjs/plugin/weekOfYear"));
+var import_dayjs3 = __toESM(require("dayjs")), import_weekday3 = __toESM(require("dayjs/plugin/weekday")), import_weekOfYear3 = __toESM(require("dayjs/plugin/weekOfYear"));
 
 // app/components/FoodWastePreview.jsx
 var import_react12 = require("react");
@@ -1118,16 +1156,19 @@ function FoodWastePreview({
   plateSeries = [],
   totalSeries = [],
   isIncreasePlate,
-  isIncreaseTotal
+  isIncreaseTotal,
+  selectedLocation
 }) {
   let textColorPlate = isIncreasePlate ? "text-[#8B4513]" : "text-[#24361F]", arrowIconPlate = isIncreasePlate ? "/images/arrow-up.svg" : "/images/arrow-down.svg", textColorAvg = isIncreaseTotal ? "text-[#8B4513]" : "text-[#24361F]", arrowIconAvg = isIncreaseTotal ? "/images/arrow-up.svg" : "/images/arrow-down.svg", clipboard = useClipboard_default({ resetDelay: 2e3 }), linkToCopy = (0, import_react12.useMemo)(() => {
+    if (!selectedLocation)
+      return "";
     let { origin } = window.location;
-    return url_default(`/banner/${currentWeek}/foodwaste/${orientation}`, origin);
-  }, [orientation]), label = clipboard.status === "success" ? "Copied!" : clipboard.status === "error" ? "Failed to copy" : "Copy Link", handleCopy = () => clipboard.copy(linkToCopy);
+    return url_default(`/banner/foodwaste/${selectedLocation}`, origin);
+  }, [selectedLocation]), label = clipboard.status === "success" ? "Copied!" : clipboard.status === "error" ? "Failed to copy" : "Copy Link", handleCopy = () => clipboard.copy(linkToCopy);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("bg-[#E6EFE6] py-8 px-12 rounded-md", orientation === "landscape" ? "food-waste-hr-bg" : "food-waste-vr-bg"), children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("h1", { className: (0, import_clsx2.default)("mb-10 font-semibold text-3xl", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: "Food Waste" }, void 0, !1, {
       fileName: "app/components/FoodWastePreview.jsx",
-      lineNumber: 55,
+      lineNumber: 57,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "grid gap-8", children: [
@@ -1135,29 +1176,29 @@ function FoodWastePreview({
         /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)(orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black"), children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("h3", { className: "text-xl font-semibold mb-1", children: "Plate Waste" }, void 0, !1, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 59,
+            lineNumber: 61,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("p", { className: "text-sm font-semibold opacity-80 mb-4", children: "pr. Guest / Day" }, void 0, !1, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 62,
+            lineNumber: 64,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("p", { className: "text-sm opacity-80 mb-4", children: "Good food thrown in the trash" }, void 0, !1, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 65,
+            lineNumber: 67,
             columnNumber: 25
           }, this)
         ] }, void 0, !0, {
           fileName: "app/components/FoodWastePreview.jsx",
-          lineNumber: 58,
+          lineNumber: 60,
           columnNumber: 21
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "flex items-center gap-12", children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "text-center", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: "Last Week" }, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 72,
+              lineNumber: 74,
               columnNumber: 29
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: `w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorPlate}`, children: [
@@ -1165,107 +1206,107 @@ function FoodWastePreview({
                 Math.round(plateWasteCurrentWeek),
                 /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("img", { src: arrowIconPlate, width: "20px", height: "20px" }, void 0, !1, {
                   fileName: "app/components/FoodWastePreview.jsx",
-                  lineNumber: 78,
+                  lineNumber: 80,
                   columnNumber: 37
                 }, this)
               ] }, void 0, !0, {
                 fileName: "app/components/FoodWastePreview.jsx",
-                lineNumber: 76,
+                lineNumber: 78,
                 columnNumber: 33
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "mt-2 text-xs opacity-80", children: "grams" }, void 0, !1, {
                 fileName: "app/components/FoodWastePreview.jsx",
-                lineNumber: 81,
+                lineNumber: 83,
                 columnNumber: 33
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 75,
+              lineNumber: 77,
               columnNumber: 29
             }, this)
           ] }, void 0, !0, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 71,
+            lineNumber: 73,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "text-center", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: "Weekly Average*" }, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 85,
+              lineNumber: 87,
               columnNumber: 29
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white", children: [
               Math.round(plateWasteWeeklyAvg),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "mt-2 text-xs text-white opacity-80", children: "grams" }, void 0, !1, {
                 fileName: "app/components/FoodWastePreview.jsx",
-                lineNumber: 92,
+                lineNumber: 94,
                 columnNumber: 33
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 88,
+              lineNumber: 90,
               columnNumber: 29
             }, this)
           ] }, void 0, !0, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 84,
+            lineNumber: 86,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("flex flex-col gap-2", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(ClientApexChart, { data: plateSeries, color: "#CBD5E1" }, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 98,
+              lineNumber: 100,
               columnNumber: 29
             }, this),
             "Weekly Average *",
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("br", {}, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 100,
+              lineNumber: 102,
               columnNumber: 29
             }, this),
             "(Based on last three months *)"
           ] }, void 0, !0, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 96,
+            lineNumber: 98,
             columnNumber: 25
           }, this)
         ] }, void 0, !0, {
           fileName: "app/components/FoodWastePreview.jsx",
-          lineNumber: 70,
+          lineNumber: 72,
           columnNumber: 21
         }, this)
       ] }, void 0, !0, {
         fileName: "app/components/FoodWastePreview.jsx",
-        lineNumber: 57,
+        lineNumber: 59,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("section", { className: (0, import_clsx2.default)("flex", orientation === "landscape" ? "gap-12 items-center" : "flex-col items-start gap-4"), children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)(orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black"), children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("h3", { className: "text-xl font-semibold mb-1", children: "Total Waste" }, void 0, !1, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 110,
+            lineNumber: 112,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("p", { className: "text-sm  font-semibold opacity-80 mb-4", children: "pr. Guest / Day" }, void 0, !1, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 113,
+            lineNumber: 115,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("p", { className: "text-sm opacity-80 mb-4", children: "Plate Waste + Production Waste + Buffet waste" }, void 0, !1, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 116,
+            lineNumber: 118,
             columnNumber: 25
           }, this)
         ] }, void 0, !0, {
           fileName: "app/components/FoodWastePreview.jsx",
-          lineNumber: 109,
+          lineNumber: 111,
           columnNumber: 21
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "flex items-center gap-12", children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "text-center", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: "Last Week" }, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 123,
+              lineNumber: 125,
               columnNumber: 29
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: `w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorAvg}`, children: [
@@ -1273,83 +1314,83 @@ function FoodWastePreview({
                 Math.round(totalWasteCurrentWeek),
                 /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("img", { src: arrowIconAvg, width: "20px", height: "20px" }, void 0, !1, {
                   fileName: "app/components/FoodWastePreview.jsx",
-                  lineNumber: 129,
+                  lineNumber: 131,
                   columnNumber: 37
                 }, this)
               ] }, void 0, !0, {
                 fileName: "app/components/FoodWastePreview.jsx",
-                lineNumber: 127,
+                lineNumber: 129,
                 columnNumber: 33
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "mt-2 text-xs opacity-80", children: "grams" }, void 0, !1, {
                 fileName: "app/components/FoodWastePreview.jsx",
-                lineNumber: 131,
+                lineNumber: 133,
                 columnNumber: 33
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 126,
+              lineNumber: 128,
               columnNumber: 29
             }, this)
           ] }, void 0, !0, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 122,
+            lineNumber: 124,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "text-center", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: "Weekly Average*" }, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 135,
+              lineNumber: 137,
               columnNumber: 29
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white", children: [
               Math.round(totalWasteWeeklyAvg),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "mt-2 text-xs text-white opacity-80", children: "grams" }, void 0, !1, {
                 fileName: "app/components/FoodWastePreview.jsx",
-                lineNumber: 140,
+                lineNumber: 142,
                 columnNumber: 33
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 138,
+              lineNumber: 140,
               columnNumber: 29
             }, this)
           ] }, void 0, !0, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 134,
+            lineNumber: 136,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: (0, import_clsx2.default)("flex flex-col gap-2 ", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(ClientApexChart, { data: totalSeries, color: "#CBD5E1" }, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 146,
+              lineNumber: 148,
               columnNumber: 29
             }, this),
             "Weekly Average *",
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("br", {}, void 0, !1, {
               fileName: "app/components/FoodWastePreview.jsx",
-              lineNumber: 148,
+              lineNumber: 150,
               columnNumber: 29
             }, this),
             "(Based on last three months *)"
           ] }, void 0, !0, {
             fileName: "app/components/FoodWastePreview.jsx",
-            lineNumber: 144,
+            lineNumber: 146,
             columnNumber: 25
           }, this)
         ] }, void 0, !0, {
           fileName: "app/components/FoodWastePreview.jsx",
-          lineNumber: 121,
+          lineNumber: 123,
           columnNumber: 21
         }, this)
       ] }, void 0, !0, {
         fileName: "app/components/FoodWastePreview.jsx",
-        lineNumber: 108,
+        lineNumber: 110,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/components/FoodWastePreview.jsx",
-      lineNumber: 56,
+      lineNumber: 58,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("div", { className: "flex justify-center mt-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -1368,24 +1409,24 @@ function FoodWastePreview({
       !1,
       {
         fileName: "app/components/FoodWastePreview.jsx",
-        lineNumber: 157,
+        lineNumber: 159,
         columnNumber: 17
       },
       this
     ) }, void 0, !1, {
       fileName: "app/components/FoodWastePreview.jsx",
-      lineNumber: 156,
+      lineNumber: 158,
       columnNumber: 13
     }, this)
   ] }, void 0, !0, {
     fileName: "app/components/FoodWastePreview.jsx",
-    lineNumber: 54,
+    lineNumber: 56,
     columnNumber: 9
   }, this);
 }
 
 // app/routes/admin/kitchen.foodwaste.jsx
-var import_lucide_react3 = require("lucide-react");
+var import_lucide_react5 = require("lucide-react");
 
 // app/components/OrientationToggle.jsx
 var import_react13 = require("react"), import_lucide_react2 = require("lucide-react"), import_jsx_dev_runtime10 = require("react/jsx-dev-runtime");
@@ -1441,324 +1482,58 @@ function OrientationToggle({ onChange }) {
   }, this);
 }
 
-// app/routes/admin/kitchen.foodwaste.jsx
-var import_jsx_dev_runtime11 = require("react/jsx-dev-runtime");
-import_dayjs3.default.extend(import_weekday2.default);
-import_dayjs3.default.extend(import_weekOfYear2.default);
-var WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], NUMERIC_FIELD_KEYS = ["number_of_users", "food_waste", "total_waste"];
-function links2() {
-  return [
-    { rel: "stylesheet", href: "https://unpkg.com/react-spreadsheet@0.9.7/dist/react-spreadsheet.css" }
-  ];
-}
-function coerceDisplayValue(value) {
-  return value ?? "";
-}
-function FoodWaste() {
-  let {
-    week,
-    setWeek,
-    allRecords,
-    filteredRecords,
-    handleUpdate,
-    getPendingValue,
-    saveUpdates,
-    loading,
-    isSaving,
-    hasPendingUpdates,
-    toast,
-    dismissToast
-  } = useFoodWasteTable(), [isClient, setIsClient] = (0, import_react14.useState)(!1), [Spreadsheet, setSpreadsheet] = (0, import_react14.useState)(null), [sheetData, setSheetData] = (0, import_react14.useState)([]), [showPreview, setShowPreview] = (0, import_react14.useState)(!1), [previewData, setPreviewData] = (0, import_react14.useState)(null), [orientation, setOrientation] = (0, import_react14.useState)("landscape");
-  (0, import_react14.useEffect)(() => {
-    setIsClient(!0);
-  }, []), (0, import_react14.useEffect)(() => {
-    let mounted = !0;
-    return import("react-spreadsheet").then((mod) => {
-      !mounted || setSpreadsheet(() => mod.default || null);
-    }).catch(() => {
-    }), () => {
-      mounted = !1;
-    };
-  }, []);
-  let { start, end } = getWeekDateRange(week), recordsByDate = (0, import_react14.useMemo)(() => {
-    let map = /* @__PURE__ */ new Map();
-    return filteredRecords.forEach((item) => {
-      let iso = (0, import_dayjs3.default)(item.date).format("YYYY-MM-DD");
-      map.set(iso, item);
-    }), map;
-  }, [filteredRecords]), mondayOfWeek = (0, import_react14.useMemo)(() => (0, import_dayjs3.default)().week(Number(week)).weekday(1), [week]), rowModels = (0, import_react14.useMemo)(() => WEEKDAYS.map((_, idx) => {
-    let dateIso = mondayOfWeek.add(idx, "day").format("YYYY-MM-DD"), record = recordsByDate.get(dateIso), key = (record == null ? void 0 : record.id) ?? dateIso;
-    return {
-      key,
-      date: dateIso,
-      number_of_users: coerceDisplayValue(getPendingValue(key, "number_of_users", (record == null ? void 0 : record.number_of_users) ?? "")),
-      food_waste: coerceDisplayValue(getPendingValue(key, "food_waste", (record == null ? void 0 : record.food_waste) ?? "")),
-      total_waste: coerceDisplayValue(getPendingValue(key, "total_waste", (record == null ? void 0 : record.total_waste) ?? ""))
-    };
-  }), [week, mondayOfWeek, recordsByDate, getPendingValue]);
-  (0, import_react14.useEffect)(() => {
-    let next = rowModels.map((r) => [
-      { value: r.number_of_users },
-      { value: r.food_waste },
-      { value: r.total_waste }
-    ]);
-    setSheetData(next);
-  }, [rowModels]);
-  let columnLabels = (0, import_react14.useMemo)(() => ["No of Users this Day", "Plate Waste", "Total Waste"], []), rowLabels = (0, import_react14.useMemo)(() => WEEKDAYS.map((d, idx) => `${d} ${mondayOfWeek.add(idx, "day").format("DD/MM/YYYY")}`), [mondayOfWeek]), handleSheetChange = (0, import_react14.useCallback)((newData) => {
-    var _a, _b;
-    let maxRows = Math.min(newData.length, rowModels.length);
-    for (let r = 0; r < maxRows; r++) {
-      let prevRow = sheetData[r] || [], nextRow = newData[r] || [], model = rowModels[r];
-      for (let c = 0; c < NUMERIC_FIELD_KEYS.length; c++) {
-        let prevVal = ((_a = prevRow[c]) == null ? void 0 : _a.value) ?? "", nextVal = ((_b = nextRow[c]) == null ? void 0 : _b.value) ?? "";
-        if (prevVal !== nextVal) {
-          let field = NUMERIC_FIELD_KEYS[c], parsed = Number(nextVal), normalized = nextVal === "" || nextVal === null || nextVal === void 0 || Number.isNaN(parsed) ? null : parsed;
-          handleUpdate(model.key, { date: model.date, [field]: normalized });
-        }
-      }
-    }
-    setSheetData(newData);
-  }, [sheetData, rowModels, handleUpdate]), buildPreviewData2 = (0, import_react14.useCallback)(() => {
-    let currentWeekNum = Number(week), lastWeekNum = currentWeekNum - 1, isWeek = (r, wn) => (0, import_dayjs3.default)(r.date).week() === wn;
-    function weeklyPerGuestAverages(weekNum) {
-      let days = allRecords.filter((r) => isWeek(r, weekNum)), plate = [], total = [];
-      days.forEach((d) => {
-        let users = Number(d.number_of_users) || 0;
-        users > 0 && (d.food_waste != null && plate.push(Number(d.food_waste) / users), d.total_waste != null && total.push(Number(d.total_waste) / users));
-      });
-      let avg2 = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-      return { plateAvg: avg2(plate), totalAvg: avg2(total) };
-    }
-    let currentWeek = weeklyPerGuestAverages(currentWeekNum), lastWeek = weeklyPerGuestAverages(lastWeekNum), isIncreasePlate = currentWeek.plateAvg > lastWeek.plateAvg, isIncreaseTotal = currentWeek.totalAvg > lastWeek.totalAvg, plateSeries = [], totalSeries = [];
-    for (let i = 12; i >= 1; i--) {
-      let wn = currentWeekNum - i, { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
-      plateSeries.push(Math.round(plateAvg)), totalSeries.push(Math.round(totalAvg));
-    }
-    let avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-    return {
-      currentWeek: currentWeekNum,
-      plateWasteCurrentWeek: currentWeek.plateAvg,
-      totalWasteCurrentWeek: currentWeek.totalAvg,
-      isIncreasePlate,
-      isIncreaseTotal,
-      plateWasteWeeklyAvg: avg(plateSeries),
-      totalWasteWeeklyAvg: avg(totalSeries),
-      plateSeries,
-      totalSeries
-    };
-  }, [allRecords, week]);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "pt-4", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "flex justify-between gap-4 mb-4", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "flex gap-4 items-center", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("h3", { children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("span", { className: "text-[var(--primary-color)] text-2xl", children: [
-            "Week ",
-            week,
-            " /"
-          ] }, void 0, !0, {
-            fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-            lineNumber: 234,
-            columnNumber: 25
-          }, this),
-          " ",
-          start,
-          " - ",
-          end
-        ] }, void 0, !0, {
-          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-          lineNumber: 233,
-          columnNumber: 21
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "flex gap-2", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-            "button",
-            {
-              onClick: () => setWeek((prev) => Math.max(prev - 1, 1)),
-              className: "px-3 py-1 border rounded hover:bg-gray-100",
-              children: "\u2190"
-            },
-            void 0,
-            !1,
-            {
-              fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-              lineNumber: 237,
-              columnNumber: 25
-            },
-            this
-          ),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-            "button",
-            {
-              onClick: () => setWeek((prev) => prev + 1),
-              className: "px-3 py-1 border rounded hover:bg-gray-100",
-              children: "\u2192"
-            },
-            void 0,
-            !1,
-            {
-              fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-              lineNumber: 244,
-              columnNumber: 25
-            },
-            this
-          )
-        ] }, void 0, !0, {
-          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-          lineNumber: 236,
-          columnNumber: 21
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-        lineNumber: 232,
-        columnNumber: 17
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "flex gap-2", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(OrientationToggle, { onChange: (value) => setOrientation(value) }, void 0, !1, {
-          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-          lineNumber: 254,
-          columnNumber: 21
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-          Button,
-          {
-            variant: "secondary",
-            onClick: () => {
-              let data = buildPreviewData2();
-              setPreviewData(data), setShowPreview(!0);
-            },
-            className: "flex gap-[10px] items-center",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(import_lucide_react3.Eye, { size: 20 }, void 0, !1, {
-                fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-                lineNumber: 264,
-                columnNumber: 25
-              }, this),
-              " Preview"
-            ]
-          },
-          void 0,
-          !0,
-          {
-            fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-            lineNumber: 255,
-            columnNumber: 21
-          },
-          this
-        )
-      ] }, void 0, !0, {
-        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-        lineNumber: 253,
-        columnNumber: 17
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "flex justify-end items-center mb-6 pos-top", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("p", { className: "mr-4", children: "Remember to update before leaving" }, void 0, !1, {
-          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-          lineNumber: 270,
-          columnNumber: 21
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(Button, { onClick: saveUpdates, variant: "primary", disabled: isSaving || !hasPendingUpdates, children: "Update" }, void 0, !1, {
-          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-          lineNumber: 271,
-          columnNumber: 21
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-        lineNumber: 269,
-        columnNumber: 17
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-      lineNumber: 231,
-      columnNumber: 13
-    }, this),
-    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-      Toast,
-      {
-        message: toast.message,
-        type: toast.type,
-        onClose: dismissToast
-      },
-      void 0,
-      !1,
-      {
-        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-        lineNumber: 278,
-        columnNumber: 17
-      },
-      this
-    ),
-    loading ? /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("p", { children: "Loading\u2026" }, void 0, !1, {
-      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-      lineNumber: 286,
-      columnNumber: 17
-    }, this) : isClient && Spreadsheet ? /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "rounded overflow-hidden w-full", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-      Spreadsheet,
-      {
-        data: sheetData,
-        onChange: handleSheetChange,
-        columnLabels,
-        rowLabels,
-        className: "w-full foodwaste-sheet",
-        style: { width: "100%" }
-      },
-      void 0,
-      !1,
-      {
-        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-        lineNumber: 289,
-        columnNumber: 21
-      },
-      this
-    ) }, void 0, !1, {
-      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-      lineNumber: 288,
-      columnNumber: 17
-    }, this) : null,
-    showPreview && previewData && /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: "fixed inset-0 bg-black/50 flex items-center justify-center z-50", onClick: () => setShowPreview(!1), children: /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("div", { className: `bg-white rounded-md ${orientation === "landscape" ? "w-[1500px]" : "w-[1080px]"}`, onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-      FoodWastePreview,
-      {
-        currentWeek: previewData.currentWeek,
-        orientation,
-        plateWasteCurrentWeek: previewData.plateWasteCurrentWeek,
-        plateWasteWeeklyAvg: previewData.plateWasteWeeklyAvg,
-        totalWasteCurrentWeek: previewData.totalWasteCurrentWeek,
-        totalWasteWeeklyAvg: previewData.totalWasteWeeklyAvg,
-        plateSeries: previewData.plateSeries,
-        totalSeries: previewData.totalSeries,
-        isIncreasePlate: previewData.isIncreasePlate,
-        isIncreaseTotal: previewData.isIncreaseTotal
-      },
-      void 0,
-      !1,
-      {
-        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-        lineNumber: 302,
-        columnNumber: 25
-      },
-      this
-    ) }, void 0, !1, {
-      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-      lineNumber: 301,
-      columnNumber: 21
-    }, this) }, void 0, !1, {
-      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-      lineNumber: 300,
-      columnNumber: 17
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/admin/kitchen.foodwaste.jsx",
-    lineNumber: 230,
-    columnNumber: 9
-  }, this);
-}
-var kitchen_foodwaste_default = FoodWaste;
+// app/components/AdminLayout.jsx
+var import_react18 = require("@remix-run/react"), import_react19 = require("react");
 
-// app/routes/api.update-location.js
-var api_update_location_exports = {};
-__export(api_update_location_exports, {
-  action: () => action
-});
-var import_node4 = require("@remix-run/node");
+// app/components/AdminPanelLink.jsx
+var import_react14 = require("@remix-run/react"), import_lucide_react3 = require("lucide-react"), import_clsx3 = __toESM(require("clsx")), import_jsx_dev_runtime11 = require("react/jsx-dev-runtime");
+function AdminPanelLink({
+  to,
+  icon: Icon = import_lucide_react3.Settings,
+  children,
+  className,
+  ...props
+}) {
+  let { pathname } = (0, import_react14.useLocation)(), isActive = pathname === to, showIcon = Icon !== "none";
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
+    import_react14.Link,
+    {
+      to,
+      className: (0, import_clsx3.default)(
+        "flex items-center gap-3 px-6 py-4 transition-colors duration-200",
+        isActive ? "border-l border-gray-300 text-white" : "text-gray-300 hover:bg-gray-700",
+        className
+      ),
+      ...props,
+      children: [
+        showIcon && /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(Icon, { className: "w-5 h-5" }, void 0, !1, {
+          fileName: "app/components/AdminPanelLink.jsx",
+          lineNumber: 29,
+          columnNumber: 26
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)("span", { children }, void 0, !1, {
+          fileName: "app/components/AdminPanelLink.jsx",
+          lineNumber: 30,
+          columnNumber: 13
+        }, this)
+      ]
+    },
+    void 0,
+    !0,
+    {
+      fileName: "app/components/AdminPanelLink.jsx",
+      lineNumber: 20,
+      columnNumber: 9
+    },
+    this
+  );
+}
+
+// app/components/AdminLayout.jsx
+var import_lucide_react4 = require("lucide-react");
+
+// app/components/LocationSelector.jsx
+var import_react15 = require("react"), import_react16 = require("react");
 
 // app/sessionHandler.server.js
 var import_node3 = require("@remix-run/node");
@@ -1795,20 +1570,620 @@ async function requireAccessToken(request) {
   return token;
 }
 async function getCurrentUser(request) {
-  let token = await requireAccessToken(request), response = await fetch(`${API_BASE_URL}/users/me`, {
+  let token = await requireAccessToken(request), session = await getSession(request), response = await fetch(`${API_BASE_URL}/users/me`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   });
   if (!response.ok)
-    throw new Error("Failed to fetch current user.");
-  return {
-    user: (await response.json()).data,
+    throw session.unset("token"), (0, import_node3.redirect)("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session)
+      }
+    });
+  let result = await response.json();
+  return session.set("user", result.data), {
+    user: result.data,
     token
   };
 }
 
+// app/lib/users.js
+async function updateCurrentUser(payload, token) {
+  var _a, _b;
+  let response = await fetch(`${API_BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ data: payload })
+  }), json8 = await response.json();
+  if (!response.ok)
+    throw new Error(((_b = (_a = json8 == null ? void 0 : json8.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to update user");
+  return console.log("Updated user data:", json8), json8.data;
+}
+
+// app/components/LocationSelector.jsx
+var import_react17 = require("@headlessui/react"), import_jsx_dev_runtime12 = require("react/jsx-dev-runtime");
+function LocationSelector({ user, token, selectedLocation, setSelectedLocation }) {
+  var _a;
+  let [locations, setLocations] = (0, import_react16.useState)([]), [userId] = (0, import_react16.useState)((user == null ? void 0 : user.id) || null), [toast, setToast] = (0, import_react16.useState)(null), dismissToast = () => setToast(null);
+  (0, import_react16.useEffect)(() => {
+    async function loadData() {
+      try {
+        let locs = await fetchLocations();
+        if (setLocations(locs), user != null && user.selected_locations) {
+          let exists = locs.some(
+            (loc) => loc.id === user.selected_locations
+          );
+          setSelectedLocation(exists ? user.selected_locations : "");
+        } else
+          setSelectedLocation("");
+      } catch (err) {
+        console.error("Error loading locations:", err);
+      }
+    }
+    loadData();
+  }, []);
+  async function handleLocationChange(value) {
+    setSelectedLocation(value);
+    try {
+      await updateCurrentUser({ selected_locations: value }, token), setToast({
+        message: "Location updated successfully!",
+        type: "success"
+      });
+    } catch (err) {
+      console.error(err), setToast({
+        message: err.message || "Failed to update location.",
+        type: "error"
+      });
+    }
+  }
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(import_jsx_dev_runtime12.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)("div", { className: "mt-5 mx-4 mb-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(import_react17.Listbox, { value: selectedLocation, onChange: handleLocationChange, children: /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)("div", { className: "relative w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(import_react17.ListboxButton, { className: "w-full border border-gray-300 text-white px-4 py-2 rounded text-left flex justify-between", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)("span", { children: selectedLocation ? (_a = locations.find((l) => l.id === selectedLocation)) == null ? void 0 : _a.name : "Select Location" }, void 0, !1, {
+          fileName: "app/components/LocationSelector.jsx",
+          lineNumber: 68,
+          columnNumber: 29
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)("span", { className: "ml-2 text-white", children: "\u25BC" }, void 0, !1, {
+          fileName: "app/components/LocationSelector.jsx",
+          lineNumber: 74,
+          columnNumber: 29
+        }, this)
+      ] }, void 0, !0, {
+        fileName: "app/components/LocationSelector.jsx",
+        lineNumber: 67,
+        columnNumber: 25
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(import_react17.ListboxOptions, { className: "bg-gray-700 mt-1 rounded shadow-lg text-left absolute w-full", children: locations.map((loc) => /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
+        import_react17.ListboxOption,
+        {
+          value: loc.id,
+          className: ({ active }) => `px-4 py-2 cursor-pointer ${active ? "bg-gray-600" : ""}`,
+          children: loc.name
+        },
+        loc.id,
+        !1,
+        {
+          fileName: "app/components/LocationSelector.jsx",
+          lineNumber: 80,
+          columnNumber: 33
+        },
+        this
+      )) }, void 0, !1, {
+        fileName: "app/components/LocationSelector.jsx",
+        lineNumber: 78,
+        columnNumber: 25
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/components/LocationSelector.jsx",
+      lineNumber: 66,
+      columnNumber: 21
+    }, this) }, void 0, !1, {
+      fileName: "app/components/LocationSelector.jsx",
+      lineNumber: 65,
+      columnNumber: 17
+    }, this) }, void 0, !1, {
+      fileName: "app/components/LocationSelector.jsx",
+      lineNumber: 64,
+      columnNumber: 13
+    }, this),
+    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
+      Toast,
+      {
+        message: toast.message,
+        type: toast.type,
+        onClose: dismissToast
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/components/LocationSelector.jsx",
+        lineNumber: 100,
+        columnNumber: 17
+      },
+      this
+    )
+  ] }, void 0, !0, {
+    fileName: "app/components/LocationSelector.jsx",
+    lineNumber: 63,
+    columnNumber: 9
+  }, this);
+}
+var LocationSelector_default = LocationSelector;
+
+// app/components/AdminLayout.jsx
+var import_jsx_dev_runtime13 = require("react/jsx-dev-runtime"), SelectedLocationContext = (0, import_react19.createContext)(null);
+function AdminLayout({ children, user, token }) {
+  console.log("entered aminlayout");
+  let [open, setOpen] = (0, import_react19.useState)(!0), [selectedLocation, setSelectedLocation] = (0, import_react19.useState)((user == null ? void 0 : user.selected_locations) || "");
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(SelectedLocationContext.Provider, { value: { selectedLocation, setSelectedLocation }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "min-h-screen flex relative", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+      "aside",
+      {
+        className: "bg-[var(--primary-color)] sticky top-0 h-[100vh] flex flex-col text-white transition-all duration-300 w-64",
+        children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex justify-between p-4", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("img", { src: "/images/iss_logo.webp", alt: "iss logo", width: "50px", className: "logo" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 27,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react18.Link, { to: "/logout", className: "block px-3 py-2 hover:bg-gray-700", children: "Logout" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 29,
+              columnNumber: 25
+            }, this)
+          ] }, void 0, !0, {
+            fileName: "app/components/AdminLayout.jsx",
+            lineNumber: 26,
+            columnNumber: 21
+          }, this),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+            LocationSelector_default,
+            {
+              user,
+              token,
+              selectedLocation,
+              setSelectedLocation
+            },
+            void 0,
+            !1,
+            {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 43,
+              columnNumber: 21
+            },
+            this
+          ),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("nav", { className: "space-y-4", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(AdminPanelLink, { to: "/admin", className: "mb-2", children: "Live Stage" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 53,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(AdminPanelLink, { to: "/admin/#", icon: import_lucide_react4.HandPlatter, children: "Kitchen" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 57,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "sub-menu", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(AdminPanelLink, { to: "/admin/kitchen/", icon: "none", className: "pl-16", children: "Cafe & Food Waste" }, void 0, !1, {
+                fileName: "app/components/AdminLayout.jsx",
+                lineNumber: 62,
+                columnNumber: 29
+              }, this),
+              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(AdminPanelLink, { to: "#", icon: "none", className: "pl-16", children: "Signs" }, void 0, !1, {
+                fileName: "app/components/AdminLayout.jsx",
+                lineNumber: 66,
+                columnNumber: 29
+              }, this)
+            ] }, void 0, !0, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 61,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(AdminPanelLink, { to: "/admin/settings", children: "Settings" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 71,
+              columnNumber: 25
+            }, this)
+          ] }, void 0, !0, {
+            fileName: "app/components/AdminLayout.jsx",
+            lineNumber: 51,
+            columnNumber: 21
+          }, this),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex mt-auto justify-between pt-4 p-4", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("img", { src: "/images/sous-chef-white.svg", alt: "sous-chef logo", width: "70px", className: "logo" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 77,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex flex-col gap-y-2", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { children: "Need support?" }, void 0, !1, {
+                fileName: "app/components/AdminLayout.jsx",
+                lineNumber: 79,
+                columnNumber: 29
+              }, this),
+              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("a", { href: "#", className: "font-bold", children: "Click here" }, void 0, !1, {
+                fileName: "app/components/AdminLayout.jsx",
+                lineNumber: 80,
+                columnNumber: 29
+              }, this)
+            ] }, void 0, !0, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 78,
+              columnNumber: 25
+            }, this)
+          ] }, void 0, !0, {
+            fileName: "app/components/AdminLayout.jsx",
+            lineNumber: 76,
+            columnNumber: 21
+          }, this)
+        ]
+      },
+      void 0,
+      !0,
+      {
+        fileName: "app/components/AdminLayout.jsx",
+        lineNumber: 21,
+        columnNumber: 17
+      },
+      this
+    ),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("main", { className: "flex-1 p-6 overflow-y-auto max-w-none mt-[0]", children }, void 0, !1, {
+      fileName: "app/components/AdminLayout.jsx",
+      lineNumber: 85,
+      columnNumber: 17
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/components/AdminLayout.jsx",
+    lineNumber: 20,
+    columnNumber: 13
+  }, this) }, void 0, !1, {
+    fileName: "app/components/AdminLayout.jsx",
+    lineNumber: 19,
+    columnNumber: 9
+  }, this);
+}
+
+// app/routes/admin/kitchen.foodwaste.jsx
+var import_jsx_dev_runtime14 = require("react/jsx-dev-runtime");
+import_dayjs3.default.extend(import_weekday3.default);
+import_dayjs3.default.extend(import_weekOfYear3.default);
+var WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], NUMERIC_FIELD_KEYS = ["number_of_users", "food_waste", "total_waste"];
+function links2() {
+  return [
+    { rel: "stylesheet", href: "https://unpkg.com/react-spreadsheet@0.9.7/dist/react-spreadsheet.css" }
+  ];
+}
+function coerceDisplayValue(value) {
+  return value ?? "";
+}
+function FoodWaste() {
+  let selectedLocation = (0, import_react20.useContext)(SelectedLocationContext), {
+    week,
+    setWeek,
+    allRecords,
+    filteredRecords,
+    handleUpdate,
+    getPendingValue,
+    saveUpdates,
+    loading,
+    isSaving,
+    hasPendingUpdates,
+    toast,
+    dismissToast
+  } = useFoodWasteTable(selectedLocation.selectedLocation), [isClient, setIsClient] = (0, import_react20.useState)(!1), [Spreadsheet, setSpreadsheet] = (0, import_react20.useState)(null), [sheetData, setSheetData] = (0, import_react20.useState)([]), [showPreview, setShowPreview] = (0, import_react20.useState)(!1), [previewData, setPreviewData] = (0, import_react20.useState)(null), [orientation, setOrientation] = (0, import_react20.useState)("landscape");
+  (0, import_react20.useEffect)(() => {
+    setIsClient(!0);
+  }, []), (0, import_react20.useEffect)(() => {
+    let mounted = !0;
+    return import("react-spreadsheet").then((mod) => {
+      !mounted || setSpreadsheet(() => mod.default || null);
+    }).catch(() => {
+    }), () => {
+      mounted = !1;
+    };
+  }, []);
+  let { start, end } = getWeekDateRange(week), recordsByDate = (0, import_react20.useMemo)(() => {
+    let map = /* @__PURE__ */ new Map();
+    return filteredRecords.forEach((item) => {
+      let iso = (0, import_dayjs3.default)(item.date).format("YYYY-MM-DD");
+      map.set(iso, item);
+    }), map;
+  }, [filteredRecords]), mondayOfWeek = (0, import_react20.useMemo)(() => (0, import_dayjs3.default)().week(Number(week)).weekday(1), [week]), rowModels = (0, import_react20.useMemo)(() => WEEKDAYS.map((_, idx) => {
+    let dateIso = mondayOfWeek.add(idx, "day").format("YYYY-MM-DD"), record = recordsByDate.get(dateIso), key = (record == null ? void 0 : record.id) ?? dateIso;
+    return {
+      key,
+      date: dateIso,
+      number_of_users: coerceDisplayValue(getPendingValue(key, "number_of_users", (record == null ? void 0 : record.number_of_users) ?? "")),
+      food_waste: coerceDisplayValue(getPendingValue(key, "food_waste", (record == null ? void 0 : record.food_waste) ?? "")),
+      total_waste: coerceDisplayValue(getPendingValue(key, "total_waste", (record == null ? void 0 : record.total_waste) ?? ""))
+    };
+  }), [week, mondayOfWeek, recordsByDate, getPendingValue]);
+  (0, import_react20.useEffect)(() => {
+    let next = rowModels.map((r) => [
+      { value: r.number_of_users },
+      { value: r.food_waste },
+      { value: r.total_waste }
+    ]);
+    setSheetData(next);
+  }, [rowModels]);
+  let columnLabels = (0, import_react20.useMemo)(() => ["No of Users this Day", "Plate Waste", "Total Waste"], []), rowLabels = (0, import_react20.useMemo)(() => WEEKDAYS.map((d, idx) => `${d} ${mondayOfWeek.add(idx, "day").format("DD/MM/YYYY")}`), [mondayOfWeek]), handleSheetChange = (0, import_react20.useCallback)((newData) => {
+    var _a, _b;
+    let maxRows = Math.min(newData.length, rowModels.length);
+    for (let r = 0; r < maxRows; r++) {
+      let prevRow = sheetData[r] || [], nextRow = newData[r] || [], model = rowModels[r];
+      for (let c = 0; c < NUMERIC_FIELD_KEYS.length; c++) {
+        let prevVal = ((_a = prevRow[c]) == null ? void 0 : _a.value) ?? "", nextVal = ((_b = nextRow[c]) == null ? void 0 : _b.value) ?? "";
+        if (prevVal !== nextVal) {
+          let field = NUMERIC_FIELD_KEYS[c], parsed = Number(nextVal), normalized = nextVal === "" || nextVal === null || nextVal === void 0 || Number.isNaN(parsed) ? null : parsed;
+          handleUpdate(model.key, { date: model.date, [field]: normalized });
+        }
+      }
+    }
+    setSheetData(newData);
+  }, [sheetData, rowModels, handleUpdate]);
+  (0, import_react20.useEffect)(() => {
+    week && localStorage.setItem("banner_week", week);
+  }, [week]);
+  let buildPreviewData2 = (0, import_react20.useCallback)(() => {
+    let currentWeekNum = Number(week), lastWeekNum = currentWeekNum - 1, isWeek = (r, wn) => (0, import_dayjs3.default)(r.date).week() === wn;
+    function weeklyPerGuestAverages(weekNum) {
+      let days = allRecords.filter((r) => isWeek(r, weekNum)), plate = [], total = [];
+      days.forEach((d) => {
+        let users = Number(d.number_of_users) || 0;
+        users > 0 && (d.food_waste != null && plate.push(Number(d.food_waste) / users), d.total_waste != null && total.push(Number(d.total_waste) / users));
+      });
+      let avg2 = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+      return { plateAvg: avg2(plate), totalAvg: avg2(total) };
+    }
+    let currentWeek = weeklyPerGuestAverages(currentWeekNum), lastWeek = weeklyPerGuestAverages(lastWeekNum), isIncreasePlate = currentWeek.plateAvg > lastWeek.plateAvg, isIncreaseTotal = currentWeek.totalAvg > lastWeek.totalAvg, plateSeries = [], totalSeries = [];
+    for (let i = 12; i >= 1; i--) {
+      let wn = currentWeekNum - i, { plateAvg, totalAvg } = weeklyPerGuestAverages(wn);
+      plateSeries.push(Math.round(plateAvg)), totalSeries.push(Math.round(totalAvg));
+    }
+    let avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+    return {
+      currentWeek: currentWeekNum,
+      plateWasteCurrentWeek: currentWeek.plateAvg,
+      totalWasteCurrentWeek: currentWeek.totalAvg,
+      isIncreasePlate,
+      isIncreaseTotal,
+      plateWasteWeeklyAvg: avg(plateSeries),
+      totalWasteWeeklyAvg: avg(totalSeries),
+      plateSeries,
+      totalSeries
+    };
+  }, [allRecords, week]);
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "pt-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex justify-between gap-4 mb-4", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex gap-4 items-center", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("h3", { children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("span", { className: "text-[var(--primary-color)] text-2xl", children: [
+            "Week ",
+            week,
+            " /"
+          ] }, void 0, !0, {
+            fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+            lineNumber: 201,
+            columnNumber: 25
+          }, this),
+          " ",
+          start,
+          " - ",
+          end
+        ] }, void 0, !0, {
+          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+          lineNumber: 200,
+          columnNumber: 21
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex gap-2", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            "button",
+            {
+              onClick: () => setWeek((prev) => Math.max(prev - 1, 1)),
+              className: "px-3 py-1 border rounded hover:bg-gray-100",
+              children: "\u2190"
+            },
+            void 0,
+            !1,
+            {
+              fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+              lineNumber: 204,
+              columnNumber: 25
+            },
+            this
+          ),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            "button",
+            {
+              onClick: () => setWeek((prev) => prev + 1),
+              className: "px-3 py-1 border rounded hover:bg-gray-100",
+              children: "\u2192"
+            },
+            void 0,
+            !1,
+            {
+              fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+              lineNumber: 211,
+              columnNumber: 25
+            },
+            this
+          )
+        ] }, void 0, !0, {
+          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+          lineNumber: 203,
+          columnNumber: 21
+        }, this)
+      ] }, void 0, !0, {
+        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+        lineNumber: 199,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex gap-2", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+          OrientationToggle,
+          {
+            onChange: (value) => {
+              setOrientation(value), console.log(value), updateLocationIsVertical(selectedLocation.selectedLocation, value === "portrait").then(() => console.log("Orientation updated")).catch((err) => console.error(err));
+            }
+          },
+          void 0,
+          !1,
+          {
+            fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+            lineNumber: 221,
+            columnNumber: 21
+          },
+          this
+        ),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+          Button,
+          {
+            variant: "secondary",
+            onClick: () => {
+              let data = buildPreviewData2();
+              setPreviewData(data), setShowPreview(!0);
+            },
+            className: "flex gap-[10px] items-center",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(import_lucide_react5.Eye, { size: 20 }, void 0, !1, {
+                fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+                lineNumber: 242,
+                columnNumber: 25
+              }, this),
+              " Preview"
+            ]
+          },
+          void 0,
+          !0,
+          {
+            fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+            lineNumber: 233,
+            columnNumber: 21
+          },
+          this
+        )
+      ] }, void 0, !0, {
+        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+        lineNumber: 220,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex justify-end items-center mb-6 pos-top", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("p", { className: "mr-4", children: "Remember to update before leaving" }, void 0, !1, {
+          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+          lineNumber: 248,
+          columnNumber: 21
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Button, { onClick: saveUpdates, variant: "primary", disabled: isSaving || !hasPendingUpdates, children: "Update" }, void 0, !1, {
+          fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+          lineNumber: 249,
+          columnNumber: 21
+        }, this)
+      ] }, void 0, !0, {
+        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+        lineNumber: 247,
+        columnNumber: 17
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+      lineNumber: 198,
+      columnNumber: 13
+    }, this),
+    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+      Toast,
+      {
+        message: toast.message,
+        type: toast.type,
+        onClose: dismissToast
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+        lineNumber: 256,
+        columnNumber: 17
+      },
+      this
+    ),
+    loading ? /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("p", { children: "Loading\u2026" }, void 0, !1, {
+      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+      lineNumber: 264,
+      columnNumber: 17
+    }, this) : isClient && Spreadsheet ? /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "rounded overflow-hidden w-full", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+      Spreadsheet,
+      {
+        data: sheetData,
+        onChange: handleSheetChange,
+        columnLabels,
+        rowLabels,
+        className: "w-full foodwaste-sheet",
+        style: { width: "100%" }
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+        lineNumber: 267,
+        columnNumber: 21
+      },
+      this
+    ) }, void 0, !1, {
+      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+      lineNumber: 266,
+      columnNumber: 17
+    }, this) : null,
+    showPreview && previewData && /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "fixed inset-0 bg-black/50 flex items-center justify-center z-50", onClick: () => setShowPreview(!1), children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: `bg-white rounded-md ${orientation === "landscape" ? "w-[1500px]" : "w-[1080px]"}`, onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+      FoodWastePreview,
+      {
+        currentWeek: previewData.currentWeek,
+        orientation,
+        plateWasteCurrentWeek: previewData.plateWasteCurrentWeek,
+        plateWasteWeeklyAvg: previewData.plateWasteWeeklyAvg,
+        totalWasteCurrentWeek: previewData.totalWasteCurrentWeek,
+        totalWasteWeeklyAvg: previewData.totalWasteWeeklyAvg,
+        plateSeries: previewData.plateSeries,
+        totalSeries: previewData.totalSeries,
+        isIncreasePlate: previewData.isIncreasePlate,
+        isIncreaseTotal: previewData.isIncreaseTotal,
+        selectedLocation: selectedLocation.selectedLocation
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+        lineNumber: 280,
+        columnNumber: 25
+      },
+      this
+    ) }, void 0, !1, {
+      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+      lineNumber: 279,
+      columnNumber: 21
+    }, this) }, void 0, !1, {
+      fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+      lineNumber: 278,
+      columnNumber: 17
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/admin/kitchen.foodwaste.jsx",
+    lineNumber: 197,
+    columnNumber: 9
+  }, this);
+}
+var kitchen_foodwaste_default = FoodWaste;
+
 // app/routes/api.update-location.js
+var api_update_location_exports = {};
+__export(api_update_location_exports, {
+  action: () => action
+});
+var import_node4 = require("@remix-run/node");
 async function action({ request }) {
   let body = await request.json(), { location } = body, session = await getSession(request), user = session.get("user");
   return user ? (user.selected_location = location, session.set("user", user), (0, import_node4.json)(
@@ -1826,16 +2201,16 @@ var kitchen_cafe_exports = {};
 __export(kitchen_cafe_exports, {
   default: () => kitchen_cafe_default
 });
-var import_react20 = require("react");
+var import_react26 = require("react");
 
 // app/components/ProductGrid.jsx
-var import_react19 = require("react");
+var import_react25 = require("react");
 
 // app/components/Toggle.jsx
-var import_react15 = require("react"), import_jsx_dev_runtime12 = require("react/jsx-dev-runtime");
+var import_react21 = require("react"), import_jsx_dev_runtime15 = require("react/jsx-dev-runtime");
 function Toggle({ apiOn = !1, onToggle }) {
-  let [on, setOn] = (0, import_react15.useState)(apiOn);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
+  let [on, setOn] = (0, import_react21.useState)(apiOn);
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(
     "button",
     {
       onClick: () => {
@@ -1843,7 +2218,7 @@ function Toggle({ apiOn = !1, onToggle }) {
       },
       className: `w-20 h-8 rounded-full flex items-center px-1 relative transition-all duration-200 ${on ? "bg-[var(--primary-color)]" : "bg-gray-300"}`,
       children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(
           "span",
           {
             className: `absolute left-2 text-sm font-medium transition-all duration-200 ${on ? "text-white" : "text-gray-500"}`,
@@ -1858,7 +2233,7 @@ function Toggle({ apiOn = !1, onToggle }) {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(
           "span",
           {
             className: `absolute right-2 text-sm font-medium transition-all duration-200 ${on ? "text-[transparent]" : "text-gray-600"}`,
@@ -1873,7 +2248,7 @@ function Toggle({ apiOn = !1, onToggle }) {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(
           "div",
           {
             className: `w-6 h-6 bg-white rounded-full shadow-md transform transition-all duration-200 ${on ? "translate-x-12" : "translate-x-0"}`
@@ -1902,13 +2277,13 @@ function Toggle({ apiOn = !1, onToggle }) {
 var Toggle_default = Toggle;
 
 // app/components/PreviewModal.jsx
-var import_react16 = require("@remix-run/react"), import_react17 = require("react");
-var import_jsx_dev_runtime13 = require("react/jsx-dev-runtime");
+var import_react22 = require("@remix-run/react"), import_react23 = require("react");
+var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime");
 function PreviewModal({ open, onClose, data, screen, setScreen, screenNumber }) {
   if (!open)
     return null;
   let hasError = data.some((item) => item.error);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(
     "div",
     {
       className: "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 regular-text",
@@ -1917,24 +2292,24 @@ function PreviewModal({ open, onClose, data, screen, setScreen, screenNumber }) 
         e.key === "Escape" && onClose();
       },
       tabIndex: 0,
-      children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+      children: /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(
         "div",
         {
           className: "w-[1080px] p-8 max-h-[80vh] min-h-[70vh] overflow-y-auto svg-bg bg-[var(--banner-bg-color)]",
           onClick: (e) => e.stopPropagation(),
           children: [
-            hasError ? /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_jsx_dev_runtime13.Fragment, {}, void 0, !1, {
+            hasError ? /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(import_jsx_dev_runtime16.Fragment, {}, void 0, !1, {
               fileName: "app/components/PreviewModal.jsx",
               lineNumber: 23,
               columnNumber: 33
-            }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_jsx_dev_runtime13.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "menu-wrapper p-6 pt-12 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex gap-3 mt-6 justify-end", children: [
-                /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("button", { onClick: () => setScreen("screen1") }, void 0, !1, {
+            }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(import_jsx_dev_runtime16.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "menu-wrapper p-6 pt-12 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "flex gap-3 mt-6 justify-end", children: [
+                /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("button", { onClick: () => setScreen("screen1") }, void 0, !1, {
                   fileName: "app/components/PreviewModal.jsx",
                   lineNumber: 26,
                   columnNumber: 33
                 }, this),
-                /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("button", { onClick: () => setScreen("screen2"), children: "next" }, void 0, !1, {
+                /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("button", { onClick: () => setScreen("screen2"), children: "next" }, void 0, !1, {
                   fileName: "app/components/PreviewModal.jsx",
                   lineNumber: 27,
                   columnNumber: 33
@@ -1944,29 +2319,29 @@ function PreviewModal({ open, onClose, data, screen, setScreen, screenNumber }) 
                 lineNumber: 25,
                 columnNumber: 29
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("h2", { className: "text-4xl bold-text mb-2", children: "THE BRICK" }, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("h2", { className: "text-4xl bold-text mb-2", children: "THE BRICK" }, void 0, !1, {
                 fileName: "app/components/PreviewModal.jsx",
                 lineNumber: 29,
                 columnNumber: 29
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("h6", { className: "text-2xl regular-text mb-6", children: "Lounge & Bar" }, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("h6", { className: "text-2xl regular-text mb-6", children: "Lounge & Bar" }, void 0, !1, {
                 fileName: "app/components/PreviewModal.jsx",
                 lineNumber: 33,
                 columnNumber: 29
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "columns-2 gap-x-10 w-full", children: data.map(({ category, products }) => /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "category mb-6 break-inside-avoid", children: [
-                /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("h3", { className: "bold-text text-lg pb-1 mb-2", children: category }, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "columns-2 gap-x-10 w-full", children: data.map(({ category, products }) => /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "category mb-6 break-inside-avoid", children: [
+                /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("h3", { className: "bold-text text-lg pb-1 mb-2", children: category }, void 0, !1, {
                   fileName: "app/components/PreviewModal.jsx",
                   lineNumber: 38,
                   columnNumber: 41
                 }, this),
-                products.map((prod) => /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex justify-between items-center py-1", children: [
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: prod.name }, void 0, !1, {
+                products.map((prod) => /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "flex justify-between items-center py-1", children: [
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("span", { children: prod.name }, void 0, !1, {
                     fileName: "app/components/PreviewModal.jsx",
                     lineNumber: 42,
                     columnNumber: 49
                   }, this),
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: prod.price }, void 0, !1, {
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("span", { children: prod.price }, void 0, !1, {
                     fileName: "app/components/PreviewModal.jsx",
                     lineNumber: 43,
                     columnNumber: 49
@@ -1994,7 +2369,7 @@ function PreviewModal({ open, onClose, data, screen, setScreen, screenNumber }) 
               lineNumber: 23,
               columnNumber: 43
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "menu-wrapper p-6 pt-32 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex justify-center mt-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(CopyLinkButton_default, { screenNumber }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "menu-wrapper p-6 pt-32 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]", children: /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "flex justify-center mt-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(CopyLinkButton_default, { screenNumber }, void 0, !1, {
               fileName: "app/components/PreviewModal.jsx",
               lineNumber: 78,
               columnNumber: 25
@@ -2031,7 +2406,7 @@ function PreviewModal({ open, onClose, data, screen, setScreen, screenNumber }) 
 }
 
 // app/hooks/useProductsTable.js
-var import_react18 = require("react");
+var import_react24 = require("react");
 
 // app/lib/products.js
 async function fetchCategoriesAndProducts2() {
@@ -2099,8 +2474,8 @@ function buildPreviewData(categories = [], products = [], screen = "screen1") {
 
 // app/hooks/useProductsTable.js
 function useProductsTable() {
-  let [categories, setCategories] = (0, import_react18.useState)([]), [products, setProducts] = (0, import_react18.useState)([]), [updates, setUpdates] = (0, import_react18.useState)({}), [toast, setToast] = (0, import_react18.useState)(null), [loading, setLoading] = (0, import_react18.useState)(!1), [error, setError] = (0, import_react18.useState)(null), [isSaving, setIsSaving] = (0, import_react18.useState)(!1);
-  (0, import_react18.useEffect)(() => {
+  let [categories, setCategories] = (0, import_react24.useState)([]), [products, setProducts] = (0, import_react24.useState)([]), [updates, setUpdates] = (0, import_react24.useState)({}), [toast, setToast] = (0, import_react24.useState)(null), [loading, setLoading] = (0, import_react24.useState)(!1), [error, setError] = (0, import_react24.useState)(null), [isSaving, setIsSaving] = (0, import_react24.useState)(!1);
+  (0, import_react24.useEffect)(() => {
     let isMounted = !0;
     async function loadData() {
       setLoading(!0);
@@ -2119,9 +2494,9 @@ function useProductsTable() {
       isMounted = !1;
     };
   }, []);
-  let showToast = (0, import_react18.useCallback)((message, type = "success") => {
+  let showToast = (0, import_react24.useCallback)((message, type = "success") => {
     setToast({ message, type });
-  }, []), dismissToast = (0, import_react18.useCallback)(() => setToast(null), []), handleProductUpdate = (0, import_react18.useCallback)((productId, updatedFields) => {
+  }, []), dismissToast = (0, import_react24.useCallback)(() => setToast(null), []), handleProductUpdate = (0, import_react24.useCallback)((productId, updatedFields) => {
     setProducts(
       (prev) => prev.map(
         (product) => product.id === productId ? { ...product, ...updatedFields } : product
@@ -2133,7 +2508,7 @@ function useProductsTable() {
         ...updatedFields
       }
     }));
-  }, []), saveAllUpdates = (0, import_react18.useCallback)(async () => {
+  }, []), saveAllUpdates = (0, import_react24.useCallback)(async () => {
     let payload = Object.entries(updates).map(([id, data]) => ({
       id,
       ...data
@@ -2150,7 +2525,7 @@ function useProductsTable() {
     } finally {
       setIsSaving(!1);
     }
-  }, [showToast, updates]), getProductsForCategory = (0, import_react18.useCallback)(
+  }, [showToast, updates]), getProductsForCategory = (0, import_react24.useCallback)(
     (category) => {
       if (!category)
         return [];
@@ -2158,10 +2533,10 @@ function useProductsTable() {
       return products.filter((product) => productIds.has(product.id));
     },
     [products]
-  ), previewDataForScreen = (0, import_react18.useCallback)(
+  ), previewDataForScreen = (0, import_react24.useCallback)(
     (screen) => buildPreviewData(categories, products, screen),
     [categories, products]
-  ), hasPendingUpdates = (0, import_react18.useMemo)(() => Object.keys(updates).length > 0, [updates]);
+  ), hasPendingUpdates = (0, import_react24.useMemo)(() => Object.keys(updates).length > 0, [updates]);
   return {
     categories,
     products,
@@ -2181,7 +2556,7 @@ function useProductsTable() {
 var useProductsTable_default = useProductsTable;
 
 // app/components/ProductGrid.jsx
-var import_lucide_react4 = require("lucide-react"), import_jsx_dev_runtime14 = require("react/jsx-dev-runtime");
+var import_lucide_react6 = require("lucide-react"), import_jsx_dev_runtime17 = require("react/jsx-dev-runtime");
 function ProductsTable() {
   let {
     categories,
@@ -2194,26 +2569,26 @@ function ProductsTable() {
     error,
     isSaving,
     previewDataForScreen
-  } = useProductsTable_default(), [showPreviewModal, setShowPreviewModal] = (0, import_react19.useState)(!1), [previewScreen, setPreviewScreen] = (0, import_react19.useState)("screen1"), previewData = (0, import_react19.useMemo)(
+  } = useProductsTable_default(), [showPreviewModal, setShowPreviewModal] = (0, import_react25.useState)(!1), [previewScreen, setPreviewScreen] = (0, import_react25.useState)("screen1"), previewData = (0, import_react25.useMemo)(
     () => previewDataForScreen(previewScreen),
     [previewDataForScreen, previewScreen]
   );
-  return loading ? /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "p-6", children: "Loading products\u2026" }, void 0, !1, {
+  return loading ? /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "p-6", children: "Loading products\u2026" }, void 0, !1, {
     fileName: "app/components/ProductGrid.jsx",
     lineNumber: 32,
     columnNumber: 16
-  }, this) : error ? /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "p-6 text-red-600", children: error }, void 0, !1, {
+  }, this) : error ? /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "p-6 text-red-600", children: error }, void 0, !1, {
     fileName: "app/components/ProductGrid.jsx",
     lineNumber: 36,
     columnNumber: 16
-  }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "p-6 px-0 min-h-screen", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex justify-end items-center mb-6 pos-top", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("p", { className: "mr-4", children: "Remember to update before leaving" }, void 0, !1, {
+  }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "p-6 px-0 min-h-screen", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "flex justify-end items-center mb-6 pos-top", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("p", { className: "mr-4", children: "Remember to update before leaving" }, void 0, !1, {
         fileName: "app/components/ProductGrid.jsx",
         lineNumber: 42,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Button, { onClick: saveAllUpdates, variant: "primary", disabled: isSaving, children: isSaving ? "Saving..." : "Update" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(Button, { onClick: saveAllUpdates, variant: "primary", disabled: isSaving, children: isSaving ? "Saving..." : "Update" }, void 0, !1, {
         fileName: "app/components/ProductGrid.jsx",
         lineNumber: 43,
         columnNumber: 17
@@ -2223,7 +2598,7 @@ function ProductsTable() {
       lineNumber: 41,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex justify-end items-center mb-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "flex justify-end items-center mb-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
       Button,
       {
         variant: "secondary",
@@ -2232,7 +2607,7 @@ function ProductsTable() {
         },
         className: "flex gap-[10px] items-center",
         children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(import_lucide_react4.Eye, { size: 20 }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(import_lucide_react6.Eye, { size: 20 }, void 0, !1, {
             fileName: "app/components/ProductGrid.jsx",
             lineNumber: 57,
             columnNumber: 21
@@ -2253,9 +2628,9 @@ function ProductsTable() {
       lineNumber: 48,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "bg-white rounded-lg shadow overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("table", { className: "min-w-full border-collapse text-sm border border-gray-400", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("thead", { className: "bg-[var(--primary-color)] text-white font-semibold", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("tr", { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "bg-white rounded-lg shadow overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("table", { className: "min-w-full border-collapse text-sm border border-gray-400", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("thead", { className: "bg-[var(--primary-color)] text-white font-semibold", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("tr", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
           "th",
           {
             className: "p-3 border border-gray-400 text-left",
@@ -2273,7 +2648,7 @@ function ProductsTable() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
           "th",
           {
             className: "p-3 border border-gray-400 text-left",
@@ -2291,22 +2666,22 @@ function ProductsTable() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left", children: "Description" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left", children: "Description" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
           lineNumber: 77,
           columnNumber: 29
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left", children: "Price" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left", children: "Price" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
           lineNumber: 78,
           columnNumber: 29
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left text-nowrap", children: "Display Screen 1" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left text-nowrap", children: "Display Screen 1" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
           lineNumber: 79,
           columnNumber: 29
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left text-nowrap", children: "Display Screen 2" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("th", { className: "p-3 border border-gray-400 text-left text-nowrap", children: "Display Screen 2" }, void 0, !1, {
           fileName: "app/components/ProductGrid.jsx",
           lineNumber: 80,
           columnNumber: 29
@@ -2320,12 +2695,12 @@ function ProductsTable() {
         lineNumber: 64,
         columnNumber: 21
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("tbody", { className: "divide-y divide-gray-200", children: categories.map((category) => {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("tbody", { className: "divide-y divide-gray-200", children: categories.map((category) => {
         let categoryProducts = getProductsForCategory(category);
         return categoryProducts.map((product, index) => {
           var _a, _b;
-          return /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("tr", { className: "border border-gray-400", children: [
-            index === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+          return /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("tr", { className: "border border-gray-400", children: [
+            index === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
               "td",
               {
                 rowSpan: categoryProducts.length,
@@ -2341,8 +2716,8 @@ function ProductsTable() {
               },
               this
             ),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("td", { className: "p-3 font-medium border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex flex-col gap-y-4 w-[250px] h-[150px] justify-between", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("td", { className: "p-3 font-medium border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "flex flex-col gap-y-4 w-[250px] h-[150px] justify-between", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
                 "textarea",
                 {
                   value: product.name || "",
@@ -2361,7 +2736,7 @@ function ProductsTable() {
                 },
                 this
               ),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "text-gray-600", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "text-gray-600", children: [
                 "Upto ",
                 ((_a = product.name) == null ? void 0 : _a.length) || 0,
                 " / 250 characters"
@@ -2379,8 +2754,8 @@ function ProductsTable() {
               lineNumber: 103,
               columnNumber: 37
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("td", { className: "p-3 border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex flex-col gap-y-4 w-[250px] h-[150px] justify-between", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("td", { className: "p-3 border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "flex flex-col gap-y-4 w-[250px] h-[150px] justify-between", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
                 "textarea",
                 {
                   value: product.description || "",
@@ -2399,7 +2774,7 @@ function ProductsTable() {
                 },
                 this
               ),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "text-gray-600", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "text-gray-600", children: [
                 "Upto ",
                 ((_b = product.description) == null ? void 0 : _b.length) || 0,
                 " /     250 characters"
@@ -2417,7 +2792,7 @@ function ProductsTable() {
               lineNumber: 120,
               columnNumber: 37
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("td", { className: "p-3 font-medium border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex flex-col gap-y-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("td", { className: "p-3 font-medium border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "flex flex-col gap-y-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
               "input",
               {
                 type: "text",
@@ -2445,7 +2820,7 @@ function ProductsTable() {
               lineNumber: 138,
               columnNumber: 37
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("td", { className: "p-3 border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("td", { className: "p-3 border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
               Toggle_default,
               {
                 apiOn: product.display_on_screen_1,
@@ -2464,7 +2839,7 @@ function ProductsTable() {
               lineNumber: 153,
               columnNumber: 37
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("td", { className: "p-3 border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("td", { className: "p-3 border border-gray-400", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
               Toggle_default,
               {
                 apiOn: product.display_on_screen_2,
@@ -2503,7 +2878,7 @@ function ProductsTable() {
       lineNumber: 61,
       columnNumber: 13
     }, this),
-    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
       Toast,
       {
         message: toast.message,
@@ -2519,7 +2894,7 @@ function ProductsTable() {
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
       PreviewModal,
       {
         open: showPreviewModal,
@@ -2546,9 +2921,9 @@ function ProductsTable() {
 }
 
 // app/routes/admin/kitchen.cafe.jsx
-var import_jsx_dev_runtime15 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime18 = require("react/jsx-dev-runtime");
 function Cafe() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(ProductsTable, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(ProductsTable, {}, void 0, !1, {
     fileName: "app/routes/admin/kitchen.cafe.jsx",
     lineNumber: 6,
     columnNumber: 9
@@ -2562,20 +2937,20 @@ __export(dashboard_exports, {
   default: () => Dashboard,
   loader: () => loader3
 });
-var import_node5 = require("@remix-run/node"), import_react23 = require("@remix-run/react");
+var import_node5 = require("@remix-run/node"), import_react29 = require("@remix-run/react");
 
 // app/components/CurrentUserCard.jsx
-var import_react21 = require("react");
-var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime");
+var import_react27 = require("react");
+var import_jsx_dev_runtime19 = require("react/jsx-dev-runtime");
 function CurrentUserCard({ user }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "p-4 border rounded-lg shadow", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("h2", { className: "text-xl font-bold mb-2", children: "Current User" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "p-4 border rounded-lg shadow", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("h2", { className: "text-xl font-bold mb-2", children: "Current User" }, void 0, !1, {
       fileName: "app/components/CurrentUserCard.jsx",
       lineNumber: 8,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("p", { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("strong", { children: "ID:" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("p", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("strong", { children: "ID:" }, void 0, !1, {
         fileName: "app/components/CurrentUserCard.jsx",
         lineNumber: 9,
         columnNumber: 16
@@ -2587,8 +2962,8 @@ function CurrentUserCard({ user }) {
       lineNumber: 9,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("p", { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("strong", { children: "Name:" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("p", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("strong", { children: "Name:" }, void 0, !1, {
         fileName: "app/components/CurrentUserCard.jsx",
         lineNumber: 10,
         columnNumber: 16
@@ -2602,8 +2977,8 @@ function CurrentUserCard({ user }) {
       lineNumber: 10,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("p", { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("strong", { children: "Email:" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("p", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("strong", { children: "Email:" }, void 0, !1, {
         fileName: "app/components/CurrentUserCard.jsx",
         lineNumber: 11,
         columnNumber: 16
@@ -2615,8 +2990,8 @@ function CurrentUserCard({ user }) {
       lineNumber: 11,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("p", { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("strong", { children: "Status:" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("p", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("strong", { children: "Status:" }, void 0, !1, {
         fileName: "app/components/CurrentUserCard.jsx",
         lineNumber: 12,
         columnNumber: 16
@@ -2628,8 +3003,8 @@ function CurrentUserCard({ user }) {
       lineNumber: 12,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("p", { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("strong", { children: "Last Access:" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("p", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("strong", { children: "Last Access:" }, void 0, !1, {
         fileName: "app/components/CurrentUserCard.jsx",
         lineNumber: 13,
         columnNumber: 16
@@ -2641,7 +3016,7 @@ function CurrentUserCard({ user }) {
       lineNumber: 13,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("p", { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("p", { children: [
       "Needed one: ",
       user.selected_locations
     ] }, void 0, !0, {
@@ -2657,28 +3032,10 @@ function CurrentUserCard({ user }) {
 }
 
 // app/components/UpdateCurrentUser.jsx
-var import_react22 = require("react");
-
-// app/lib/users.js
-async function updateCurrentUser(payload, token) {
-  var _a, _b;
-  let response = await fetch(`${API_BASE_URL}/users/me`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ data: payload })
-  }), json8 = await response.json();
-  if (!response.ok)
-    throw new Error(((_b = (_a = json8 == null ? void 0 : json8.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to update user");
-  return console.log("Updated user data:", json8), json8.data;
-}
-
-// app/components/UpdateCurrentUser.jsx
-var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime");
+var import_react28 = require("react");
+var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime");
 function UpdateLocation() {
-  let [status, setStatus] = (0, import_react22.useState)("");
+  let [status, setStatus] = (0, import_react28.useState)("");
   async function handleUpdate() {
     try {
       await updateCurrentUser({ first_name: "sa16" }, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc0YzlkNDdjLWE2NmYtNDQ4ZC1hNWY5LTJiODExODRiZmViMyIsInJvbGUiOm51bGwsImFwcF9hY2Nlc3MiOm51bGwsImFkbWluX2FjY2VzcyI6bnVsbCwiaWF0IjoxNzYzMTIwOTc0LCJleHAiOjE3NjMxMjE4NzQsImlzcyI6ImRpcmVjdHVzIn0.7rbr-RuzIxVLNWrn_Q4Q1JxQBFrGC8QDieTfFEc8ve4"), setStatus("Updated successfully!");
@@ -2686,8 +3043,8 @@ function UpdateLocation() {
       setStatus(err.message);
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
       "button",
       {
         onClick: handleUpdate,
@@ -2703,7 +3060,7 @@ function UpdateLocation() {
       },
       this
     ),
-    status && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("p", { className: "mt-2", children: status }, void 0, !1, {
+    status && /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("p", { className: "mt-2", children: status }, void 0, !1, {
       fileName: "app/components/UpdateCurrentUser.jsx",
       lineNumber: 26,
       columnNumber: 24
@@ -2716,90 +3073,99 @@ function UpdateLocation() {
 }
 
 // app/routes/dashboard/index.jsx
-var import_jsx_dev_runtime18 = require("react/jsx-dev-runtime");
+var import_react30 = require("react"), import_jsx_dev_runtime21 = require("react/jsx-dev-runtime");
 async function loader3({ request }) {
   let user = await getCurrentUser(request);
   return (0, import_node5.json)({ user });
 }
 function Dashboard() {
-  let { user, token, refresh_token, expires_in } = (0, import_react23.useLoaderData)();
-  return console.log("\u{1F510} CLIENT \u2014 USER:", user), /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("div", { className: "p-6", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("h1", { className: "text-2xl font-bold", children: [
+  let { user, token, refresh_token, expires_in } = (0, import_react29.useLoaderData)(), { selectedLocation } = (0, import_react30.useContext)(SelectedLocationContext);
+  return console.log("\u{1F510} CLIENT \u2014 USER:", user), /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "p-6", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("h1", { className: "text-2xl font-bold", children: [
       "Welcome, ",
       user.email || "User",
       " \u{1F44B}"
     ] }, void 0, !0, {
       fileName: "app/routes/dashboard/index.jsx",
-      lineNumber: 24,
+      lineNumber: 27,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("div", { className: "mb-4 p-3 rounded bg-gray-100", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("p", { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("strong", { children: "Access Token:" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("h1", { className: "text-2xl font-bold", children: [
+      "Your current location: ",
+      selectedLocation.selectedLocation,
+      "    "
+    ] }, void 0, !0, {
+      fileName: "app/routes/dashboard/index.jsx",
+      lineNumber: 29,
+      columnNumber: 13
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "mb-4 p-3 rounded bg-gray-100", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("strong", { children: "Access Token:" }, void 0, !1, {
           fileName: "app/routes/dashboard/index.jsx",
-          lineNumber: 27,
+          lineNumber: 32,
           columnNumber: 20
         }, this),
         " ",
         token
       ] }, void 0, !0, {
         fileName: "app/routes/dashboard/index.jsx",
-        lineNumber: 27,
+        lineNumber: 32,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("p", { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("strong", { children: "Refresh Token:" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("strong", { children: "Refresh Token:" }, void 0, !1, {
           fileName: "app/routes/dashboard/index.jsx",
-          lineNumber: 28,
+          lineNumber: 33,
           columnNumber: 20
         }, this),
         " ",
         refresh_token
       ] }, void 0, !0, {
         fileName: "app/routes/dashboard/index.jsx",
-        lineNumber: 28,
+        lineNumber: 33,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("p", { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("strong", { children: "Expires In:" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("strong", { children: "Expires In:" }, void 0, !1, {
           fileName: "app/routes/dashboard/index.jsx",
-          lineNumber: 29,
+          lineNumber: 34,
           columnNumber: 20
         }, this),
         " ",
         expires_in
       ] }, void 0, !0, {
         fileName: "app/routes/dashboard/index.jsx",
-        lineNumber: 29,
+        lineNumber: 34,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/dashboard/index.jsx",
-      lineNumber: 26,
+      lineNumber: 31,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(CurrentUserCard, { user }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(CurrentUserCard, { user }, void 0, !1, {
       fileName: "app/routes/dashboard/index.jsx",
-      lineNumber: 32,
+      lineNumber: 37,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(UpdateLocation, { user }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(UpdateLocation, { user }, void 0, !1, {
       fileName: "app/routes/dashboard/index.jsx",
-      lineNumber: 33,
+      lineNumber: 38,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(import_react23.Form, { method: "post", action: "/logout", reloadDocument: !0, children: /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(Button, { type: "submit", variant: "danger", children: "Logout" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(import_react29.Form, { method: "post", action: "/logout", reloadDocument: !0, children: /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(Button, { type: "submit", variant: "danger", children: "Logout" }, void 0, !1, {
       fileName: "app/routes/dashboard/index.jsx",
-      lineNumber: 36,
+      lineNumber: 41,
       columnNumber: 17
     }, this) }, void 0, !1, {
       fileName: "app/routes/dashboard/index.jsx",
-      lineNumber: 35,
+      lineNumber: 40,
       columnNumber: 13
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/dashboard/index.jsx",
-    lineNumber: 23,
+    lineNumber: 26,
     columnNumber: 9
   }, this);
 }
@@ -2809,281 +3175,7 @@ var settings_exports = {};
 __export(settings_exports, {
   default: () => settings_default
 });
-var import_react30 = require("react");
-
-// app/components/AdminLayout.jsx
-var import_react28 = require("@remix-run/react"), import_react29 = require("react");
-
-// app/components/AdminPanelLink.jsx
-var import_react24 = require("@remix-run/react"), import_lucide_react5 = require("lucide-react"), import_clsx3 = __toESM(require("clsx")), import_jsx_dev_runtime19 = require("react/jsx-dev-runtime");
-function AdminPanelLink({
-  to,
-  icon: Icon = import_lucide_react5.Settings,
-  children,
-  className,
-  ...props
-}) {
-  let { pathname } = (0, import_react24.useLocation)(), isActive = pathname === to, showIcon = Icon !== "none";
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
-    import_react24.Link,
-    {
-      to,
-      className: (0, import_clsx3.default)(
-        "flex items-center gap-3 px-6 py-4 transition-colors duration-200",
-        isActive ? "border-l border-gray-300 text-white" : "text-gray-300 hover:bg-gray-700",
-        className
-      ),
-      ...props,
-      children: [
-        showIcon && /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(Icon, { className: "w-5 h-5" }, void 0, !1, {
-          fileName: "app/components/AdminPanelLink.jsx",
-          lineNumber: 29,
-          columnNumber: 26
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("span", { children }, void 0, !1, {
-          fileName: "app/components/AdminPanelLink.jsx",
-          lineNumber: 30,
-          columnNumber: 13
-        }, this)
-      ]
-    },
-    void 0,
-    !0,
-    {
-      fileName: "app/components/AdminPanelLink.jsx",
-      lineNumber: 20,
-      columnNumber: 9
-    },
-    this
-  );
-}
-
-// app/components/AdminLayout.jsx
-var import_lucide_react6 = require("lucide-react");
-
-// app/lib/locations.js
-async function fetchLocations() {
-  let response = await fetch(`${API_BASE_URL}/items/Locations/`);
-  if (!response.ok)
-    throw new Error("Failed to fetch locations.");
-  let result = await response.json();
-  return result.data || result;
-}
-
-// app/components/LocationSelector.jsx
-var import_react25 = require("react"), import_react26 = require("react");
-var import_react27 = require("@headlessui/react"), import_jsx_dev_runtime20 = require("react/jsx-dev-runtime");
-function LocationSelector({ user, token }) {
-  let [locations, setLocations] = (0, import_react26.useState)([]), [selectedLocation, setSelectedLocation] = (0, import_react26.useState)(""), [userId] = (0, import_react26.useState)((user == null ? void 0 : user.id) || null), [toast, setToast] = (0, import_react26.useState)(null), dismissToast = () => setToast(null);
-  (0, import_react26.useEffect)(() => {
-    async function loadData() {
-      try {
-        let locs = await fetchLocations();
-        if (setLocations(locs), user != null && user.selected_location) {
-          let exists = locs.some(
-            (loc) => loc.id === user.selected_location
-          );
-          setSelectedLocation(exists ? user.selected_location : "");
-        } else
-          setSelectedLocation("");
-      } catch (err) {
-        console.error("Error loading locations:", err);
-      }
-    }
-    loadData();
-  }, []);
-  async function handleLocationChange(e) {
-    let value = e.target.value;
-    setSelectedLocation(value);
-    try {
-      await updateCurrentUser({ selected_locations: value }, token), setToast({
-        message: "Location updated successfully!",
-        type: "success"
-      });
-    } catch (err) {
-      console.error(err), setToast({
-        message: err.message || "Failed to update location.",
-        type: "error"
-      });
-    }
-  }
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(import_jsx_dev_runtime20.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "border border-gray-300 px-4 py-2 mt-5 mx-4 mb-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
-      "select",
-      {
-        className: "w-full bg-transparent text-white outline-none",
-        value: selectedLocation,
-        onChange: handleLocationChange,
-        children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("option", { value: "", disabled: !0, children: "Select Location" }, void 0, !1, {
-            fileName: "app/components/LocationSelector.jsx",
-            lineNumber: 71,
-            columnNumber: 21
-          }, this),
-          locations.map((loc) => /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("option", { value: loc.id, children: loc.name }, loc.id, !1, {
-            fileName: "app/components/LocationSelector.jsx",
-            lineNumber: 73,
-            columnNumber: 25
-          }, this))
-        ]
-      },
-      void 0,
-      !0,
-      {
-        fileName: "app/components/LocationSelector.jsx",
-        lineNumber: 66,
-        columnNumber: 17
-      },
-      this
-    ) }, void 0, !1, {
-      fileName: "app/components/LocationSelector.jsx",
-      lineNumber: 65,
-      columnNumber: 13
-    }, this),
-    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
-      Toast,
-      {
-        message: toast.message,
-        type: toast.type,
-        onClose: dismissToast
-      },
-      void 0,
-      !1,
-      {
-        fileName: "app/components/LocationSelector.jsx",
-        lineNumber: 100,
-        columnNumber: 17
-      },
-      this
-    )
-  ] }, void 0, !0, {
-    fileName: "app/components/LocationSelector.jsx",
-    lineNumber: 64,
-    columnNumber: 9
-  }, this);
-}
-var LocationSelector_default = LocationSelector;
-
-// app/components/AdminLayout.jsx
-var import_jsx_dev_runtime21 = require("react/jsx-dev-runtime");
-function AdminLayout({ children, user, token }) {
-  console.log("entered aminlayout");
-  let [open, setOpen] = (0, import_react29.useState)(!0);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "min-h-screen flex relative", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(
-      "aside",
-      {
-        className: "bg-[var(--primary-color)] sticky top-0 h-[100vh] flex flex-col text-white transition-all duration-300 w-64",
-        children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "flex justify-between p-4", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("img", { src: "/images/iss_logo.webp", alt: "iss logo", width: "50px", className: "logo" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 21,
-              columnNumber: 21
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(import_react28.Link, { to: "/logout", className: "block px-3 py-2 hover:bg-gray-700", children: "Logout" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 23,
-              columnNumber: 21
-            }, this)
-          ] }, void 0, !0, {
-            fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 20,
-            columnNumber: 17
-          }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(LocationSelector_default, { user, token }, void 0, !1, {
-            fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 37,
-            columnNumber: 17
-          }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("nav", { className: "space-y-4", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(AdminPanelLink, { to: "/admin", className: "mb-2", children: "Live Stage" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 41,
-              columnNumber: 21
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(AdminPanelLink, { to: "/admin/#", icon: import_lucide_react6.HandPlatter, children: "Kitchen" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 45,
-              columnNumber: 21
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "sub-menu", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(AdminPanelLink, { to: "/admin/kitchen/", icon: "none", className: "pl-16", children: "Cafe & Food Waste" }, void 0, !1, {
-                fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 50,
-                columnNumber: 25
-              }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(AdminPanelLink, { to: "#", icon: "none", className: "pl-16", children: "Signs" }, void 0, !1, {
-                fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 54,
-                columnNumber: 25
-              }, this)
-            ] }, void 0, !0, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 49,
-              columnNumber: 21
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(AdminPanelLink, { to: "/admin/settings", children: "Settings" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 59,
-              columnNumber: 21
-            }, this)
-          ] }, void 0, !0, {
-            fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 39,
-            columnNumber: 17
-          }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "flex mt-auto justify-between pt-4 p-4", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("img", { src: "/images/sous-chef-white.svg", alt: "sous-chef logo", width: "70px", className: "logo" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 65,
-              columnNumber: 21
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "flex flex-col gap-y-2", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { children: "Need support?" }, void 0, !1, {
-                fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 67,
-                columnNumber: 25
-              }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("a", { href: "#", className: "font-bold", children: "Click here" }, void 0, !1, {
-                fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 68,
-                columnNumber: 25
-              }, this)
-            ] }, void 0, !0, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 66,
-              columnNumber: 21
-            }, this)
-          ] }, void 0, !0, {
-            fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 64,
-            columnNumber: 17
-          }, this)
-        ]
-      },
-      void 0,
-      !0,
-      {
-        fileName: "app/components/AdminLayout.jsx",
-        lineNumber: 15,
-        columnNumber: 13
-      },
-      this
-    ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("main", { className: "flex-1 p-6 overflow-y-auto max-w-none mt-[0]", children }, void 0, !1, {
-      fileName: "app/components/AdminLayout.jsx",
-      lineNumber: 73,
-      columnNumber: 13
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/components/AdminLayout.jsx",
-    lineNumber: 14,
-    columnNumber: 9
-  }, this);
-}
-
-// app/routes/admin/settings.jsx
+var import_react31 = require("react");
 var import_jsx_dev_runtime22 = require("react/jsx-dev-runtime");
 function Settings2() {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(AdminLayout, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("div", { children: "This is setting" }, void 0, !1, {
@@ -3104,15 +3196,15 @@ __export(kitchen_exports, {
   default: () => kitchen_default,
   loader: () => loader4
 });
-var import_react31 = require("react");
-var import_react32 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
+var import_react32 = require("react");
+var import_react33 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
 var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime");
 async function loader4({ request }) {
   let { user, token } = await getCurrentUser(request);
   return (0, import_node6.json)({ user, token });
 }
 function Kitchen() {
-  let { user, token } = (0, import_react32.useLoaderData)(), [searchParams, setSearchParams] = (0, import_react32.useSearchParams)(), activeTab = searchParams.get("tab") || "cafe", setTab = (tab) => setSearchParams({ tab }), tabBase = "px-6 py-4 pl-0 font-medium transition-colors", tabActive = "text-[var(--primary-color)] border-b-2 border-b-[var(--primary-color)]", tabInactive = "text-gray-700";
+  let { user, token } = (0, import_react33.useLoaderData)(), [searchParams, setSearchParams] = (0, import_react33.useSearchParams)(), activeTab = searchParams.get("tab") || "cafe", setTab = (tab) => setSearchParams({ tab }), tabBase = "px-6 py-4 pl-0 font-medium transition-colors", tabActive = "text-[var(--primary-color)] border-b-2 border-b-[var(--primary-color)]", tabInactive = "text-gray-700";
   return /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(AdminLayout, { user, token, children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "p-6", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "flex justify-between", children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("h1", { className: "text-2xl font-semibold mb-4 text-[--primary-color]", children: "Kitchen" }, void 0, !1, {
       fileName: "app/routes/admin/kitchen.jsx",
@@ -3204,7 +3296,7 @@ __export(logout_exports, {
   default: () => logout_default,
   loader: () => loader5
 });
-var import_react33 = require("react"), import_node7 = require("@remix-run/node");
+var import_react34 = require("react"), import_node7 = require("@remix-run/node");
 var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime");
 async function action2({ request }) {
   let session = await getSession(request);
@@ -3232,10 +3324,10 @@ __export(signup_exports, {
   action: () => action3,
   default: () => signup_default
 });
-var import_react37 = require("react");
+var import_react38 = require("react");
 
 // app/components/Input.jsx
-var import_react34 = require("react"), import_jsx_dev_runtime25 = require("react/jsx-dev-runtime");
+var import_react35 = require("react"), import_jsx_dev_runtime25 = require("react/jsx-dev-runtime");
 function Input({ children, type = "text", className = "", ...props }) {
   let styles = `w-full pr-10 pl-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`;
   return /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("input", { type, className: styles, ...props }, void 0, !1, {
@@ -3247,9 +3339,9 @@ function Input({ children, type = "text", className = "", ...props }) {
 var Input_default = Input;
 
 // app/hooks/useImageUpload.js
-var import_react35 = require("react"), DEFAULT_MAX_SIZE = 2 * 1024 * 1024;
+var import_react36 = require("react"), DEFAULT_MAX_SIZE = 2 * 1024 * 1024;
 function useImageUpload({ maxSize = DEFAULT_MAX_SIZE } = {}) {
-  let [images, setImages] = (0, import_react35.useState)([]), [error, setError] = (0, import_react35.useState)(""), [isDragging, setIsDragging] = (0, import_react35.useState)(!1), resetError = (0, import_react35.useCallback)(() => setError(""), []), addFiles = (0, import_react35.useCallback)(
+  let [images, setImages] = (0, import_react36.useState)([]), [error, setError] = (0, import_react36.useState)(""), [isDragging, setIsDragging] = (0, import_react36.useState)(!1), resetError = (0, import_react36.useCallback)(() => setError(""), []), addFiles = (0, import_react36.useCallback)(
     (fileList) => {
       if (!fileList || fileList.length === 0)
         return;
@@ -3267,27 +3359,27 @@ function useImageUpload({ maxSize = DEFAULT_MAX_SIZE } = {}) {
 `)) : resetError(), validFiles.length > 0 && setImages((prev) => [...prev, ...validFiles]);
     },
     [maxSize, resetError]
-  ), handleInputChange = (0, import_react35.useCallback)(
+  ), handleInputChange = (0, import_react36.useCallback)(
     (event) => {
       addFiles(event.target.files), event.target.value = "";
     },
     [addFiles]
-  ), handleDrop = (0, import_react35.useCallback)(
+  ), handleDrop = (0, import_react36.useCallback)(
     (event) => {
       event.preventDefault(), event.stopPropagation(), setIsDragging(!1), addFiles(event.dataTransfer.files);
     },
     [addFiles]
-  ), handleDragOver = (0, import_react35.useCallback)((event) => {
+  ), handleDragOver = (0, import_react36.useCallback)((event) => {
     event.preventDefault(), event.stopPropagation(), setIsDragging(!0);
-  }, []), handleDragLeave = (0, import_react35.useCallback)((event) => {
+  }, []), handleDragLeave = (0, import_react36.useCallback)((event) => {
     event.preventDefault(), event.stopPropagation(), setIsDragging(!1);
-  }, []), removeImage = (0, import_react35.useCallback)((index) => {
+  }, []), removeImage = (0, import_react36.useCallback)((index) => {
     setImages((prev) => {
       let next = [...prev], [removed] = next.splice(index, 1);
       return removed && URL.revokeObjectURL(removed.preview), next;
     });
   }, []);
-  return (0, import_react35.useEffect)(() => () => {
+  return (0, import_react36.useEffect)(() => () => {
     images.forEach((img) => URL.revokeObjectURL(img.preview));
   }, [images]), {
     images,
@@ -3443,13 +3535,13 @@ function ImagesUpload({ name = "default-name", maxSize }) {
 }
 
 // app/routes/signup/index.jsx
-var import_react38 = require("@remix-run/react");
+var import_react39 = require("@remix-run/react");
 
 // app/components/PasswordInput.jsx
-var import_react36 = require("react");
+var import_react37 = require("react");
 var import_lucide_react7 = require("lucide-react"), import_jsx_dev_runtime27 = require("react/jsx-dev-runtime");
 function PasswordInput({ ...props }) {
-  let [showPassword, setShowPassword] = (0, import_react36.useState)(!1);
+  let [showPassword, setShowPassword] = (0, import_react37.useState)(!1);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "relative", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
       Input_default,
@@ -3554,7 +3646,7 @@ async function action3({ request }) {
   return (0, import_node8.redirect)("/login");
 }
 function SignUp() {
-  let actionData = (0, import_react38.useActionData)();
+  let actionData = (0, import_react39.useActionData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
       "SignUp",
@@ -3578,7 +3670,7 @@ function SignUp() {
       lineNumber: 112,
       columnNumber: 17
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(import_react38.Form, { method: "post", encType: "multipart/form-data", onSubmit: () => console.log("Form submitted"), className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(import_react39.Form, { method: "post", encType: "multipart/form-data", onSubmit: () => console.log("Form submitted"), className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(Input_default, { type: "name", name: "first-name", required: !0, placeholder: "Enter your first name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
         lineNumber: 117,
@@ -3635,29 +3727,28 @@ var signup_default = SignUp;
 // app/routes/admin/index.jsx
 var admin_exports = {};
 __export(admin_exports, {
-  default: () => admin_default,
+  default: () => Admin,
   loader: () => loader6
 });
-var import_react39 = require("react");
-var import_react40 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
+var import_react40 = require("react");
+var import_react41 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
 var import_jsx_dev_runtime29 = require("react/jsx-dev-runtime");
 async function loader6({ request }) {
   let { user, token } = await getCurrentUser(request);
   return (0, import_node9.json)({ user, token });
 }
 function Admin() {
-  let { user, token } = (0, import_react40.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(AdminLayout, { user, token, children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react40.Outlet, {}, void 0, !1, {
+  let { user, token } = (0, import_react41.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(AdminLayout, { user, token, children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react41.Outlet, {}, void 0, !1, {
     fileName: "app/routes/admin/index.jsx",
-    lineNumber: 21,
+    lineNumber: 23,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/routes/admin/index.jsx",
-    lineNumber: 20,
+    lineNumber: 22,
     columnNumber: 5
   }, this);
 }
-var admin_default = Admin;
 
 // app/routes/login/index.jsx
 var login_exports = {};
@@ -3666,7 +3757,7 @@ __export(login_exports, {
   default: () => LoginPage,
   loader: () => loader7
 });
-var import_node10 = require("@remix-run/node"), import_react41 = require("@remix-run/react");
+var import_node10 = require("@remix-run/node"), import_react42 = require("@remix-run/react");
 var import_lucide_react8 = require("lucide-react");
 var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 async function loader7({ request }) {
@@ -3695,58 +3786,58 @@ async function action4({ request }) {
   }
 }
 function LoginPage() {
-  let actionData = (0, import_react41.useActionData)(), transition = (0, import_react41.useTransition)(), [searchParams] = (0, import_react41.useSearchParams)(), redirectTo = searchParams.get("redirectTo") || "/dashboard";
+  let actionData = (0, import_react42.useActionData)(), transition = (0, import_react42.useTransition)(), [searchParams] = (0, import_react42.useSearchParams)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
       "Login",
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 96,
+        lineNumber: 95,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
-      lineNumber: 94,
+      lineNumber: 93,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react41.Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("input", { type: "hidden", name: "redirectTo", value: searchParams.get("redirectTo") || "/admin" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react42.Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("input", { type: "hidden", name: "redirectTo", value: searchParams.get("redirectTo") || "/admin/kitchen" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 100,
+        lineNumber: 99,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 102,
+        lineNumber: 101,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", name: "password" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 104,
+        lineNumber: 103,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "text-right", children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("a", { href: "#", children: "Forgot Password?" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 106,
+        lineNumber: 105,
         columnNumber: 45
       }, this) }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 106,
+        lineNumber: 105,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Button, { type: "submit", disabled: transition.state === "submitting", children: transition.state === "submitting" ? "Logging in..." : "Login" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 108,
+        lineNumber: 107,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
-      lineNumber: 99,
+      lineNumber: 98,
       columnNumber: 13
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/login/index.jsx",
-    lineNumber: 92,
+    lineNumber: 91,
     columnNumber: 9
   }, this);
 }
@@ -3756,7 +3847,7 @@ var test_exports = {};
 __export(test_exports, {
   default: () => test_default
 });
-var import_react42 = require("react");
+var import_react43 = require("react");
 var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime");
 function Test() {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { children: [
@@ -3783,18 +3874,18 @@ var routes_exports = {};
 __export(routes_exports, {
   default: () => Index
 });
-var import_react43 = require("@remix-run/react");
+var import_react44 = require("@remix-run/react");
 var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
 function Index() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(LoginPage, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_jsx_dev_runtime32.Fragment, { children: "Hello world" }, void 0, !1, {
     fileName: "app/routes/index.jsx",
-    lineNumber: 7,
+    lineNumber: 8,
     columnNumber: 5
   }, this);
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "a60a9919", entry: { module: "/build/entry.client-3FQPG5TY.js", imports: ["/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-RME4RTF7.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-CG7JJUWX.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-JFD7DZ5O.js", imports: ["/build/_shared/chunk-3HRROXVY.js", "/build/_shared/chunk-5BYPI3AI.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-LWHL7UAZ.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-RJO4CZ7O.js", imports: ["/build/_shared/chunk-3HRROXVY.js", "/build/_shared/chunk-45PB35EH.js", "/build/_shared/chunk-QM52U5KH.js", "/build/_shared/chunk-5BYPI3AI.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-NXFCOVYJ.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-LWHL7UAZ.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen.cafe": { id: "routes/admin/kitchen.cafe", parentId: "root", path: "admin/kitchen/cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen.cafe-GVIDURLS.js", imports: ["/build/_shared/chunk-NXFCOVYJ.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen.foodwaste": { id: "routes/admin/kitchen.foodwaste", parentId: "root", path: "admin/kitchen/foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen.foodwaste-JF7C7RRY.js", imports: ["/build/_shared/chunk-45PB35EH.js", "/build/_shared/chunk-QM52U5KH.js", "/build/_shared/chunk-5BYPI3AI.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-O7JANNUK.js", imports: ["/build/_shared/chunk-3HRROXVY.js", "/build/_shared/chunk-5BYPI3AI.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-LWHL7UAZ.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-QAPFMI42.js", imports: ["/build/_shared/chunk-KHAFF6G6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.$weekno.foodwaste.$orientation": { id: "routes/banner.$weekno.foodwaste.$orientation", parentId: "root", path: "banner/:weekno/foodwaste/:orientation", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.$weekno.foodwaste.$orientation-CJOIFJWV.js", imports: ["/build/_shared/chunk-QM52U5KH.js", "/build/_shared/chunk-5BYPI3AI.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-3BUKOWM2.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-5RIYENTH.js", imports: ["/build/_shared/chunk-LWHL7UAZ.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-HT2QKPB6.js", imports: ["/build/_shared/chunk-KQFF6LSN.js", "/build/_shared/chunk-EFEUUENY.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-FIQ3ZGLH.js", imports: ["/build/_shared/chunk-KQFF6LSN.js", "/build/_shared/chunk-EFEUUENY.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-X6JOJQ77.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-YDLLEQ5N.js", imports: ["/build/_shared/chunk-EFEUUENY.js", "/build/_shared/chunk-3LNOBBMD.js", "/build/_shared/chunk-FPQW764O.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-A60A9919.js" };
+var assets_manifest_default = { version: "f7c14976", entry: { module: "/build/entry.client-3FQPG5TY.js", imports: ["/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-RME4RTF7.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M6VPJM3C.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-R7IYOH53.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-2EIRXXOF.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-R6ZS7E2E.js", imports: ["/build/_shared/chunk-N7WYWIJZ.js", "/build/_shared/chunk-K7J76WSV.js", "/build/_shared/chunk-AX3KC2PM.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-PSDAS6IS.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-2EIRXXOF.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen.cafe": { id: "routes/admin/kitchen.cafe", parentId: "root", path: "admin/kitchen/cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen.cafe-5V4XFSOL.js", imports: ["/build/_shared/chunk-PSDAS6IS.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen.foodwaste": { id: "routes/admin/kitchen.foodwaste", parentId: "root", path: "admin/kitchen/foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen.foodwaste-RTJHKB56.js", imports: ["/build/_shared/chunk-K7J76WSV.js", "/build/_shared/chunk-AX3KC2PM.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-2EIRXXOF.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-DNWP732F.js", imports: ["/build/_shared/chunk-2EIRXXOF.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-QAPFMI42.js", imports: ["/build/_shared/chunk-KHAFF6G6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-3UPKB4UJ.js", imports: ["/build/_shared/chunk-AX3KC2PM.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-3BUKOWM2.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-S2G4KXHZ.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-2EIRXXOF.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-YWPLNQAW.js", imports: ["/build/_shared/chunk-N7WYWIJZ.js", "/build/_shared/chunk-2V4HDJCS.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-K7J76WSV.js", "/build/_shared/chunk-AX3KC2PM.js", "/build/_shared/chunk-KHAFF6G6.js", "/build/_shared/chunk-PSDAS6IS.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-2EIRXXOF.js", "/build/_shared/chunk-TVRUMNI6.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-SSMRX47O.js", imports: ["/build/_shared/chunk-2V4HDJCS.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-X6JOJQ77.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-NNOQ6KBE.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-F7C14976.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
@@ -3806,14 +3897,6 @@ var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath 
     caseSensitive: void 0,
     module: root_exports
   },
-  "routes/banner.$weekno.foodwaste.$orientation": {
-    id: "routes/banner.$weekno.foodwaste.$orientation",
-    parentId: "root",
-    path: "banner/:weekno/foodwaste/:orientation",
-    index: void 0,
-    caseSensitive: void 0,
-    module: banner_weekno_foodwaste_orientation_exports
-  },
   "routes/banner.product.$productId.$screen": {
     id: "routes/banner.product.$productId.$screen",
     parentId: "root",
@@ -3821,6 +3904,14 @@ var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath 
     index: void 0,
     caseSensitive: void 0,
     module: banner_product_productId_screen_exports
+  },
+  "routes/banner.foodwaste.$locationId": {
+    id: "routes/banner.foodwaste.$locationId",
+    parentId: "root",
+    path: "banner/foodwaste/:locationId",
+    index: void 0,
+    caseSensitive: void 0,
+    module: banner_foodwaste_locationId_exports
   },
   "routes/admin/kitchen.foodwaste": {
     id: "routes/admin/kitchen.foodwaste",
