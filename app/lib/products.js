@@ -19,9 +19,11 @@ export async function fetchCategoriesAndProducts() {
         (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
     );
 
-    const productsData = (products.data || []).slice().sort(
-        (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
-    );
+    const productsData = (products.data || [])
+        .filter(prod => !!prod.name && String(prod.name).trim().length > 0)
+        .slice().sort(
+            (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
+        );
 
     return {
         categories: categoriesData,

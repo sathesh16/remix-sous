@@ -126,10 +126,16 @@
 
 .food-waste-hr-bg {
     background-image: url('/images/foodWasteHR.jpg');
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: #AFB8A0;
 }
 
 .food-waste-vr-bg {
     background-image: url('/images/foodWasteVr.png');
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: #AFB8A0;
 }

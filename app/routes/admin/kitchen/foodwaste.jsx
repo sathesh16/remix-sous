@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState, useContext } from 'react';
-import useFoodWasteTable from '../../hooks/useFoodWasteTable';
-import { getWeekDateRange } from '../../utils/date';
-import Toast from '../../components/Toast';
-import Button from '../../components/Button';
+import useFoodWasteTable from '../../../hooks/useFoodWasteTable';
+import { getWeekDateRange } from '../../../utils/date';
+import Toast from '../../../components/Toast';
+import Button from '../../../components/Button';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import FoodWastePreview from '../../components/FoodWastePreview';
-import CopyLinkButton from '../../components/CopyLinkButton';
+import FoodWastePreview from '../../../components/FoodWastePreview';
+import CopyLinkButton from '../../../components/CopyLinkButton';
 import { Eye } from 'lucide-react';
-import OrientationToggle from '../../components/OrientationToggle';
-import { SelectedLocationContext } from '../../components/AdminLayout';
-import { updateLocationIsVertical } from '../../lib/locations';
+import OrientationToggle from '../../../components/OrientationToggle';
+import { SelectedLocationContext } from '../../../components/AdminLayout';
+import { updateLocationIsVertical } from '../../../lib/locations';
 
 
 dayjs.extend(weekday);
@@ -44,7 +44,9 @@ function FoodWaste() {
         isSaving,
         hasPendingUpdates,
         toast,
-        dismissToast
+        dismissToast,
+        orientation,
+        setOrientation
     } = useFoodWasteTable(selectedLocation.selectedLocation);
 
     const [isClient, setIsClient] = useState(false);
@@ -52,7 +54,6 @@ function FoodWaste() {
     const [sheetData, setSheetData] = useState([]);
     const [showPreview, setShowPreview] = useState(false);
     const [previewData, setPreviewData] = useState(null);
-    const [orientation, setOrientation] = useState("landscape");
 
     useEffect(() => {
         setIsClient(true);
@@ -131,12 +132,6 @@ function FoodWaste() {
         }
         setSheetData(newData);
     }, [sheetData, rowModels, handleUpdate]);
-
-    useEffect(() => {
-        if (week) {
-            localStorage.setItem("banner_week", week);
-        }
-    }, [week]);
 
     const buildPreviewData = useCallback(() => {
         const currentWeekNum = Number(week);
@@ -219,13 +214,14 @@ function FoodWaste() {
                 </div>
                 <div className="flex gap-2">
                     <OrientationToggle
+                        value={orientation}
                         onChange={(value) => {
                             setOrientation(value);
-                            console.log(value);
-                            // value will be "portrait" or "landscape"
-                            // const isVertical = value === "portrait";
 
-                            updateLocationIsVertical(selectedLocation.selectedLocation, value === "portrait")
+                            updateLocationIsVertical(
+                                selectedLocation.selectedLocation,
+                                value === "portrait"
+                            )
                                 .then(() => console.log("Orientation updated"))
                                 .catch(err => console.error(err));
                         }}
@@ -276,7 +272,7 @@ function FoodWaste() {
             ) : null}
             {showPreview && previewData && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowPreview(false)}>
-                    <div className={`bg-white rounded-md ${orientation === "landscape" ? "w-[1500px]" : "w-[1080px]"}`} onClick={(e) => e.stopPropagation()}>
+                    <div className={`bg-white rounded-md w-[90vw] h-[90vh]`} onClick={(e) => e.stopPropagation()}>
                         <FoodWastePreview
                             currentWeek={previewData.currentWeek}
                             orientation={orientation}

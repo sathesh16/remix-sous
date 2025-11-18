@@ -8,6 +8,14 @@ export default async function fetchLocations() {
     return result.data || result;
 }
 
+export async function getLocationIsVertical(id) {
+    const response = await fetch(`${API_BASE_URL}/items/Locations/${id}`);
+    if (!response.ok) throw new Error("Failed to fetch locations.");
+
+    const result = await response.json();
+    return result.data.is_vertical_foodwaste;
+}
+
 export async function updateLocationIsVertical(id, isVertical) {
     const payload = {
         is_vertical_foodwaste: isVertical

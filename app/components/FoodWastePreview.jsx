@@ -5,6 +5,7 @@ import { ArrowBigDown, } from "lucide-react";
 import clsx from "clsx";
 import useClipboard from "../hooks/useClipboard";
 import buildAbsoluteUrl from "../utils/url";
+import WeeklyAreaChart from "./WeeklyAreaChart";
 
 
 
@@ -53,9 +54,11 @@ export default function FoodWastePreview({
     const handleCopy = () => clipboard.copy(linkToCopy);
 
     return (
-        <div className={clsx("bg-[#E6EFE6] py-8 px-12 rounded-md", orientation === "landscape" ? "food-waste-hr-bg" : "food-waste-vr-bg")}>
+        <div className={clsx("bg-[#E6EFE6] py-8 px-12 rounded-md h-full overflow-y-auto", orientation === "landscape" ? "food-waste-hr-bg" : "food-waste-vr-bg")}>
             <h1 className={clsx("mb-10 font-semibold text-3xl", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>Food Waste</h1>
-            <div className="grid gap-8">
+            {plateWasteCurrentWeek === 0 ? (
+                <div></div>
+            ) : (<div className="grid gap-12">
                 <section className={clsx("flex", orientation === "landscape" ? "gap-12 items-center" : "flex-col items-start gap-4")}>
                     <div className={clsx(orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black")}>
                         <h3 className="text-xl font-semibold mb-1">
@@ -71,7 +74,7 @@ export default function FoodWastePreview({
 
                     <div className="flex items-center gap-12">
                         <div className="text-center">
-                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                            <div className={clsx("mb-4 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
                                 Last Week
                             </div>
                             <div className={`w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorPlate}`}>
@@ -84,7 +87,7 @@ export default function FoodWastePreview({
                             </div>
                         </div>
                         <div className="text-center">
-                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                            <div className={clsx("mb-4 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
                                 Weekly Average*
                             </div>
                             <div className="w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white">
@@ -96,8 +99,8 @@ export default function FoodWastePreview({
                         </div>
 
                         <div className={clsx("flex flex-col gap-2", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
-                            {/* 👇 Replaced Sparkline */}
-                            <ClientApexChart data={plateSeries} color="#CBD5E1" />
+                            {/* 👇 Replaced chart */}
+                            <WeeklyAreaChart series={plateSeries} color="#CBD5E1" />
                             Weekly Average *
                             <br />
                             (Based on last three months *)
@@ -107,7 +110,7 @@ export default function FoodWastePreview({
                     </div>
                 </section>
 
-                <section className={clsx("flex", orientation === "landscape" ? "gap-12 items-center" : "flex-col items-start gap-4")}>
+                {totalWasteCurrentWeek === 0 ? (<div></div>) : (<section className={clsx("flex", orientation === "landscape" ? "gap-12 items-center" : "flex-col items-start gap-4")}>
                     <div className={clsx(orientation === "landscape" ? "basis-[200px] text-[#24361F]" : "basis-auto text-black")}>
                         <h3 className="text-xl font-semibold mb-1">
                             Total Waste
@@ -122,7 +125,7 @@ export default function FoodWastePreview({
 
                     <div className="flex items-center gap-12">
                         <div className="text-center">
-                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                            <div className={clsx("mb-4 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
                                 Last Week
                             </div>
                             <div className={`w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold ${textColorAvg}`}>
@@ -134,7 +137,7 @@ export default function FoodWastePreview({
                             </div>
                         </div>
                         <div className="text-center">
-                            <div className={clsx("mb-2 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
+                            <div className={clsx("mb-4 text-xs font-semibold", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
                                 Weekly Average*
                             </div>
                             <div className="w-28 h-28 rounded-full border border-white/60 flex flex-col items-center justify-center text-3xl font-semibold text-white">
@@ -144,8 +147,8 @@ export default function FoodWastePreview({
                         </div>
 
                         <div className={clsx("flex flex-col gap-2 ", orientation === "landscape" ? "text-[#24361F]" : "text-black")}>
-                            {/* 👇 Replaced Sparkline */}
-                            <ClientApexChart data={totalSeries} color="#CBD5E1" />
+                            {/* 👇 Replaced graph */}
+                            <WeeklyAreaChart series={totalSeries} color="#CBD5E1" />
                             Weekly Average *
                             <br />
                             (Based on last three months *)
@@ -153,9 +156,12 @@ export default function FoodWastePreview({
 
 
                     </div>
-                </section>
-            </div>
-            <div className="flex justify-center mt-4">
+                </section>)}
+
+
+            </div>)}
+
+            <div className="flex justify-start mt-4">
                 <button
                     onClick={handleCopy}
                     disabled={clipboard.status === "success"}

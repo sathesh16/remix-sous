@@ -3,31 +3,35 @@ import { fetchFoodWaste, patchFoodWaste, createFoodWaste } from "../lib/foodWast
 import weekday from "dayjs/plugin/weekday";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { getLocationIsVertical } from "../lib/locations";
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
 
-export default function useFoodWasteTable(selectedLocation) {
+export default function useFoodWasteTable(selectedLocationId) {
     const [records, setRecords] = useState([]);
     const [updates, setUpdates] = useState({});
     const [week, setWeek] = useState(dayjs().week());
     const [loading, setLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [toast, setToast] = useState(null);
+    const [orientation, setOrientation] = useState("landscape");
 
     // Load data
     useEffect(() => {
         async function load() {
             setLoading(true);
             try {
-                const data = await fetchFoodWaste(selectedLocation);
+                const data = await fetchFoodWaste(selectedLocationId);
+                const isVertical = await getLocationIsVertical(selectedLocationId);
+                setOrientation(isVertical ? "portrait" : "landscape");
                 setRecords(data);
             } finally {
                 setLoading(false);
             }
         }
-        if (selectedLocation) load();
-    }, [selectedLocation]);
+        if (selectedLocationId) load();
+    }, [selectedLocationId]);
 
     // Filter records by selected week
     const filteredRecords = useMemo(() => {
@@ -78,14 +82,20 @@ export default function useFoodWasteTable(selectedLocation) {
                 toUpdate.push({ id: Number(key), ...data });
             } else {
                 // New record (no id) → create
-                toCreate.push(data); // MUST contain date before saving
+                toCreate.push({
+                    ...data,
+                    location_id: selectedLocation,
+                });
             }
         });
 
         setIsSaving(true);
         try {
             if (toUpdate.length > 0) await patchFoodWaste(toUpdate);
-            if (toCreate.length > 0) await createFoodWaste(toCreate);
+            if (toCreate.length > 0) {
+                console.log("entered data to pass" + toCreate)
+                await createFoodWaste(toCreate);
+            }
 
             showToast("✅ Saved successfully!");
             setUpdates({});
@@ -111,5 +121,7 @@ export default function useFoodWasteTable(selectedLocation) {
         hasPendingUpdates: Object.keys(updates).length > 0,
         toast,
         dismissToast,
+        orientation,
+        setOrientation
     };
 }

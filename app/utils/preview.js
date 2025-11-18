@@ -16,10 +16,18 @@ export function buildPreviewData(categories = [], products = [], screen = "scree
         .map((category) => {
             const categoryProductIds = new Set(category?.product_list || []);
 
-            const filteredProducts = products.filter(
-                (product) =>
-                    categoryProductIds.has(product.id) && Boolean(product?.[screenKey])
-            );
+            const filteredProducts = products.filter((product) => {
+                const hasId = categoryProductIds.has(product.id);
+                const hasScreenKey = Boolean(product?.[screenKey]);
+
+                // VALID NAME CHECK
+                const hasValidName =
+                    product?.name &&
+                    typeof product.name === "string" &&
+                    product.name.trim().length > 0;
+
+                return hasId && hasScreenKey && hasValidName;
+            });
 
             if (filteredProducts.length === 0) {
                 return null;
@@ -31,6 +39,7 @@ export function buildPreviewData(categories = [], products = [], screen = "scree
             };
         })
         .filter(Boolean);
+
 
     if (filtered.length === 0) {
         return [

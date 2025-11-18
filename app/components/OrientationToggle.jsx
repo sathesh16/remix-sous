@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Tv2 as ImageIcon, Smartphone as SmartphoneIcon } from "lucide-react";
 
-export default function OrientationToggle({ onChange }) {
-    const [orientation, setOrientation] = useState("landscape");
+export default function OrientationToggle({ value, onChange }) {
+    const orientation = value; // controlled by parent
 
-    const handleClick = (value) => {
-        setOrientation(value);
-        if (onChange) onChange(value);
+    const handleClick = (val) => {
+        if (onChange) onChange(val);
     };
 
     return (

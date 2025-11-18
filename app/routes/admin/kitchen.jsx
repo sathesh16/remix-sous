@@ -1,7 +1,7 @@
 import React from 'react'
 import AdminLayout from '../../components/AdminLayout'
 import ProductsGrid from '../../components/ProductGrid'
-import FoodWaste from './kitchen.foodwaste'
+import FoodWaste from './kitchen/foodwaste'
 import { useLoaderData, useSearchParams, Outlet, NavLink } from '@remix-run/react'
 import { json } from '@remix-run/node'
 import { getCurrentUser } from '../../sessionHandler.server'
@@ -36,35 +36,30 @@ function Kitchen() {
                     <h1 className="text-2xl font-semibold mb-4 text-[--primary-color]">Kitchen</h1>
                 </div>
 
-                <div role="tablist" aria-label="Kitchen sections" className="flex gap-6 mb-4 border-b border-gray-200">
-                    <button
-                        role="tab"
-                        aria-selected={activeTab === 'cafe'}
-                        className={`${tabBase} ${activeTab === 'cafe' ? tabActive : tabInactive}`}
-                        onClick={() => setTab('cafe')}
-                        type="button"
+                <div className="flex gap-6 mb-4 border-b border-gray-200">
+
+                    <NavLink
+                        to="cafe"
+                        className={({ isActive }) =>
+                            `${tabBase} ${isActive ? tabActive : tabInactive}`
+                        }
                     >
                         Cafe
-                    </button>
+                    </NavLink>
 
-                    <button
-                        role="tab"
-                        aria-selected={activeTab === 'foodwaste'}
-                        className={`${tabBase} ${activeTab === 'foodwaste' ? tabActive : tabInactive}`}
-                        onClick={() => setTab('foodwaste')}
-                        type="button"
+                    <NavLink
+                        to="foodwaste"
+                        className={({ isActive }) =>
+                            `${tabBase} ${isActive ? tabActive : tabInactive}`
+                        }
                     >
                         Food Waste
-                    </button>
+                    </NavLink>
+
                 </div>
 
-                <div role="tabpanel" hidden={activeTab !== 'cafe'}>
-                    <ProductsGrid />
-                </div>
-
-                <div role="tabpanel" hidden={activeTab !== 'foodwaste'}>
-                    <FoodWaste />
-                </div>
+                {/* CHILD ROUTES RENDER HERE */}
+                <Outlet />
             </div>
         </AdminLayout>
     )

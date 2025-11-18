@@ -8,6 +8,7 @@ import fetchLocations from '../lib/locations';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
+import WeeklyAreaChart from '../components/WeeklyAreaChart';
 
 
 
@@ -149,7 +150,9 @@ export default function FoodWasteBanner() {
                         Food Waste
                     </h1>
 
-                    <div className="grid gap-24">
+                    {plateWasteCurrentWeek === 0 ? (
+                        <div></div>
+                    ) : (<div className="grid gap-24">
                         {/* --- Plate Waste --- */}
                         <section
                             className={clsx(
@@ -213,11 +216,11 @@ export default function FoodWasteBanner() {
 
                                 <div
                                     className={clsx(
-                                        "flex flex-col gap-2",
+                                        "flex flex-col gap-2 basis-[300px]",
                                         orientation === "landscape" ? "text-[#24361F]" : "text-black"
                                     )}
                                 >
-                                    <ClientApexChart data={plateSeries} color="#CBD5E1" />
+                                    <WeeklyAreaChart series={plateSeries} color="#CBD5E1" />
                                     Weekly Average *
                                     <br />
                                     (Based on last three months *)
@@ -226,7 +229,7 @@ export default function FoodWasteBanner() {
                         </section>
 
                         {/* --- Total Waste --- */}
-                        <section
+                        {totalWasteCurrentWeek === 0 ? (<div></div>) : (<section
                             className={clsx(
                                 "flex",
                                 orientation === "landscape"
@@ -288,18 +291,21 @@ export default function FoodWasteBanner() {
 
                                 <div
                                     className={clsx(
-                                        "flex flex-col gap-2",
+                                        "flex flex-col gap-2 basis-[300px]",
                                         orientation === "landscape" ? "text-[#24361F]" : "text-black"
                                     )}
                                 >
-                                    <ClientApexChart data={totalSeries} color="#CBD5E1" />
+                                    <WeeklyAreaChart series={totalSeries} color="#CBD5E1" />
                                     Weekly Average *
                                     <br />
                                     (Based on last three months *)
                                 </div>
                             </div>
-                        </section>
-                    </div>
+                        </section>)}
+
+                    </div>)}
+
+
                 </div>
 
             </div>

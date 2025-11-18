@@ -1,17 +1,18 @@
+import { fetchCategoriesAndProducts } from "../lib/products";
 import { API_BASE_URL } from "../utils/constants";
 
 
-export async function fetchCategoriesAndProducts() {
-    const [catRes, prodRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/items/Products`).then(res => res.json()),
-        fetch(`${API_BASE_URL}/items/Product_list`).then(res => res.json()),
-    ]);
+// export async function fetchCategoriesAndProducts() {
+//     const [catRes, prodRes] = await Promise.all([
+//         fetch(`${API_BASE_URL}/items/Products`).then(res => res.json()),
+//         fetch(`${API_BASE_URL}/items/Product_list`).then(res => res.json()),
+//     ]);
 
-    return {
-        categories: catRes.data || [],
-        products: prodRes.data || [],
-    };
-}
+//     return {
+//         categories: catRes.data || [],
+//         products: prodRes.data || [],
+//     };
+// }
 
 // ✅ The function we will reuse anywhere (Modal Preview / Full Page Preview)
 export async function getPreviewData(screen) {

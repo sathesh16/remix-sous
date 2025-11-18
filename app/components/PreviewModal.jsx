@@ -35,11 +35,15 @@ export default function PreviewModal({ open, onClose, data, screen, setScreen, s
                             <div className="columns-2 gap-x-10 w-full">
                                 {data.map(({ category, products }) => (
                                     <div key={category} className="category mb-6 break-inside-avoid">
-                                        <h3 className="bold-text text-lg pb-1 mb-2">{category}</h3>
+                                        <h3 className="bold-text text-lg">{category}</h3>
 
                                         {products.map(prod => (
-                                            <div key={prod.id} className="flex justify-between items-center py-1">
-                                                <span>{prod.name}</span>
+                                            <div key={prod.id} className="flex gap-[20px] justify-between items-center py-1">
+                                                <div className="flex flex-col">
+                                                    <span>{prod.name}</span>
+                                                    <span>{prod.description}</span>
+                                                </div>
+
                                                 <span>{prod.price}</span>
                                             </div>
                                         ))}
@@ -50,31 +54,7 @@ export default function PreviewModal({ open, onClose, data, screen, setScreen, s
                     </>)
                 }
                 <div className="menu-wrapper p-6 pt-32 text-[var(--banner-text-color)] rounded-tr-[50px] rounded-br-[50px]">
-                    {/* <div className="flex gap-3 mt-6 justify-end">
-                        <button onClick={() => setScreen("screen1")}>Screen 1</button>
-                        <button onClick={() => setScreen("screen2")}>Screen 2</button>
-                    </div>
-                    <h2 className="text-4xl bold-text mb-2">
-                        THE BRICK
-                    </h2>
-
-                    <h6 className="text-2xl regular-text mb-6">Lounge & Bar</h6>
-
-                    <div className="columns-2 gap-x-10 w-full">
-                        {data.map(({ category, products }) => (
-                            <div key={category} className="category mb-6 break-inside-avoid">
-                                <h3 className="bold-text text-lg pb-1 mb-2">{category}</h3>
-
-                                {products.map(prod => (
-                                    <div key={prod.id} className="flex justify-between items-center py-1">
-                                        <span>{prod.name}</span>
-                                        <span>{prod.price}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div> */}
-                    <div className="flex justify-center mt-6">
+                    <div className="flex justify-start mt-6">
                         <CopyLinkButton screenNumber={screenNumber} />
                     </div>
                 </div>

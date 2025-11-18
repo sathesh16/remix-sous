@@ -59,7 +59,7 @@ export default function AdminLayout({ children, user, token }) {
                         </AdminPanelLink>
 
                         <div className="sub-menu">
-                            <AdminPanelLink to="/admin/kitchen/" icon="none" className="pl-16">
+                            <AdminPanelLink to="/admin/kitchen/cafe" icon="none" className="pl-16">
                                 Cafe & Food Waste
                             </AdminPanelLink>
 

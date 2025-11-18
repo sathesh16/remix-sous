@@ -3,8 +3,7 @@ import { redirect } from '@remix-run/node';
 import { destroySession, getSession } from '../../sessionHandler.server';
 
 // Runs when <Form method="post" action="/logout" /> is submitted
-export async function action({ request }) {
-    // ✅ Pass the full request object, not just the cookie string
+export async function loader({ request }) {
     const session = await getSession(request);
 
     return redirect("/login", {
@@ -13,16 +12,9 @@ export async function action({ request }) {
         },
     });
 }
-export async function loader() {
-    return redirect("/login");
+
+export default function Logout() {
+    return null; // never rendered
 }
 
-function Logout() {
-    return (
-        <div>
-            You have been logged out
-        </div>
-    )
-}
 
-export default Logout

@@ -100,7 +100,13 @@ export default function ProductsTable() {
                                     )}
 
                                     {/* ✅ Product Name (Input) */}
-                                    <td className="p-3 font-medium border border-gray-400">
+                                    <td
+                                        className="p-3 font-medium border border-gray-400 cursor-pointer"
+                                        onClick={(e) => {
+                                            const textarea = e.currentTarget.querySelector("textarea");
+                                            textarea?.focus();
+                                        }}
+                                    >
                                         <div className="flex flex-col gap-y-4 w-[250px] h-[150px] justify-between">
                                             <textarea
                                                 value={product.name || ""}
@@ -117,7 +123,13 @@ export default function ProductsTable() {
                                     </td>
 
                                     {/* ✅ Description (Textarea) */}
-                                    <td className="p-3 border border-gray-400" >
+                                    <td
+                                        className="p-3 border border-gray-400 cursor-pointer"
+                                        onClick={(e) => {
+                                            const textarea = e.currentTarget.querySelector("textarea");
+                                            textarea?.focus();
+                                        }}
+                                    >
                                         <div className="flex flex-col gap-y-4 w-[250px] h-[150px] justify-between">
                                             <textarea
                                                 value={product.description || ""}
@@ -135,7 +147,13 @@ export default function ProductsTable() {
                                     </td>
 
                                     {/* ✅ Price (Only Numbers , , and - allowed) */}
-                                    <td className="p-3 font-medium border border-gray-400">
+                                    <td
+                                        className="p-3 font-medium border border-gray-400 cursor-pointer"
+                                        onClick={(e) => {
+                                            const input = e.currentTarget.querySelector("input");
+                                            input?.focus();
+                                        }}
+                                    >
                                         <div className="flex flex-col gap-y-4">
                                             <input
                                                 type="text"
