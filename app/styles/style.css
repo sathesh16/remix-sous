@@ -41,6 +41,10 @@
     font-display: swap;
 }
 
+html {
+    overflow-y: auto !important;
+}
+
 .bold-text {
     font-family: 'LEGO Typewell';
     font-weight: 700;

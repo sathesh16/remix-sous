@@ -12,7 +12,7 @@ import { commitSession, getSession } from "../../sessionHandler.server.js";
 export async function loader({ request }) {
     const session = await getSession(request);
     const user = session.get("user");
-    if (user) return redirect("/login");
+    if (user) return redirect("/admin/kitchen/cafe");
     return null;
 }
 
@@ -40,7 +40,7 @@ export async function action({ request }) {
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
-    const redirectTo = formData.get("redirectTo") || "/admin/kitchen";
+    const redirectTo = formData.get("redirectTo") || "/admin/kitchen/cafe";
 
     try {
         // 1️⃣ Login to Directus
@@ -96,7 +96,7 @@ export default function LoginPage() {
             </div>
 
             <Form method="post" className="flex flex-col gap-6 max-w-[400px] w-full">
-                <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") || "/admin/kitchen"} />
+                <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") || "/admin/kitchen/cafe"} />
 
                 <Input type="email" required name="email" placeholder="Email" />
 
@@ -107,7 +107,10 @@ export default function LoginPage() {
                 <Button type="submit" disabled={transition.state === "submitting"}>
                     {transition.state === "submitting" ? "Logging in..." : "Login"}
                 </Button>
-
+            </Form>
+            <Form method="post" action="/signup" reloadDocument className="flex max-w-[400px] justify-between w-full items-center">
+                <div>Don't have an account,</div>
+                <Button type="submit">Sign Up</Button>
             </Form>
         </div>
     );

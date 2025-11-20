@@ -1,12 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import ImagesUpload from '../../components/ImagesUpload'
-import { Form, useActionData } from '@remix-run/react'
+import { Form, useActionData, useNavigate } from '@remix-run/react'
 import PasswordInput from '../../components/PasswordInput'
 import { json, redirect } from '@remix-run/node'
 // import { redirect } from 'next/dist/server/api-utils'
 import { API_BASE_URL } from '../../utils/constants'
+import LocationSelector from '../../components/LocationSelector'
+import MultiselectLocation from '../../components/MultiselectLocation'
+import Toast from '../../components/Toast'
+import { getSession } from '../../sessionHandler.server'
+
+export async function loader({ request }) {
+    const session = await getSession(request);
+    const user = session.get("user");
+
+    if (user) {
+        throw redirect("/admin/kitchen/cafe");
+    }
+
+    return null;
+}
 
 export async function action({ request }) {
     const contentType = request.headers.get("content-type");
@@ -23,9 +38,16 @@ export async function action({ request }) {
     const email = formData.get("email");
     const password = formData.get("password");
     const confirmPassword = formData.get("confirm-password");
+    const selectLocations = formData.getAll("selected-locations[]").map(Number)
+    selectLocations.sort()
 
     if (password !== confirmPassword) {
-        return json({ error: "Passwords do not match" }, { status: 400 });
+        return json({
+            toast: {
+                type: "error",
+                message: error.message || "Password mismatch",
+            }
+        });
     }
 
     // 🔹 Step 1: Check if email already exists
@@ -35,7 +57,12 @@ export async function action({ request }) {
     const checkEmailJson = await checkEmailRes.json();
 
     if (checkEmailJson?.data?.length > 0) {
-        return json({ error: "Email already registered" }, { status: 400 });
+        return json({
+            toast: {
+                type: "error",
+                message: "Email already registered",
+            }
+        });
     }
 
     // 🔹 Step 2: Handle multiple file uploads
@@ -79,21 +106,52 @@ export async function action({ request }) {
             password,
             avatar: avatarId,
             status: "active",
+            allowed_locations: selectLocations,
         }),
     });
 
     if (!userRes.ok) {
         const err = await userRes.text();
-        return json({ error: err }, { status: 400 });
+        return json(
+            {
+                toast: {
+                    type: "error",
+                    message: err.message || "There is a problem in saving user",
+                }
+            }
+        );
     }
 
-    return redirect("/login");
+    return json({
+        toast: {
+            type: "success",
+            message: "User saved successfully"
+        },
+        redirectTo: "/login"
+    });
 }
 
 
 function SignUp() {
+    const [selectedLocations, setSelectedLocations] = useState([]);
+    // Toast state
+    const [toast, setToast] = useState(null);
+
+    const navigate = useNavigate()
 
     const actionData = useActionData()
+    useEffect(() => {
+        if (actionData?.toast) {
+            setToast(actionData.toast);
+
+            // If redirect flag exists, wait 3 sec and redirect
+            if (actionData.redirectTo) {
+                setTimeout(() => {
+                    navigate(actionData.redirectTo);
+                }, 1000); // same as Toast auto-close time
+            }
+        }
+    }, [actionData, navigate]);
 
     return (
 
@@ -103,14 +161,6 @@ function SignUp() {
                 SignUp
                 <img src="/images/iss_logo.webp" width="50px" />
             </div>
-
-            {actionData?.error && (
-                <p className="text-red-500 text-sm">{actionData.error}</p>
-            )}
-
-            {actionData?.success && (
-                <p className="text-red-500 text-sm">okay</p>
-            )}
 
             <Form method="post" encType="multipart/form-data" onSubmit={() => console.log("Form submitted")} className="flex flex-col gap-6 max-w-[400px] w-full">
 
@@ -128,11 +178,28 @@ function SignUp() {
 
                 <PasswordInput placeholder="Confirm password" required name="confirm-password" />
 
+                <MultiselectLocation
+                    selectedLocations={selectedLocations}
+                    setSelectedLocations={setSelectedLocations}
+                    variant="black"
+                />
+
+                {selectedLocations.map(id => (
+                    <input key={id} type="hidden" name="selected-locations[]" value={id} />
+                ))}
+
                 <Button type="submit">
                     Sign up
                 </Button>
 
             </Form>
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
 
     )

@@ -61,10 +61,10 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_node = require("@remix-run/node");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-VMKDBN5Y.css";
+var app_default = "/build/_assets/app-KCU7DPQG.css";
 
 // app/styles/style.css
-var style_default = "/build/_assets/style-3MFDESGA.css";
+var style_default = "/build/_assets/style-62GU4SJC.css";
 
 // app/root.jsx
 var import_jsx_dev_runtime2 = require("react/jsx-dev-runtime"), links = () => [{ rel: "stylesheet", href: app_default }, { rel: "stylesheet", href: style_default }], meta = () => ({
@@ -117,7 +117,7 @@ function App() {
     columnNumber: 5
   }, this);
 }
-function ErrorBoundary({ error }) {
+function ErrorBoundary({ error: error2 }) {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("html", { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("head", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("title", { children: "Error" }, void 0, !1, {
       fileName: "app/root.jsx",
@@ -134,7 +134,7 @@ function ErrorBoundary({ error }) {
         lineNumber: 48,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("p", { children: error == null ? void 0 : error.message }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("p", { children: error2 == null ? void 0 : error2.message }, void 0, !1, {
         fileName: "app/root.jsx",
         lineNumber: 49,
         columnNumber: 9
@@ -216,8 +216,8 @@ async function patchProducts(payload) {
     body: JSON.stringify(payload)
   });
   if (!response.ok) {
-    let error = await response.text();
-    throw new Error(error || "Failed to save products.");
+    let error2 = await response.text();
+    throw new Error(error2 || "Failed to save products.");
   }
   return response.json();
 }
@@ -278,7 +278,7 @@ function BannerProductPreviewRoute() {
           lineNumber: 47,
           columnNumber: 29
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "columns-2 gap-x-10 w-full", children: previewData.map(({ category, products, error, message }) => error ? /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "text-center text-red-400 py-10", children: message }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "columns-2 gap-x-10 w-full", children: previewData.map(({ category, products, error: error2, message }) => error2 ? /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "text-center text-red-400 py-10", children: message }, void 0, !1, {
           fileName: "app/routes/banner.product.$productId.$screen.jsx",
           lineNumber: 52,
           columnNumber: 41
@@ -1457,15 +1457,18 @@ function Toast({ message, type = "success", onClose }) {
 
 // app/components/LocationSelector.jsx
 var import_react14 = require("@headlessui/react"), import_jsx_dev_runtime13 = require("react/jsx-dev-runtime");
-function LocationSelector({ user, token, selectedLocation: selectedLocation2, setSelectedLocation }) {
+function LocationSelector({ user, token, selectedLocation: selectedLocation2, setSelectedLocation, variant = "default" }) {
   var _a;
-  let [locations, setLocations] = (0, import_react13.useState)([]), [userId] = (0, import_react13.useState)((user == null ? void 0 : user.id) || null), [toast, setToast] = (0, import_react13.useState)(null), dismissToast = () => setToast(null);
+  let [locations, setLocations] = (0, import_react13.useState)([]), [userId] = (0, import_react13.useState)((user == null ? void 0 : user.id) || null), [toast, setToast] = (0, import_react13.useState)(null), dismissToast = () => setToast(null), isBlack = variant === "black", textColor = isBlack ? "text-[#777]" : "text-white", bgColor = isBlack ? "bg-white" : "bg-gray-700", optionActiveBg = isBlack ? "bg-gray-200" : "bg-gray-600", dropdownPosition = isBlack ? "" : "absolute";
   (0, import_react13.useEffect)(() => {
     async function loadData() {
+      var _a2;
       try {
-        let locs = await fetchLocations();
-        if (setLocations(locs), user != null && user.selected_locations) {
-          let exists = locs.some(
+        let locs = await fetchLocations(), allowedLocs = (_a2 = user == null ? void 0 : user.allowed_locations) != null && _a2.length ? locs.filter(
+          (loc) => user.allowed_locations.includes(loc.id)
+        ) : [];
+        if (setLocations(allowedLocs), user != null && user.selected_locations) {
+          let exists = allowedLocs.some(
             (loc) => loc.id === user.selected_locations
           );
           setSelectedLocation(exists ? user.selected_locations : "");
@@ -1479,6 +1482,8 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
   }, []);
   async function handleLocationChange(value) {
     setSelectedLocation(value);
+    let selectedLocObject = locations.find((l) => l.id === value);
+    selectedLocObject && window.dispatchEvent(new CustomEvent("locationChanged", { detail: selectedLocObject }));
     try {
       await updateCurrentUser({ selected_locations: value }, token), setToast({
         message: "Location updated successfully!",
@@ -1492,54 +1497,70 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
     }
   }
   return /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_jsx_dev_runtime13.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "mt-5 mx-4 mb-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react14.Listbox, { value: selectedLocation2, onChange: handleLocationChange, children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "relative w-full", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react14.ListboxButton, { className: "w-full border border-gray-300 text-white px-4 py-2 rounded text-left flex justify-between", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: selectedLocation2 ? (_a = locations.find((l) => l.id === selectedLocation2)) == null ? void 0 : _a.name : "Select Location" }, void 0, !1, {
-          fileName: "app/components/LocationSelector.jsx",
-          lineNumber: 68,
-          columnNumber: 29
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { className: "ml-2 text-white", children: "\u25BC" }, void 0, !1, {
-          fileName: "app/components/LocationSelector.jsx",
-          lineNumber: 74,
-          columnNumber: 29
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/components/LocationSelector.jsx",
-        lineNumber: 67,
-        columnNumber: 25
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react14.ListboxOptions, { className: "bg-gray-700 mt-1 rounded shadow-lg text-left absolute w-full", children: locations.map((loc) => /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
-        import_react14.ListboxOption,
+    /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react14.Listbox, { value: selectedLocation2, onChange: (value) => handleLocationChange(value), children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "relative w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+        import_react14.ListboxButton,
         {
-          value: loc.id,
-          className: ({ active }) => `px-4 py-2 cursor-pointer ${active ? "bg-gray-600" : ""}`,
-          children: loc.name
+          className: `w-full border border-gray-300 px-4 py-2 rounded text-left flex justify-between ${textColor}`,
+          children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: selectedLocation2 ? (_a = locations.find((l) => l.id === selectedLocation2)) == null ? void 0 : _a.name : "Allowed Locations" }, void 0, !1, {
+              fileName: "app/components/LocationSelector.jsx",
+              lineNumber: 90,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { className: textColor, children: "\u25BC" }, void 0, !1, {
+              fileName: "app/components/LocationSelector.jsx",
+              lineNumber: 95,
+              columnNumber: 25
+            }, this)
+          ]
         },
-        loc.id,
+        void 0,
+        !0,
+        {
+          fileName: "app/components/LocationSelector.jsx",
+          lineNumber: 87,
+          columnNumber: 21
+        },
+        this
+      ),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+        import_react14.ListboxOptions,
+        {
+          className: `${bgColor} mt-1 rounded shadow-lg text-left w-full ${dropdownPosition}`,
+          children: locations.map((loc) => /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
+            import_react14.ListboxOption,
+            {
+              value: loc.id,
+              className: ({ active }) => `px-4 py-2 cursor-pointer ${active ? optionActiveBg : ""} ${textColor}`,
+              children: loc.name
+            },
+            loc.id,
+            !1,
+            {
+              fileName: "app/components/LocationSelector.jsx",
+              lineNumber: 102,
+              columnNumber: 29
+            },
+            this
+          ))
+        },
+        void 0,
         !1,
         {
           fileName: "app/components/LocationSelector.jsx",
-          lineNumber: 80,
-          columnNumber: 33
+          lineNumber: 98,
+          columnNumber: 21
         },
         this
-      )) }, void 0, !1, {
-        fileName: "app/components/LocationSelector.jsx",
-        lineNumber: 78,
-        columnNumber: 25
-      }, this)
+      )
     ] }, void 0, !0, {
       fileName: "app/components/LocationSelector.jsx",
-      lineNumber: 66,
-      columnNumber: 21
-    }, this) }, void 0, !1, {
-      fileName: "app/components/LocationSelector.jsx",
-      lineNumber: 65,
+      lineNumber: 86,
       columnNumber: 17
     }, this) }, void 0, !1, {
       fileName: "app/components/LocationSelector.jsx",
-      lineNumber: 64,
+      lineNumber: 85,
       columnNumber: 13
     }, this),
     toast && /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
@@ -1553,14 +1574,14 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
       !1,
       {
         fileName: "app/components/LocationSelector.jsx",
-        lineNumber: 100,
+        lineNumber: 117,
         columnNumber: 17
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/components/LocationSelector.jsx",
-    lineNumber: 63,
+    lineNumber: 84,
     columnNumber: 9
   }, this);
 }
@@ -1569,31 +1590,40 @@ var LocationSelector_default = LocationSelector;
 // app/components/AdminLayout.jsx
 var import_jsx_dev_runtime14 = require("react/jsx-dev-runtime"), SelectedLocationContext = (0, import_react16.createContext)(null);
 function AdminLayout({ children, user, token }) {
-  console.log("entered aminlayout");
-  let [open, setOpen] = (0, import_react16.useState)(!0), [selectedLocation2, setSelectedLocation] = (0, import_react16.useState)((user == null ? void 0 : user.selected_locations) || "");
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(SelectedLocationContext.Provider, { value: { selectedLocation: selectedLocation2, setSelectedLocation }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "min-h-screen flex relative", children: [
+  let [logoUrl, setLogoUrl] = (0, import_react16.useState)(null), [open, setOpen] = (0, import_react16.useState)(!0), [selectedLocation2, setSelectedLocation] = (0, import_react16.useState)((user == null ? void 0 : user.selected_locations) || "");
+  return (0, import_react16.useEffect)(() => {
+    function updateLogo(e) {
+      let loc = e.detail;
+      if (!(loc != null && loc.logo)) {
+        setLogoUrl(null);
+        return;
+      }
+      setLogoUrl(`${API_BASE_URL}/assets/${loc.logo}`);
+    }
+    return window.addEventListener("locationChanged", updateLogo), () => window.removeEventListener("locationChanged", updateLogo);
+  }, []), /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(SelectedLocationContext.Provider, { value: { selectedLocation: selectedLocation2, setSelectedLocation }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "min-h-screen flex relative", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
       "aside",
       {
         className: "bg-[var(--primary-color)] sticky top-0 h-[100vh] flex flex-col text-white transition-all duration-300 w-64",
         children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex justify-between p-4", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("img", { src: "/images/iss_logo.webp", alt: "iss logo", width: "50px", className: "logo" }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("img", { src: logoUrl || "/images/iss_logo.webp", alt: "iss logo", width: "50px", className: "logo" }, void 0, !1, {
               fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 27,
+              lineNumber: 42,
               columnNumber: 25
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(import_react15.Link, { to: "/logout", className: "block px-3 py-2 hover:bg-gray-700", children: "Logout" }, void 0, !1, {
               fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 29,
+              lineNumber: 44,
               columnNumber: 25
             }, this)
           ] }, void 0, !0, {
             fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 26,
+            lineNumber: 41,
             columnNumber: 21
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
+          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "mt-5 mx-4 mb-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
             LocationSelector_default,
             {
               user,
@@ -1605,73 +1635,77 @@ function AdminLayout({ children, user, token }) {
             !1,
             {
               fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 43,
-              columnNumber: 21
+              lineNumber: 59,
+              columnNumber: 25
             },
             this
-          ),
+          ) }, void 0, !1, {
+            fileName: "app/components/AdminLayout.jsx",
+            lineNumber: 58,
+            columnNumber: 21
+          }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("nav", { className: "space-y-4", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(AdminPanelLink, { to: "/admin", className: "mb-2", children: "Live Stage" }, void 0, !1, {
               fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 53,
+              lineNumber: 70,
               columnNumber: 25
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(AdminPanelLink, { to: "/admin/#", icon: import_lucide_react2.HandPlatter, children: "Kitchen" }, void 0, !1, {
               fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 57,
+              lineNumber: 74,
               columnNumber: 25
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "sub-menu", children: [
               /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(AdminPanelLink, { to: "/admin/kitchen/cafe", icon: "none", className: "pl-16", children: "Cafe & Food Waste" }, void 0, !1, {
                 fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 62,
+                lineNumber: 79,
                 columnNumber: 29
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(AdminPanelLink, { to: "#", icon: "none", className: "pl-16", children: "Signs" }, void 0, !1, {
                 fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 66,
-                columnNumber: 29
-              }, this)
-            ] }, void 0, !0, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 61,
-              columnNumber: 25
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(AdminPanelLink, { to: "/admin/settings", children: "Settings" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 71,
-              columnNumber: 25
-            }, this)
-          ] }, void 0, !0, {
-            fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 51,
-            columnNumber: 21
-          }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex mt-auto justify-between pt-4 p-4", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("img", { src: "/images/sous-chef-white.svg", alt: "sous-chef logo", width: "70px", className: "logo" }, void 0, !1, {
-              fileName: "app/components/AdminLayout.jsx",
-              lineNumber: 77,
-              columnNumber: 25
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex flex-col gap-y-2", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { children: "Need support?" }, void 0, !1, {
-                fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 79,
-                columnNumber: 29
-              }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("a", { href: "#", className: "font-bold", children: "Click here" }, void 0, !1, {
-                fileName: "app/components/AdminLayout.jsx",
-                lineNumber: 80,
+                lineNumber: 83,
                 columnNumber: 29
               }, this)
             ] }, void 0, !0, {
               fileName: "app/components/AdminLayout.jsx",
               lineNumber: 78,
               columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(AdminPanelLink, { to: "/admin/settings", children: "Settings" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 88,
+              columnNumber: 25
             }, this)
           ] }, void 0, !0, {
             fileName: "app/components/AdminLayout.jsx",
-            lineNumber: 76,
+            lineNumber: 68,
+            columnNumber: 21
+          }, this),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex mt-auto justify-between pt-4 p-4", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("img", { src: "/images/sous-chef-white.svg", alt: "sous-chef logo", width: "70px", className: "logo" }, void 0, !1, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 94,
+              columnNumber: 25
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex flex-col gap-y-2", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { children: "Need support?" }, void 0, !1, {
+                fileName: "app/components/AdminLayout.jsx",
+                lineNumber: 96,
+                columnNumber: 29
+              }, this),
+              /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("a", { href: "#", className: "font-bold", children: "Click here" }, void 0, !1, {
+                fileName: "app/components/AdminLayout.jsx",
+                lineNumber: 97,
+                columnNumber: 29
+              }, this)
+            ] }, void 0, !0, {
+              fileName: "app/components/AdminLayout.jsx",
+              lineNumber: 95,
+              columnNumber: 25
+            }, this)
+          ] }, void 0, !0, {
+            fileName: "app/components/AdminLayout.jsx",
+            lineNumber: 93,
             columnNumber: 21
           }, this)
         ]
@@ -1680,23 +1714,23 @@ function AdminLayout({ children, user, token }) {
       !0,
       {
         fileName: "app/components/AdminLayout.jsx",
-        lineNumber: 21,
+        lineNumber: 36,
         columnNumber: 17
       },
       this
     ),
     /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("main", { className: "flex-1 p-6 overflow-y-auto max-w-none mt-[0]", children }, void 0, !1, {
       fileName: "app/components/AdminLayout.jsx",
-      lineNumber: 85,
+      lineNumber: 102,
       columnNumber: 17
     }, this)
   ] }, void 0, !0, {
     fileName: "app/components/AdminLayout.jsx",
-    lineNumber: 20,
+    lineNumber: 35,
     columnNumber: 13
   }, this) }, void 0, !1, {
     fileName: "app/components/AdminLayout.jsx",
-    lineNumber: 19,
+    lineNumber: 34,
     columnNumber: 9
   }, this);
 }
@@ -1909,7 +1943,7 @@ var import_react22 = require("react");
 // app/hooks/useClipboard.js
 var import_react21 = require("react"), DEFAULT_RESET_DELAY = 2e3;
 function useClipboard({ resetDelay = DEFAULT_RESET_DELAY } = {}) {
-  let [status, setStatus] = (0, import_react21.useState)("idle"), [error, setError] = (0, import_react21.useState)(null), reset = (0, import_react21.useCallback)(() => {
+  let [status, setStatus] = (0, import_react21.useState)("idle"), [error2, setError] = (0, import_react21.useState)(null), reset = (0, import_react21.useCallback)(() => {
     setStatus("idle"), setError(null);
   }, []);
   return {
@@ -1927,7 +1961,7 @@ function useClipboard({ resetDelay = DEFAULT_RESET_DELAY } = {}) {
       [reset, resetDelay]
     ),
     status,
-    error,
+    error: error2,
     reset,
     isSuccess: status === "success",
     isError: status === "error"
@@ -2147,7 +2181,7 @@ function buildPreviewData(categories = [], products = [], screen = "screen1") {
 
 // app/hooks/useProductsTable.js
 function useProductsTable() {
-  let [categories, setCategories] = (0, import_react25.useState)([]), [products, setProducts] = (0, import_react25.useState)([]), [updates, setUpdates] = (0, import_react25.useState)({}), [toast, setToast] = (0, import_react25.useState)(null), [loading, setLoading] = (0, import_react25.useState)(!1), [error, setError] = (0, import_react25.useState)(null), [isSaving, setIsSaving] = (0, import_react25.useState)(!1);
+  let [categories, setCategories] = (0, import_react25.useState)([]), [products, setProducts] = (0, import_react25.useState)([]), [updates, setUpdates] = (0, import_react25.useState)({}), [toast, setToast] = (0, import_react25.useState)(null), [loading, setLoading] = (0, import_react25.useState)(!1), [error2, setError] = (0, import_react25.useState)(null), [isSaving, setIsSaving] = (0, import_react25.useState)(!1);
   (0, import_react25.useEffect)(() => {
     let isMounted = !0;
     async function loadData() {
@@ -2220,7 +2254,7 @@ function useProductsTable() {
     showToast,
     dismissToast,
     loading,
-    error,
+    error: error2,
     isSaving,
     hasPendingUpdates,
     previewDataForScreen
@@ -2239,7 +2273,7 @@ function ProductsTable() {
     toast,
     dismissToast,
     loading,
-    error,
+    error: error2,
     isSaving,
     previewDataForScreen
   } = useProductsTable_default(), [showPreviewModal, setShowPreviewModal] = (0, import_react26.useState)(!1), [previewScreen, setPreviewScreen] = (0, import_react26.useState)("screen1"), previewData = (0, import_react26.useMemo)(
@@ -2250,7 +2284,7 @@ function ProductsTable() {
     fileName: "app/components/ProductGrid.jsx",
     lineNumber: 32,
     columnNumber: 16
-  }, this) : error ? /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "p-6 text-red-600", children: error }, void 0, !1, {
+  }, this) : error2 ? /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "p-6 text-red-600", children: error2 }, void 0, !1, {
     fileName: "app/components/ProductGrid.jsx",
     lineNumber: 36,
     columnNumber: 16
@@ -3524,9 +3558,10 @@ function Logout() {
 var signup_exports = {};
 __export(signup_exports, {
   action: () => action2,
-  default: () => signup_default
+  default: () => signup_default,
+  loader: () => loader6
 });
-var import_react38 = require("react");
+var import_react40 = require("react");
 
 // app/components/Input.jsx
 var import_react35 = require("react"), import_jsx_dev_runtime26 = require("react/jsx-dev-runtime");
@@ -3543,7 +3578,7 @@ var Input_default = Input;
 // app/hooks/useImageUpload.js
 var import_react36 = require("react"), DEFAULT_MAX_SIZE = 2 * 1024 * 1024;
 function useImageUpload({ maxSize = DEFAULT_MAX_SIZE } = {}) {
-  let [images, setImages] = (0, import_react36.useState)([]), [error, setError] = (0, import_react36.useState)(""), [isDragging, setIsDragging] = (0, import_react36.useState)(!1), resetError = (0, import_react36.useCallback)(() => setError(""), []), addFiles = (0, import_react36.useCallback)(
+  let [images, setImages] = (0, import_react36.useState)([]), [error2, setError] = (0, import_react36.useState)(""), [isDragging, setIsDragging] = (0, import_react36.useState)(!1), resetError = (0, import_react36.useCallback)(() => setError(""), []), addFiles = (0, import_react36.useCallback)(
     (fileList) => {
       if (!fileList || fileList.length === 0)
         return;
@@ -3585,7 +3620,7 @@ function useImageUpload({ maxSize = DEFAULT_MAX_SIZE } = {}) {
     images.forEach((img) => URL.revokeObjectURL(img.preview));
   }, [images]), {
     images,
-    error,
+    error: error2,
     isDragging,
     addFiles,
     handleInputChange,
@@ -3603,7 +3638,7 @@ var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime");
 function ImagesUpload({ name = "default-name", maxSize }) {
   let {
     images,
-    error,
+    error: error2,
     isDragging,
     handleInputChange,
     handleDrop,
@@ -3671,7 +3706,7 @@ function ImagesUpload({ name = "default-name", maxSize }) {
       },
       this
     ),
-    error && /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("p", { className: "text-red-500 mt-2", children: error }, void 0, !1, {
+    error2 && /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("p", { className: "text-red-500 mt-2", children: error2 }, void 0, !1, {
       fileName: "app/components/ImagesUpload.jsx",
       lineNumber: 49,
       columnNumber: 23
@@ -3737,7 +3772,7 @@ function ImagesUpload({ name = "default-name", maxSize }) {
 }
 
 // app/routes/signup/index.jsx
-var import_react39 = require("@remix-run/react");
+var import_react41 = require("@remix-run/react");
 
 // app/components/PasswordInput.jsx
 var import_react37 = require("react");
@@ -3795,20 +3830,147 @@ var PasswordInput_default = PasswordInput;
 
 // app/routes/signup/index.jsx
 var import_node8 = require("@remix-run/node");
+
+// app/components/MultiselectLocation.jsx
+var import_react38 = require("@headlessui/react"), import_react39 = require("react");
 var import_jsx_dev_runtime29 = require("react/jsx-dev-runtime");
+function MultiselectLocation({ selectedLocations, setSelectedLocations, variant = "default" }) {
+  let [locations, setLocations] = (0, import_react39.useState)([]), [toast, setToast] = (0, import_react39.useState)(null), isBlack = variant === "black", textColor = isBlack ? "text-[#777]" : "text-white", bgColor = isBlack ? "bg-white" : "bg-gray-700", optionActiveBg = isBlack ? "bg-gray-200" : "bg-gray-600", dropdownPosition = isBlack ? "" : "absolute";
+  (0, import_react39.useEffect)(() => {
+    async function loadData() {
+      try {
+        let locs = await fetchLocations();
+        setLocations(locs);
+      } catch (err) {
+        console.error("Error loading locations:", err);
+      }
+    }
+    loadData();
+  }, []);
+  async function handleLocationChange(value) {
+    setSelectedLocations(value);
+  }
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_jsx_dev_runtime29.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react38.Listbox, { multiple: !0, value: selectedLocations, onChange: handleLocationChange, children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "relative w-full", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+      import_react38.ListboxButton,
+      {
+        className: `w-full border border-gray-300 px-4 py-2 rounded text-left flex justify-between ${textColor}`,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { children: selectedLocations.length > 0 ? selectedLocations.map((id) => {
+            var _a;
+            return (_a = locations.find((l) => l.id === id)) == null ? void 0 : _a.name;
+          }).join(", ") : "Select Locations" }, void 0, !1, {
+            fileName: "app/components/MultiselectLocation.jsx",
+            lineNumber: 45,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { className: textColor, children: "\u25BC" }, void 0, !1, {
+            fileName: "app/components/MultiselectLocation.jsx",
+            lineNumber: 52,
+            columnNumber: 13
+          }, this)
+        ]
+      },
+      void 0,
+      !0,
+      {
+        fileName: "app/components/MultiselectLocation.jsx",
+        lineNumber: 42,
+        columnNumber: 11
+      },
+      this
+    ),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+      import_react38.ListboxOptions,
+      {
+        className: `${bgColor} mt-1 rounded shadow-lg text-left w-full ${dropdownPosition}`,
+        children: locations.map((loc) => /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
+          import_react38.ListboxOption,
+          {
+            value: loc.id,
+            className: ({ active, selected }) => `px-4 py-2 cursor-pointer flex justify-between ${active ? optionActiveBg : ""} ${textColor}`,
+            children: ({ selected }) => /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_jsx_dev_runtime29.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { children: loc.name }, void 0, !1, {
+                fileName: "app/components/MultiselectLocation.jsx",
+                lineNumber: 69,
+                columnNumber: 21
+              }, this),
+              selected && /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { children: "\u2713" }, void 0, !1, {
+                fileName: "app/components/MultiselectLocation.jsx",
+                lineNumber: 70,
+                columnNumber: 34
+              }, this)
+            ] }, void 0, !0, {
+              fileName: "app/components/MultiselectLocation.jsx",
+              lineNumber: 68,
+              columnNumber: 19
+            }, this)
+          },
+          loc.id,
+          !1,
+          {
+            fileName: "app/components/MultiselectLocation.jsx",
+            lineNumber: 59,
+            columnNumber: 15
+          },
+          this
+        ))
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/components/MultiselectLocation.jsx",
+        lineNumber: 55,
+        columnNumber: 11
+      },
+      this
+    )
+  ] }, void 0, !0, {
+    fileName: "app/components/MultiselectLocation.jsx",
+    lineNumber: 40,
+    columnNumber: 9
+  }, this) }, void 0, !1, {
+    fileName: "app/components/MultiselectLocation.jsx",
+    lineNumber: 39,
+    columnNumber: 7
+  }, this) }, void 0, !1, {
+    fileName: "app/components/MultiselectLocation.jsx",
+    lineNumber: 38,
+    columnNumber: 5
+  }, this);
+}
+var MultiselectLocation_default = MultiselectLocation;
+
+// app/routes/signup/index.jsx
+var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
+async function loader6({ request }) {
+  if ((await getSession(request)).get("user"))
+    throw (0, import_node8.redirect)("/admin/kitchen/cafe");
+  return null;
+}
 async function action2({ request }) {
   var _a, _b;
   let contentType = request.headers.get("content-type");
   if (console.log("Received Content-Type:", contentType), !contentType || !contentType.includes("multipart/form-data"))
     return (0, import_node8.json)({ error: "Bad content-type", contentType }, { status: 400 });
-  let formData = await request.formData(), first_name = formData.get("first-name"), last_name = formData.get("last-name"), email = formData.get("email"), password = formData.get("password"), confirmPassword = formData.get("confirm-password");
-  if (password !== confirmPassword)
-    return (0, import_node8.json)({ error: "Passwords do not match" }, { status: 400 });
+  let formData = await request.formData(), first_name = formData.get("first-name"), last_name = formData.get("last-name"), email = formData.get("email"), password = formData.get("password"), confirmPassword = formData.get("confirm-password"), selectLocations = formData.getAll("selected-locations[]").map(Number);
+  if (selectLocations.sort(), password !== confirmPassword)
+    return (0, import_node8.json)({
+      toast: {
+        type: "error",
+        message: error.message || "Password mismatch"
+      }
+    });
   let checkEmailJson = await (await fetch(
     `${API_BASE_URL}/users?filter[email][_eq]=${encodeURIComponent(email)}`
   )).json();
   if (((_a = checkEmailJson == null ? void 0 : checkEmailJson.data) == null ? void 0 : _a.length) > 0)
-    return (0, import_node8.json)({ error: "Email already registered" }, { status: 400 });
+    return (0, import_node8.json)({
+      toast: {
+        type: "error",
+        message: "Email already registered"
+      }
+    });
   let images = formData.getAll("avatar"), uploadedImageIds = [];
   for (let image of images)
     if (image && typeof image != "string" && image.size > 0) {
@@ -3825,8 +3987,8 @@ async function action2({ request }) {
         }
         let uploadJson = await uploadRes.json();
         (_b = uploadJson == null ? void 0 : uploadJson.data) != null && _b.id && uploadedImageIds.push(uploadJson.data.id);
-      } catch (error) {
-        console.error("Error uploading avatar:", error);
+      } catch (error2) {
+        console.error("Error uploading avatar:", error2);
       }
     }
   let avatarId = uploadedImageIds.length > 0 ? uploadedImageIds[0] : null, userRes = await fetch(`${API_BASE_URL}/users`, {
@@ -3838,89 +4000,134 @@ async function action2({ request }) {
       email,
       password,
       avatar: avatarId,
-      status: "active"
+      status: "active",
+      allowed_locations: selectLocations
     })
   });
   if (!userRes.ok) {
     let err = await userRes.text();
-    return (0, import_node8.json)({ error: err }, { status: 400 });
+    return (0, import_node8.json)(
+      {
+        toast: {
+          type: "error",
+          message: err.message || "There is a problem in saving user"
+        }
+      }
+    );
   }
-  return (0, import_node8.redirect)("/login");
+  return (0, import_node8.json)({
+    toast: {
+      type: "success",
+      message: "User saved successfully"
+    },
+    redirectTo: "/login"
+  });
 }
 function SignUp() {
-  let actionData = (0, import_react39.useActionData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
+  let [selectedLocations, setSelectedLocations] = (0, import_react40.useState)([]), [toast, setToast] = (0, import_react40.useState)(null), navigate = (0, import_react41.useNavigate)(), actionData = (0, import_react41.useActionData)();
+  return (0, import_react40.useEffect)(() => {
+    actionData != null && actionData.toast && (setToast(actionData.toast), actionData.redirectTo && setTimeout(() => {
+      navigate(actionData.redirectTo);
+    }, 1e3));
+  }, [actionData, navigate]), /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
       "SignUp",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 104,
+        lineNumber: 162,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/signup/index.jsx",
-      lineNumber: 102,
+      lineNumber: 160,
       columnNumber: 13
     }, this),
-    (actionData == null ? void 0 : actionData.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("p", { className: "text-red-500 text-sm", children: actionData.error }, void 0, !1, {
-      fileName: "app/routes/signup/index.jsx",
-      lineNumber: 108,
-      columnNumber: 17
-    }, this),
-    (actionData == null ? void 0 : actionData.success) && /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("p", { className: "text-red-500 text-sm", children: "okay" }, void 0, !1, {
-      fileName: "app/routes/signup/index.jsx",
-      lineNumber: 112,
-      columnNumber: 17
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react39.Form, { method: "post", encType: "multipart/form-data", onSubmit: () => console.log("Form submitted"), className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(Input_default, { type: "name", name: "first-name", required: !0, placeholder: "Enter your first name" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react41.Form, { method: "post", encType: "multipart/form-data", onSubmit: () => console.log("Form submitted"), className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "name", name: "first-name", required: !0, placeholder: "Enter your first name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 117,
+        lineNumber: 167,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(Input_default, { type: "name", name: "last-name", required: !0, placeholder: "Enter your last name" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "name", name: "last-name", required: !0, placeholder: "Enter your last name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 119,
+        lineNumber: 169,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 121,
+        lineNumber: 171,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { children: "Upload your image" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { children: "Upload your image" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 123,
+        lineNumber: 173,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(ImagesUpload, { name: "avatar" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(ImagesUpload, { name: "avatar" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 125,
+        lineNumber: 175,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", required: !0, name: "password" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", required: !0, name: "password" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 127,
+        lineNumber: 177,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(PasswordInput_default, { placeholder: "Confirm password", required: !0, name: "confirm-password" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Confirm password", required: !0, name: "confirm-password" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 129,
+        lineNumber: 179,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(Button, { type: "submit", children: "Sign up" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+        MultiselectLocation_default,
+        {
+          selectedLocations,
+          setSelectedLocations,
+          variant: "black"
+        },
+        void 0,
+        !1,
+        {
+          fileName: "app/routes/signup/index.jsx",
+          lineNumber: 181,
+          columnNumber: 17
+        },
+        this
+      ),
+      selectedLocations.map((id) => /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("input", { type: "hidden", name: "selected-locations[]", value: id }, id, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 131,
+        lineNumber: 188,
+        columnNumber: 21
+      }, this)),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Button, { type: "submit", children: "Sign up" }, void 0, !1, {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 191,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/signup/index.jsx",
-      lineNumber: 115,
+      lineNumber: 165,
       columnNumber: 13
-    }, this)
+    }, this),
+    toast && /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+      Toast,
+      {
+        message: toast.message,
+        type: toast.type,
+        onClose: () => setToast(null)
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/routes/signup/index.jsx",
+        lineNumber: 197,
+        columnNumber: 17
+      },
+      this
+    )
   ] }, void 0, !0, {
     fileName: "app/routes/signup/index.jsx",
-    lineNumber: 100,
+    lineNumber: 158,
     columnNumber: 9
   }, this);
 }
@@ -3930,18 +4137,18 @@ var signup_default = SignUp;
 var admin_exports = {};
 __export(admin_exports, {
   default: () => Admin,
-  loader: () => loader6
+  loader: () => loader7
 });
-var import_react40 = require("react");
-var import_react41 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
-var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
-async function loader6({ request }) {
+var import_react42 = require("react");
+var import_react43 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
+var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime");
+async function loader7({ request }) {
   let { user, token } = await getCurrentUser(request);
   return (0, import_node9.json)({ user, token });
 }
 function Admin() {
-  let { user, token } = (0, import_react41.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(AdminLayout, { user, token, children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react41.Outlet, {}, void 0, !1, {
+  let { user, token } = (0, import_react43.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(AdminLayout, { user, token, children: /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(import_react43.Outlet, {}, void 0, !1, {
     fileName: "app/routes/admin/index.jsx",
     lineNumber: 23,
     columnNumber: 7
@@ -3957,13 +4164,13 @@ var login_exports = {};
 __export(login_exports, {
   action: () => action3,
   default: () => LoginPage,
-  loader: () => loader7
+  loader: () => loader8
 });
-var import_node10 = require("@remix-run/node"), import_react42 = require("@remix-run/react");
+var import_node10 = require("@remix-run/node"), import_react44 = require("@remix-run/react");
 var import_lucide_react8 = require("lucide-react");
-var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime");
-async function loader7({ request }) {
-  return (await getSession(request)).get("user") ? (0, import_node10.redirect)("/login") : null;
+var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
+async function loader8({ request }) {
+  return (await getSession(request)).get("user") ? (0, import_node10.redirect)("/admin/kitchen/cafe") : null;
 }
 async function loginToExternalApi({ email, password }) {
   var _a, _b;
@@ -3977,22 +4184,22 @@ async function loginToExternalApi({ email, password }) {
   return json8.data;
 }
 async function action3({ request }) {
-  let formData = await request.formData(), email = formData.get("email"), password = formData.get("password"), redirectTo = formData.get("redirectTo") || "/admin/kitchen";
+  let formData = await request.formData(), email = formData.get("email"), password = formData.get("password"), redirectTo = formData.get("redirectTo") || "/admin/kitchen/cafe";
   try {
     let data = await loginToExternalApi({ email, password }), session = await getSession(request);
     return session.set("token", data.access_token), session.set("refresh_token", data.refresh_token), session.set("expires_in", data.expires), session.set("user", data.user || { email }), (0, import_node10.redirect)(redirectTo, {
       headers: { "Set-Cookie": await commitSession(session) }
     });
-  } catch (error) {
-    return console.error("\u274C Login error:", error), (0, import_node10.json)({ error: "Invalid email or password" }, { status: 401 });
+  } catch (error2) {
+    return console.error("\u274C Login error:", error2), (0, import_node10.json)({ error: "Invalid email or password" }, { status: 401 });
   }
 }
 function LoginPage() {
-  let actionData = (0, import_react42.useActionData)(), transition = (0, import_react42.useTransition)(), [searchParams] = (0, import_react42.useSearchParams)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
+  let actionData = (0, import_react44.useActionData)(), transition = (0, import_react44.useTransition)(), [searchParams] = (0, import_react44.useSearchParams)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
       "Login",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 95,
         columnNumber: 17
@@ -4002,23 +4209,23 @@ function LoginPage() {
       lineNumber: 93,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(import_react42.Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("input", { type: "hidden", name: "redirectTo", value: searchParams.get("redirectTo") || "/admin/kitchen" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("input", { type: "hidden", name: "redirectTo", value: searchParams.get("redirectTo") || "/admin/kitchen/cafe" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 99,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 101,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", name: "password" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", name: "password" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 103,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "text-right", children: /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("a", { href: "#", children: "Forgot Password?" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "text-right", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("a", { href: "#", children: "Forgot Password?" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 105,
         columnNumber: 45
@@ -4027,7 +4234,7 @@ function LoginPage() {
         lineNumber: 105,
         columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(Button, { type: "submit", disabled: transition.state === "submitting", children: transition.state === "submitting" ? "Logging in..." : "Login" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", disabled: transition.state === "submitting", children: transition.state === "submitting" ? "Logging in..." : "Login" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 107,
         columnNumber: 17
@@ -4035,6 +4242,22 @@ function LoginPage() {
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
       lineNumber: 98,
+      columnNumber: 13
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", action: "/signup", reloadDocument: !0, className: "flex max-w-[400px] justify-between w-full items-center", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { children: "Don't have an account," }, void 0, !1, {
+        fileName: "app/routes/login/index.jsx",
+        lineNumber: 112,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", children: "Sign Up" }, void 0, !1, {
+        fileName: "app/routes/login/index.jsx",
+        lineNumber: 113,
+        columnNumber: 17
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/login/index.jsx",
+      lineNumber: 111,
       columnNumber: 13
     }, this)
   ] }, void 0, !0, {
@@ -4049,16 +4272,16 @@ var test_exports = {};
 __export(test_exports, {
   default: () => test_default
 });
-var import_react43 = require("react");
-var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
+var import_react45 = require("react");
+var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime");
 function Test() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("h1", { children: "My ApexChart Example" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("h1", { children: "My ApexChart Example" }, void 0, !1, {
       fileName: "app/routes/admin/test.jsx",
       lineNumber: 10,
       columnNumber: 13
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(ClientApexChart, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(ClientApexChart, {}, void 0, !1, {
       fileName: "app/routes/admin/test.jsx",
       lineNumber: 12,
       columnNumber: 13
@@ -4076,10 +4299,10 @@ var routes_exports = {};
 __export(routes_exports, {
   default: () => Index
 });
-var import_react44 = require("@remix-run/react");
-var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime");
+var import_react46 = require("@remix-run/react");
+var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
 function Index() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(import_jsx_dev_runtime33.Fragment, { children: "Hello world" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_jsx_dev_runtime34.Fragment, { children: "Hello world" }, void 0, !1, {
     fileName: "app/routes/index.jsx",
     lineNumber: 8,
     columnNumber: 5
@@ -4087,7 +4310,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "f5922068", entry: { module: "/build/entry.client-Q4RKL2OQ.js", imports: ["/build/_shared/chunk-LGI7THE5.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-ENUFX3XS.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-J53SENW7.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-562GAJ4S.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-WSUR3MW7.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-WLLXILUT.js", imports: ["/build/_shared/chunk-UNU4FNZK.js", "/build/_shared/chunk-HFXNZWLP.js", "/build/_shared/chunk-GRVLG5GC.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-CZGEJKJC.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-CCCPZRQJ.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-562GAJ4S.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-WSUR3MW7.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-IDLQPGTU.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-JGG7MKBJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-VZMYHQET.js", imports: ["/build/_shared/chunk-562GAJ4S.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-WSUR3MW7.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-LMF5VUWO.js", imports: ["/build/_shared/chunk-CZGEJKJC.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-CCCPZRQJ.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-WSUR3MW7.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-EU672NMM.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-AWL7ZM4Q.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-562GAJ4S.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-WSUR3MW7.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-M4JH4EAD.js", imports: ["/build/_shared/chunk-CCCPZRQJ.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-T4DWXRPY.js", imports: ["/build/_shared/chunk-UNU4FNZK.js", "/build/_shared/chunk-HFXNZWLP.js", "/build/_shared/chunk-GRVLG5GC.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-7TZNKLM7.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-CZGEJKJC.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-CCCPZRQJ.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-562GAJ4S.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-WSUR3MW7.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-VP7OOWJJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-4WCWDPLP.js", imports: ["/build/_shared/chunk-7TZNKLM7.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-63O32O3R.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-F5922068.js" };
+var assets_manifest_default = { version: "1cd7eb8c", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-UPU3GRS2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-KEGBG2EE.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-ANM7LT6B.js", "/build/_shared/chunk-GRVLG5GC.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-I5AO6KHI.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-U7PTQLZK.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-RT2QL47B.js", imports: ["/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-XDGXZAJ2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-GDFYBORQ.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-ANM7LT6B.js", "/build/_shared/chunk-GRVLG5GC.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-5PK2ZSXJ.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-5CGUYKE4.js", imports: ["/build/_shared/chunk-5PK2ZSXJ.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-E7IEL6FQ.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-1CD7EB8C.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

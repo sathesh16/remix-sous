@@ -1,18 +1,33 @@
 import { Link } from "@remix-run/react";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Button from "./Button";
 import AdminPanelLink from "./AdminPanelLink";
 import { HandPlatter } from "lucide-react";
 import fetchLocations from "../lib/locations";
 import LocationSelector from "./LocationSelector";
+import { API_BASE_URL } from "../utils/constants";
 
 export const SelectedLocationContext = createContext(null);
 
 export default function AdminLayout({ children, user, token }) {
-
-    console.log("entered aminlayout")
+    const [logoUrl, setLogoUrl] = useState(null)
     const [open, setOpen] = useState(true);
     const [selectedLocation, setSelectedLocation] = useState(user?.selected_locations || "");
+
+    useEffect(() => {
+        function updateLogo(e) {
+            const loc = e.detail;
+            if (!loc?.logo) {
+                setLogoUrl(null);
+                return;
+            }
+            setLogoUrl(`${API_BASE_URL}/assets/${loc.logo}`);
+        }
+
+        window.addEventListener("locationChanged", updateLogo);
+
+        return () => window.removeEventListener("locationChanged", updateLogo);
+    }, []);
 
 
     return (
@@ -24,7 +39,7 @@ export default function AdminLayout({ children, user, token }) {
                 >
 
                     <div className="flex justify-between p-4">
-                        <img src="/images/iss_logo.webp" alt="iss logo" width="50px" className="logo" />
+                        <img src={logoUrl || "/images/iss_logo.webp"} alt="iss logo" width="50px" className="logo" />
                         {/* <Button type="submit" variant="danger" onClick={()=>}>Logout</Button> */}
                         <Link to="/logout" className="block px-3 py-2 hover:bg-gray-700">
                             Logout
@@ -40,12 +55,14 @@ export default function AdminLayout({ children, user, token }) {
                     {/*</button> */}
 
                     {/* 🔽 Location Dropdown */}
-                    <LocationSelector
-                        user={user}
-                        token={token}
-                        selectedLocation={selectedLocation}
-                        setSelectedLocation={setSelectedLocation}
-                    />
+                    <div className="mt-5 mx-4 mb-16">
+                        <LocationSelector
+                            user={user}
+                            token={token}
+                            selectedLocation={selectedLocation}
+                            setSelectedLocation={setSelectedLocation}
+                        />
+                    </div>
 
 
                     <nav className="space-y-4">
