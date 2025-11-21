@@ -7,6 +7,8 @@ import Input from "../../components/Input.jsx";
 import PasswordInput from "../../components/PasswordInput.jsx";
 import { API_BASE_URL } from "../../utils/constants.js";
 import { commitSession, getSession } from "../../sessionHandler.server.js";
+import { authentication, createDirectus, rest, login } from '@directus/sdk';
+import { client } from "../../utils/directus.server.js";
 
 // 🧠 Loader — kick out logged-in users
 export async function loader({ request }) {
@@ -17,34 +19,19 @@ export async function loader({ request }) {
 }
 
 
-// 🔹 Function to hit your external login API
-async function loginToExternalApi({ email, password }) {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-    });
 
-    const json = await response.json();
-    console.log("🔐 DIRECTUS LOGIN RESPONSE:", json);
 
-    if (!response.ok) {
-        throw new Error(json.errors?.[0]?.message || "Login failed");
-    }
-
-    return json.data; // ⬅️ Directus always returns the real data here
-}
 
 // 🔹 Remix action for login
 export async function action({ request }) {
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
-    const redirectTo = formData.get("redirectTo") || "/admin/kitchen/cafe";
+    const redirectTo = "/admin/kitchen/cafe";
 
     try {
         // 1️⃣ Login to Directus
-        const data = await loginToExternalApi({ email, password });
+        const data = await client.login({ email, password });
 
         // Directus login returns:
         // data.access_token

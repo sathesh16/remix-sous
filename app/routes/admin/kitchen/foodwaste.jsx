@@ -12,6 +12,10 @@ import { Eye } from 'lucide-react';
 import OrientationToggle from '../../../components/OrientationToggle';
 import { SelectedLocationContext } from '../../../components/AdminLayout';
 import { updateLocationIsVertical } from '../../../lib/locations';
+import { getSession } from '../../../sessionHandler.server';
+import { redirect } from '@remix-run/node';
+
+
 
 
 dayjs.extend(weekday);

@@ -3116,7 +3116,7 @@ function OrientationToggle({ value, onChange }) {
 }
 
 // app/routes/admin/kitchen/foodwaste.jsx
-var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime");
+var import_node6 = require("@remix-run/node"), import_jsx_dev_runtime23 = require("react/jsx-dev-runtime");
 import_dayjs3.default.extend(import_weekday3.default);
 import_dayjs3.default.extend(import_weekOfYear3.default);
 var WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], NUMERIC_FIELD_KEYS = ["number_of_users", "food_waste", "total_waste"];
@@ -3233,7 +3233,7 @@ function FoodWaste() {
             " /"
           ] }, void 0, !0, {
             fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-            lineNumber: 196,
+            lineNumber: 200,
             columnNumber: 25
           }, this),
           " ",
@@ -3242,7 +3242,7 @@ function FoodWaste() {
           end
         ] }, void 0, !0, {
           fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-          lineNumber: 195,
+          lineNumber: 199,
           columnNumber: 21
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "flex gap-2", children: [
@@ -3257,7 +3257,7 @@ function FoodWaste() {
             !1,
             {
               fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-              lineNumber: 199,
+              lineNumber: 203,
               columnNumber: 25
             },
             this
@@ -3273,19 +3273,19 @@ function FoodWaste() {
             !1,
             {
               fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-              lineNumber: 206,
+              lineNumber: 210,
               columnNumber: 25
             },
             this
           )
         ] }, void 0, !0, {
           fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-          lineNumber: 198,
+          lineNumber: 202,
           columnNumber: 21
         }, this)
       ] }, void 0, !0, {
         fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-        lineNumber: 194,
+        lineNumber: 198,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "flex gap-2", children: [
@@ -3304,7 +3304,7 @@ function FoodWaste() {
           !1,
           {
             fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-            lineNumber: 216,
+            lineNumber: 220,
             columnNumber: 21
           },
           this
@@ -3321,7 +3321,7 @@ function FoodWaste() {
             children: [
               /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_lucide_react6.Eye, { size: 20 }, void 0, !1, {
                 fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-                lineNumber: 238,
+                lineNumber: 242,
                 columnNumber: 25
               }, this),
               " Preview"
@@ -3331,35 +3331,35 @@ function FoodWaste() {
           !0,
           {
             fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-            lineNumber: 229,
+            lineNumber: 233,
             columnNumber: 21
           },
           this
         )
       ] }, void 0, !0, {
         fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-        lineNumber: 215,
+        lineNumber: 219,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "flex justify-end items-center mb-6 pos-top", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("p", { className: "mr-4", children: "Remember to update before leaving" }, void 0, !1, {
           fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-          lineNumber: 244,
+          lineNumber: 248,
           columnNumber: 21
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(Button, { onClick: saveUpdates, variant: "primary", disabled: isSaving || !hasPendingUpdates, children: "Update" }, void 0, !1, {
           fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-          lineNumber: 245,
+          lineNumber: 249,
           columnNumber: 21
         }, this)
       ] }, void 0, !0, {
         fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-        lineNumber: 243,
+        lineNumber: 247,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-      lineNumber: 193,
+      lineNumber: 197,
       columnNumber: 13
     }, this),
     toast && /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
@@ -3373,14 +3373,14 @@ function FoodWaste() {
       !1,
       {
         fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-        lineNumber: 252,
+        lineNumber: 256,
         columnNumber: 17
       },
       this
     ),
     loading ? /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("p", { children: "Loading\u2026" }, void 0, !1, {
       fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-      lineNumber: 260,
+      lineNumber: 264,
       columnNumber: 17
     }, this) : isClient && Spreadsheet ? /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "rounded overflow-hidden w-full", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
       Spreadsheet,
@@ -3396,13 +3396,13 @@ function FoodWaste() {
       !1,
       {
         fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-        lineNumber: 263,
+        lineNumber: 267,
         columnNumber: 21
       },
       this
     ) }, void 0, !1, {
       fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-      lineNumber: 262,
+      lineNumber: 266,
       columnNumber: 17
     }, this) : null,
     showPreview && previewData && /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "fixed inset-0 bg-black/50 flex items-center justify-center z-50", onClick: () => setShowPreview(!1), children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "bg-white rounded-md w-[90vw] h-[90vh]", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
@@ -3424,33 +3424,33 @@ function FoodWaste() {
       !1,
       {
         fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-        lineNumber: 276,
+        lineNumber: 280,
         columnNumber: 25
       },
       this
     ) }, void 0, !1, {
       fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-      lineNumber: 275,
+      lineNumber: 279,
       columnNumber: 21
     }, this) }, void 0, !1, {
       fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-      lineNumber: 274,
+      lineNumber: 278,
       columnNumber: 17
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/admin/kitchen/foodwaste.jsx",
-    lineNumber: 192,
+    lineNumber: 196,
     columnNumber: 9
   }, this);
 }
 var foodwaste_default = FoodWaste;
 
 // app/routes/admin/kitchen.jsx
-var import_react32 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
+var import_react32 = require("@remix-run/react"), import_node7 = require("@remix-run/node");
 var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime");
 async function loader4({ request }) {
   let { user, token } = await getCurrentUser(request);
-  return (0, import_node6.json)({ user, token });
+  return (0, import_node7.json)({ user, token });
 }
 function Kitchen() {
   let { user, token } = (0, import_react32.useLoaderData)(), [searchParams, setSearchParams] = (0, import_react32.useSearchParams)(), activeTab = searchParams.get("tab") || "cafe", setTab = (tab) => setSearchParams({ tab }), tabBase = "px-6 py-4 pl-0 font-medium transition-colors", tabActive = "text-[var(--primary-color)] border-b-2 border-b-[var(--primary-color)]", tabInactive = "text-gray-700";
@@ -3525,11 +3525,11 @@ __export(cafe_exports, {
   default: () => cafe_default
 });
 var import_react33 = require("react");
-var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime");
+var import_node8 = require("@remix-run/node"), import_jsx_dev_runtime25 = require("react/jsx-dev-runtime");
 function Cafe() {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(ProductsTable, {}, void 0, !1, {
     fileName: "app/routes/admin/kitchen/cafe.jsx",
-    lineNumber: 6,
+    lineNumber: 9,
     columnNumber: 9
   }, this);
 }
@@ -3541,10 +3541,10 @@ __export(logout_exports, {
   default: () => Logout,
   loader: () => loader5
 });
-var import_react34 = require("react"), import_node7 = require("@remix-run/node");
+var import_react34 = require("react"), import_node9 = require("@remix-run/node");
 async function loader5({ request }) {
   let session = await getSession(request);
-  return (0, import_node7.redirect)("/login", {
+  return (0, import_node9.redirect)("/login", {
     headers: {
       "Set-Cookie": await destroySession(session)
     }
@@ -3829,7 +3829,7 @@ function PasswordInput({ ...props }) {
 var PasswordInput_default = PasswordInput;
 
 // app/routes/signup/index.jsx
-var import_node8 = require("@remix-run/node");
+var import_node10 = require("@remix-run/node");
 
 // app/components/MultiselectLocation.jsx
 var import_react38 = require("@headlessui/react"), import_react39 = require("react");
@@ -3941,31 +3941,33 @@ function MultiselectLocation({ selectedLocations, setSelectedLocations, variant 
 }
 var MultiselectLocation_default = MultiselectLocation;
 
+// app/utils/directus.server.js
+var import_sdk = require("@directus/sdk");
+var client = (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)()).with((0, import_sdk.authentication)());
+
 // app/routes/signup/index.jsx
-var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
+var import_sdk2 = require("@directus/sdk"), import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 async function loader6({ request }) {
   if ((await getSession(request)).get("user"))
-    throw (0, import_node8.redirect)("/admin/kitchen/cafe");
+    throw (0, import_node10.redirect)("/admin/kitchen/cafe");
   return null;
 }
 async function action2({ request }) {
   var _a, _b;
   let contentType = request.headers.get("content-type");
   if (console.log("Received Content-Type:", contentType), !contentType || !contentType.includes("multipart/form-data"))
-    return (0, import_node8.json)({ error: "Bad content-type", contentType }, { status: 400 });
+    return (0, import_node10.json)({ error: "Bad content-type", contentType }, { status: 400 });
   let formData = await request.formData(), first_name = formData.get("first-name"), last_name = formData.get("last-name"), email = formData.get("email"), password = formData.get("password"), confirmPassword = formData.get("confirm-password"), selectLocations = formData.getAll("selected-locations[]").map(Number);
   if (selectLocations.sort(), password !== confirmPassword)
-    return (0, import_node8.json)({
+    return (0, import_node10.json)({
       toast: {
         type: "error",
         message: error.message || "Password mismatch"
       }
     });
-  let checkEmailJson = await (await fetch(
-    `${API_BASE_URL}/users?filter[email][_eq]=${encodeURIComponent(email)}`
-  )).json();
+  let checkEmailJson = await (await client.request((0, import_sdk2.readUsers)(query_object))).json();
   if (((_a = checkEmailJson == null ? void 0 : checkEmailJson.data) == null ? void 0 : _a.length) > 0)
-    return (0, import_node8.json)({
+    return (0, import_node10.json)({
       toast: {
         type: "error",
         message: "Email already registered"
@@ -4006,7 +4008,7 @@ async function action2({ request }) {
   });
   if (!userRes.ok) {
     let err = await userRes.text();
-    return (0, import_node8.json)(
+    return (0, import_node10.json)(
       {
         toast: {
           type: "error",
@@ -4015,7 +4017,7 @@ async function action2({ request }) {
       }
     );
   }
-  return (0, import_node8.json)({
+  return (0, import_node10.json)({
     toast: {
       type: "success",
       message: "User saved successfully"
@@ -4140,11 +4142,11 @@ __export(admin_exports, {
   loader: () => loader7
 });
 var import_react42 = require("react");
-var import_react43 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
+var import_react43 = require("@remix-run/react"), import_node11 = require("@remix-run/node");
 var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime");
 async function loader7({ request }) {
   let { user, token } = await getCurrentUser(request);
-  return (0, import_node9.json)({ user, token });
+  return (0, import_node11.json)({ user, token });
 }
 function Admin() {
   let { user, token } = (0, import_react43.useLoaderData)();
@@ -4166,32 +4168,22 @@ __export(login_exports, {
   default: () => LoginPage,
   loader: () => loader8
 });
-var import_node10 = require("@remix-run/node"), import_react44 = require("@remix-run/react");
+var import_node12 = require("@remix-run/node"), import_react44 = require("@remix-run/react");
 var import_lucide_react8 = require("lucide-react");
+var import_sdk3 = require("@directus/sdk");
 var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
 async function loader8({ request }) {
-  return (await getSession(request)).get("user") ? (0, import_node10.redirect)("/admin/kitchen/cafe") : null;
-}
-async function loginToExternalApi({ email, password }) {
-  var _a, _b;
-  let response = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  }), json8 = await response.json();
-  if (console.log("\u{1F510} DIRECTUS LOGIN RESPONSE:", json8), !response.ok)
-    throw new Error(((_b = (_a = json8.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Login failed");
-  return json8.data;
+  return (await getSession(request)).get("user") ? (0, import_node12.redirect)("/admin/kitchen/cafe") : null;
 }
 async function action3({ request }) {
-  let formData = await request.formData(), email = formData.get("email"), password = formData.get("password"), redirectTo = formData.get("redirectTo") || "/admin/kitchen/cafe";
+  let formData = await request.formData(), email = formData.get("email"), password = formData.get("password"), redirectTo = "/admin/kitchen/cafe";
   try {
-    let data = await loginToExternalApi({ email, password }), session = await getSession(request);
-    return session.set("token", data.access_token), session.set("refresh_token", data.refresh_token), session.set("expires_in", data.expires), session.set("user", data.user || { email }), (0, import_node10.redirect)(redirectTo, {
+    let data = await client.login({ email, password }), session = await getSession(request);
+    return session.set("token", data.access_token), session.set("refresh_token", data.refresh_token), session.set("expires_in", data.expires), session.set("user", data.user || { email }), (0, import_node12.redirect)(redirectTo, {
       headers: { "Set-Cookie": await commitSession(session) }
     });
   } catch (error2) {
-    return console.error("\u274C Login error:", error2), (0, import_node10.json)({ error: "Invalid email or password" }, { status: 401 });
+    return console.error("\u274C Login error:", error2), (0, import_node12.json)({ error: "Invalid email or password" }, { status: 401 });
   }
 }
 function LoginPage() {
@@ -4201,68 +4193,68 @@ function LoginPage() {
       "Login",
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 95,
+        lineNumber: 82,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
-      lineNumber: 93,
+      lineNumber: 80,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("input", { type: "hidden", name: "redirectTo", value: searchParams.get("redirectTo") || "/admin/kitchen/cafe" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 99,
+        lineNumber: 86,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 101,
+        lineNumber: 88,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", name: "password" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 103,
+        lineNumber: 90,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "text-right", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("a", { href: "#", children: "Forgot Password?" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 105,
+        lineNumber: 92,
         columnNumber: 45
       }, this) }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 105,
+        lineNumber: 92,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", disabled: transition.state === "submitting", children: transition.state === "submitting" ? "Logging in..." : "Login" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 107,
+        lineNumber: 94,
+        columnNumber: 17
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/login/index.jsx",
+      lineNumber: 85,
+      columnNumber: 13
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", action: "/signup", reloadDocument: !0, className: "flex max-w-[400px] justify-between w-full items-center", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { children: "Don't have an account," }, void 0, !1, {
+        fileName: "app/routes/login/index.jsx",
+        lineNumber: 99,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", children: "Sign Up" }, void 0, !1, {
+        fileName: "app/routes/login/index.jsx",
+        lineNumber: 100,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
       lineNumber: 98,
       columnNumber: 13
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", action: "/signup", reloadDocument: !0, className: "flex max-w-[400px] justify-between w-full items-center", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { children: "Don't have an account," }, void 0, !1, {
-        fileName: "app/routes/login/index.jsx",
-        lineNumber: 112,
-        columnNumber: 17
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", children: "Sign Up" }, void 0, !1, {
-        fileName: "app/routes/login/index.jsx",
-        lineNumber: 113,
-        columnNumber: 17
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/routes/login/index.jsx",
-      lineNumber: 111,
-      columnNumber: 13
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/login/index.jsx",
-    lineNumber: 91,
+    lineNumber: 78,
     columnNumber: 9
   }, this);
 }
@@ -4297,20 +4289,28 @@ var test_default = Test;
 // app/routes/index.jsx
 var routes_exports = {};
 __export(routes_exports, {
-  default: () => Index
+  default: () => Index,
+  loader: () => loader9
 });
 var import_react46 = require("@remix-run/react");
-var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
+var import_node13 = require("@remix-run/node"), import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
+function loader9() {
+  return (0, import_node13.redirect)("/login");
+}
 function Index() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_jsx_dev_runtime34.Fragment, { children: "Hello world" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_jsx_dev_runtime34.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(LoginPage, {}, void 0, !1, {
     fileName: "app/routes/index.jsx",
-    lineNumber: 8,
+    lineNumber: 15,
+    columnNumber: 7
+  }, this) }, void 0, !1, {
+    fileName: "app/routes/index.jsx",
+    lineNumber: 14,
     columnNumber: 5
   }, this);
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "1cd7eb8c", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-UPU3GRS2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-KEGBG2EE.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-ANM7LT6B.js", "/build/_shared/chunk-GRVLG5GC.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-I5AO6KHI.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-U7PTQLZK.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-RT2QL47B.js", imports: ["/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-XDGXZAJ2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-GDFYBORQ.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-ANM7LT6B.js", "/build/_shared/chunk-GRVLG5GC.js", "/build/_shared/chunk-6CXAA2VV.js", "/build/_shared/chunk-5PK2ZSXJ.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-5CGUYKE4.js", imports: ["/build/_shared/chunk-5PK2ZSXJ.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-E7IEL6FQ.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-1CD7EB8C.js" };
+var assets_manifest_default = { version: "7e8e82d1", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-UPU3GRS2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-KDUNBGUZ.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-RTN3Q43G.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-VHV2RT6T.js", imports: ["/build/_shared/chunk-7RCL2I6E.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-TED5ZY6Z.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-RT2QL47B.js", imports: ["/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-XDGXZAJ2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-ZO2CWL2A.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-RTN3Q43G.js", "/build/_shared/chunk-7RCL2I6E.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-FVIOKO5N.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-AHZK3VEO.js", imports: ["/build/_shared/chunk-FVIOKO5N.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-PXQFZHZO.js", imports: ["/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-7E8E82D1.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

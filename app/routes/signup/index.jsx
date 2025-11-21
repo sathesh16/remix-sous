@@ -11,6 +11,8 @@ import LocationSelector from '../../components/LocationSelector'
 import MultiselectLocation from '../../components/MultiselectLocation'
 import Toast from '../../components/Toast'
 import { getSession } from '../../sessionHandler.server'
+import { client } from '../../utils/directus.server'
+import { readUsers } from '@directus/sdk'
 
 export async function loader({ request }) {
     const session = await getSession(request);
@@ -51,9 +53,7 @@ export async function action({ request }) {
     }
 
     // 🔹 Step 1: Check if email already exists
-    const checkEmailRes = await fetch(
-        `${API_BASE_URL}/users?filter[email][_eq]=${encodeURIComponent(email)}`
-    );
+    const checkEmailRes = await client.request(readUsers(query_object));
     const checkEmailJson = await checkEmailRes.json();
 
     if (checkEmailJson?.data?.length > 0) {
