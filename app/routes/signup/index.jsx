@@ -55,11 +55,18 @@ export async function action({ request }) {
         });
     }
 
+    const query_object = {
+        filter: {
+            email: {
+                _eq: email
+            }
+        }
+    };
+
     // 🔹 Step 1: Check if email already exists
     const checkEmailRes = await client.request(readUsers(query_object));
-    const checkEmailJson = await checkEmailRes.json();
 
-    if (checkEmailJson?.data?.length > 0) {
+    if (checkEmailRes.length > 0) {
         return json({
             toast: {
                 type: "error",
