@@ -26,3 +26,16 @@ export async function updateCurrentUser(payload, token) {
 
     return json.data; // return updated user
 }
+
+export async function getUserAllowedLocations(id) {
+
+    const response = await fetch(`${API_BASE_URL}/users/${id}?fields[]=*.*`);
+
+    const user = await response.json()
+
+    const allowedLocationIds = user.data?.allowed_locations?.map(
+        (item) => item.Locations_id
+    ) || [];
+    console.log(allowedLocationIds);
+    return allowedLocationIds;
+}

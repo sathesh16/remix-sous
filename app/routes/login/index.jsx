@@ -9,13 +9,18 @@ import { API_BASE_URL } from "../../utils/constants.js";
 import { commitSession, getSession } from "../../sessionHandler.server.js";
 import { authentication, createDirectus, rest, login } from '@directus/sdk';
 import { client } from "../../utils/directus.server.js";
+import fetchLocations from "../../lib/locations.js";
 
 // 🧠 Loader — kick out logged-in users
 export async function loader({ request }) {
     const session = await getSession(request);
     const user = session.get("user");
     if (user) return redirect("/admin/kitchen/cafe");
-    return null;
+
+    const locs = await fetchLocations();
+    console.log("API data " + locs[0].logo)
+    const logoUrl = `${API_BASE_URL}/assets/${locs[0].logo}`
+    return logoUrl;
 }
 
 
@@ -63,6 +68,7 @@ export async function action({ request }) {
 
 export default function LoginPage() {
     const actionData = useActionData();
+    const logoURL = useLoaderData();
     const transition = useTransition();
     const [searchParams] = useSearchParams();
 
@@ -79,7 +85,7 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between w-full max-w-[400px]">
                 Login
-                <img src="/images/iss_logo.webp" width="50px" />
+                <img src={logoURL || "/images/iss_logo.webp"} alt="location_logo" width="50px" />
             </div>
 
             <Form method="post" className="flex flex-col gap-6 max-w-[400px] w-full">

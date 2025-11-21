@@ -1344,6 +1344,13 @@ async function updateCurrentUser(payload, token) {
     throw new Error(((_b = (_a = json8 == null ? void 0 : json8.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to update user");
   return console.log("Updated user data:", json8), json8.data;
 }
+async function getUserAllowedLocations(id) {
+  var _a, _b;
+  let allowedLocationIds = ((_b = (_a = (await (await fetch(`${API_BASE_URL}/users/${id}?fields[]=*.*`)).json()).data) == null ? void 0 : _a.allowed_locations) == null ? void 0 : _b.map(
+    (item) => item.Locations_id
+  )) || [];
+  return console.log(allowedLocationIds), allowedLocationIds;
+}
 
 // app/components/UpdateCurrentUser.jsx
 var import_jsx_dev_runtime10 = require("react/jsx-dev-runtime");
@@ -1462,10 +1469,11 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
   let [locations, setLocations] = (0, import_react13.useState)([]), [userId] = (0, import_react13.useState)((user == null ? void 0 : user.id) || null), [toast, setToast] = (0, import_react13.useState)(null), dismissToast = () => setToast(null), isBlack = variant === "black", textColor = isBlack ? "text-[#777]" : "text-white", bgColor = isBlack ? "bg-white" : "bg-gray-700", optionActiveBg = isBlack ? "bg-gray-200" : "bg-gray-600", dropdownPosition = isBlack ? "" : "absolute";
   (0, import_react13.useEffect)(() => {
     async function loadData() {
-      var _a2;
       try {
-        let locs = await fetchLocations(), allowedLocs = (_a2 = user == null ? void 0 : user.allowed_locations) != null && _a2.length ? locs.filter(
-          (loc) => user.allowed_locations.includes(loc.id)
+        let locs = await fetchLocations(), allowedLocs1 = await getUserAllowedLocations(user.id);
+        console.log(allowedLocs1);
+        let allowedLocs = allowedLocs1.length ? locs.filter(
+          (loc) => allowedLocs1.includes(loc.id)
         ) : [];
         if (setLocations(allowedLocs), user != null && user.selected_locations) {
           let exists = allowedLocs.some(
@@ -1505,12 +1513,12 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: selectedLocation2 ? (_a = locations.find((l) => l.id === selectedLocation2)) == null ? void 0 : _a.name : "Allowed Locations" }, void 0, !1, {
               fileName: "app/components/LocationSelector.jsx",
-              lineNumber: 90,
+              lineNumber: 93,
               columnNumber: 25
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { className: textColor, children: "\u25BC" }, void 0, !1, {
               fileName: "app/components/LocationSelector.jsx",
-              lineNumber: 95,
+              lineNumber: 98,
               columnNumber: 25
             }, this)
           ]
@@ -1519,7 +1527,7 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
         !0,
         {
           fileName: "app/components/LocationSelector.jsx",
-          lineNumber: 87,
+          lineNumber: 90,
           columnNumber: 21
         },
         this
@@ -1539,7 +1547,7 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
             !1,
             {
               fileName: "app/components/LocationSelector.jsx",
-              lineNumber: 102,
+              lineNumber: 105,
               columnNumber: 29
             },
             this
@@ -1549,18 +1557,18 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
         !1,
         {
           fileName: "app/components/LocationSelector.jsx",
-          lineNumber: 98,
+          lineNumber: 101,
           columnNumber: 21
         },
         this
       )
     ] }, void 0, !0, {
       fileName: "app/components/LocationSelector.jsx",
-      lineNumber: 86,
+      lineNumber: 89,
       columnNumber: 17
     }, this) }, void 0, !1, {
       fileName: "app/components/LocationSelector.jsx",
-      lineNumber: 85,
+      lineNumber: 88,
       columnNumber: 13
     }, this),
     toast && /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
@@ -1574,14 +1582,14 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
       !1,
       {
         fileName: "app/components/LocationSelector.jsx",
-        lineNumber: 117,
+        lineNumber: 120,
         columnNumber: 17
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/components/LocationSelector.jsx",
-    lineNumber: 84,
+    lineNumber: 87,
     columnNumber: 9
   }, this);
 }
@@ -3946,11 +3954,13 @@ var import_sdk = require("@directus/sdk");
 var client = (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)()).with((0, import_sdk.authentication)());
 
 // app/routes/signup/index.jsx
-var import_sdk2 = require("@directus/sdk"), import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
+var import_sdk2 = require("@directus/sdk");
+var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 async function loader6({ request }) {
   if ((await getSession(request)).get("user"))
     throw (0, import_node10.redirect)("/admin/kitchen/cafe");
-  return null;
+  let locs = await fetchLocations();
+  return console.log("API data " + locs[0].logo), `${API_BASE_URL}/assets/${locs[0].logo}`;
 }
 async function action2({ request }) {
   var _a, _b;
@@ -4026,7 +4036,7 @@ async function action2({ request }) {
   });
 }
 function SignUp() {
-  let [selectedLocations, setSelectedLocations] = (0, import_react40.useState)([]), [toast, setToast] = (0, import_react40.useState)(null), navigate = (0, import_react41.useNavigate)(), actionData = (0, import_react41.useActionData)();
+  let [selectedLocations, setSelectedLocations] = (0, import_react40.useState)([]), [toast, setToast] = (0, import_react40.useState)(null), navigate = (0, import_react41.useNavigate)(), actionData = (0, import_react41.useActionData)(), logoURL = (0, import_react41.useLoaderData)();
   return (0, import_react40.useEffect)(() => {
     actionData != null && actionData.toast && (setToast(actionData.toast), actionData.redirectTo && setTimeout(() => {
       navigate(actionData.redirectTo);
@@ -4034,50 +4044,50 @@ function SignUp() {
   }, [actionData, navigate]), /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
       "SignUp",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("img", { src: logoURL || "/images/iss_logo.webp", alt: "location_logo", width: "50px" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 162,
+        lineNumber: 167,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/signup/index.jsx",
-      lineNumber: 160,
+      lineNumber: 165,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react41.Form, { method: "post", encType: "multipart/form-data", onSubmit: () => console.log("Form submitted"), className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "name", name: "first-name", required: !0, placeholder: "Enter your first name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 167,
+        lineNumber: 172,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "name", name: "last-name", required: !0, placeholder: "Enter your last name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 169,
+        lineNumber: 174,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 171,
+        lineNumber: 176,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { children: "Upload your image" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 173,
+        lineNumber: 178,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(ImagesUpload, { name: "avatar" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 175,
+        lineNumber: 180,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", required: !0, name: "password" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 177,
+        lineNumber: 182,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Confirm password", required: !0, name: "confirm-password" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 179,
+        lineNumber: 184,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
@@ -4091,24 +4101,24 @@ function SignUp() {
         !1,
         {
           fileName: "app/routes/signup/index.jsx",
-          lineNumber: 181,
+          lineNumber: 186,
           columnNumber: 17
         },
         this
       ),
       selectedLocations.map((id) => /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("input", { type: "hidden", name: "selected-locations[]", value: id }, id, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 188,
+        lineNumber: 193,
         columnNumber: 21
       }, this)),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Button, { type: "submit", children: "Sign up" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 191,
+        lineNumber: 196,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/signup/index.jsx",
-      lineNumber: 165,
+      lineNumber: 170,
       columnNumber: 13
     }, this),
     toast && /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
@@ -4122,14 +4132,14 @@ function SignUp() {
       !1,
       {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 197,
+        lineNumber: 202,
         columnNumber: 17
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/routes/signup/index.jsx",
-    lineNumber: 158,
+    lineNumber: 163,
     columnNumber: 9
   }, this);
 }
@@ -4173,7 +4183,10 @@ var import_lucide_react8 = require("lucide-react");
 var import_sdk3 = require("@directus/sdk");
 var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
 async function loader8({ request }) {
-  return (await getSession(request)).get("user") ? (0, import_node12.redirect)("/admin/kitchen/cafe") : null;
+  if ((await getSession(request)).get("user"))
+    return (0, import_node12.redirect)("/admin/kitchen/cafe");
+  let locs = await fetchLocations();
+  return console.log("API data " + locs[0].logo), `${API_BASE_URL}/assets/${locs[0].logo}`;
 }
 async function action3({ request }) {
   let formData = await request.formData(), email = formData.get("email"), password = formData.get("password"), redirectTo = "/admin/kitchen/cafe";
@@ -4187,74 +4200,74 @@ async function action3({ request }) {
   }
 }
 function LoginPage() {
-  let actionData = (0, import_react44.useActionData)(), transition = (0, import_react44.useTransition)(), [searchParams] = (0, import_react44.useSearchParams)();
+  let actionData = (0, import_react44.useActionData)(), logoURL = (0, import_react44.useLoaderData)(), transition = (0, import_react44.useTransition)(), [searchParams] = (0, import_react44.useSearchParams)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "flex flex-col items-center justify-center min-h-screen gap-4 relative p-4", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "flex items-center justify-between w-full max-w-[400px]", children: [
       "Login",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("img", { src: "/images/iss_logo.webp", width: "50px" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("img", { src: logoURL || "/images/iss_logo.webp", alt: "location_logo", width: "50px" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 82,
+        lineNumber: 88,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
-      lineNumber: 80,
+      lineNumber: 86,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("input", { type: "hidden", name: "redirectTo", value: searchParams.get("redirectTo") || "/admin/kitchen/cafe" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 86,
+        lineNumber: 92,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 88,
+        lineNumber: 94,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", name: "password" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 90,
+        lineNumber: 96,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "text-right", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("a", { href: "#", children: "Forgot Password?" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 92,
+        lineNumber: 98,
         columnNumber: 45
       }, this) }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
-        lineNumber: 92,
+        lineNumber: 98,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", disabled: transition.state === "submitting", children: transition.state === "submitting" ? "Logging in..." : "Login" }, void 0, !1, {
-        fileName: "app/routes/login/index.jsx",
-        lineNumber: 94,
-        columnNumber: 17
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/routes/login/index.jsx",
-      lineNumber: 85,
-      columnNumber: 13
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", action: "/signup", reloadDocument: !0, className: "flex max-w-[400px] justify-between w-full items-center", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { children: "Don't have an account," }, void 0, !1, {
-        fileName: "app/routes/login/index.jsx",
-        lineNumber: 99,
-        columnNumber: 17
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", children: "Sign Up" }, void 0, !1, {
         fileName: "app/routes/login/index.jsx",
         lineNumber: 100,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/login/index.jsx",
-      lineNumber: 98,
+      lineNumber: 91,
+      columnNumber: 13
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_react44.Form, { method: "post", action: "/signup", reloadDocument: !0, className: "flex max-w-[400px] justify-between w-full items-center", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { children: "Don't have an account," }, void 0, !1, {
+        fileName: "app/routes/login/index.jsx",
+        lineNumber: 105,
+        columnNumber: 17
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { type: "submit", children: "Sign Up" }, void 0, !1, {
+        fileName: "app/routes/login/index.jsx",
+        lineNumber: 106,
+        columnNumber: 17
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/login/index.jsx",
+      lineNumber: 104,
       columnNumber: 13
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/login/index.jsx",
-    lineNumber: 78,
+    lineNumber: 84,
     columnNumber: 9
   }, this);
 }
@@ -4310,7 +4323,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "7e8e82d1", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-UPU3GRS2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-KDUNBGUZ.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-RTN3Q43G.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-VHV2RT6T.js", imports: ["/build/_shared/chunk-7RCL2I6E.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-TED5ZY6Z.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-RT2QL47B.js", imports: ["/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-XDGXZAJ2.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-ZO2CWL2A.js", imports: ["/build/_shared/chunk-OTCSXIZU.js", "/build/_shared/chunk-RTN3Q43G.js", "/build/_shared/chunk-7RCL2I6E.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-FVIOKO5N.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-53FEOMZ6.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-AHZK3VEO.js", imports: ["/build/_shared/chunk-FVIOKO5N.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-PXQFZHZO.js", imports: ["/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-T2QZ2SM3.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-7E8E82D1.js" };
+var assets_manifest_default = { version: "6a0ffebf", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-GKE6LTLO.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-LVU3FKZZ.js", imports: ["/build/_shared/chunk-2DD3TBJV.js", "/build/_shared/chunk-37TQUAEP.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-VHV2RT6T.js", imports: ["/build/_shared/chunk-7RCL2I6E.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-U4GJY4JA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-2WSZRAFO.js", imports: ["/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-POB4YGPR.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-SY33GG4B.js", imports: ["/build/_shared/chunk-2DD3TBJV.js", "/build/_shared/chunk-37TQUAEP.js", "/build/_shared/chunk-7RCL2I6E.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-QI5OLCAQ.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-Y4RMYCZL.js", imports: ["/build/_shared/chunk-QI5OLCAQ.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-JJHCHN3J.js", imports: ["/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-6A0FFEBF.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

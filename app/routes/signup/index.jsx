@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import ImagesUpload from '../../components/ImagesUpload'
-import { Form, useActionData, useNavigate } from '@remix-run/react'
+import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react'
 import PasswordInput from '../../components/PasswordInput'
 import { json, redirect } from '@remix-run/node'
 // import { redirect } from 'next/dist/server/api-utils'
@@ -13,6 +13,7 @@ import Toast from '../../components/Toast'
 import { getSession } from '../../sessionHandler.server'
 import { client } from '../../utils/directus.server'
 import { readUsers } from '@directus/sdk'
+import fetchLocations from '../../lib/locations'
 
 export async function loader({ request }) {
     const session = await getSession(request);
@@ -21,8 +22,10 @@ export async function loader({ request }) {
     if (user) {
         throw redirect("/admin/kitchen/cafe");
     }
-
-    return null;
+    const locs = await fetchLocations();
+    console.log("API data " + locs[0].logo)
+    const logoUrl = `${API_BASE_URL}/assets/${locs[0].logo}`
+    return logoUrl;
 }
 
 export async function action({ request }) {
@@ -140,6 +143,8 @@ function SignUp() {
     const navigate = useNavigate()
 
     const actionData = useActionData()
+
+    const logoURL = useLoaderData();
     useEffect(() => {
         if (actionData?.toast) {
             setToast(actionData.toast);
@@ -159,7 +164,7 @@ function SignUp() {
 
             <div className="flex items-center justify-between w-full max-w-[400px]">
                 SignUp
-                <img src="/images/iss_logo.webp" width="50px" />
+                <img src={logoURL || "/images/iss_logo.webp"} alt="location_logo" width="50px" />
             </div>
 
             <Form method="post" encType="multipart/form-data" onSubmit={() => console.log("Form submitted")} className="flex flex-col gap-6 max-w-[400px] w-full">

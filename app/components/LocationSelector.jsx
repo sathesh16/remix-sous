@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import fetchLocations from '../lib/locations';
-import { updateCurrentUser } from '../lib/users';
+import { getUserAllowedLocations, updateCurrentUser } from '../lib/users';
 import Toast from './Toast';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 
@@ -26,11 +26,14 @@ function LocationSelector({ user, token, selectedLocation, setSelectedLocation, 
         async function loadData() {
             try {
                 const locs = await fetchLocations();
+                const allowedLocs1 = await getUserAllowedLocations(user.id)
+                console.log(allowedLocs1)
+
 
                 // 🔥 Filter locations based on user.allowed_locations
-                const allowedLocs = user?.allowed_locations?.length
+                const allowedLocs = allowedLocs1.length
                     ? locs.filter((loc) =>
-                        user.allowed_locations.includes(loc.id)
+                        allowedLocs1.includes(loc.id)
                     )
                     : [];
                 setLocations(allowedLocs);  // <- uncomment if needed
