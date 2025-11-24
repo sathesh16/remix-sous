@@ -27,7 +27,7 @@ function LocationSelector({ user, token, selectedLocation, setSelectedLocation, 
             try {
                 const locs = await fetchLocations();
                 const allowedLocs1 = await getUserAllowedLocations(user.id)
-                console.log(allowedLocs1)
+                // console.log(allowedLocs1)
 
 
                 // 🔥 Filter locations based on user.allowed_locations

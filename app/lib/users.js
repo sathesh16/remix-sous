@@ -36,6 +36,5 @@ export async function getUserAllowedLocations(id) {
     const allowedLocationIds = user.data?.allowed_locations?.map(
         (item) => item.Locations_id
     ) || [];
-    console.log(allowedLocationIds);
     return allowedLocationIds;
 }

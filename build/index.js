@@ -185,23 +185,29 @@ __export(banner_product_productId_screen_exports, {
 });
 var import_react3 = require("@remix-run/react"), import_react4 = require("react");
 
+// app/lib/products.js
+var import_sdk = require("@directus/sdk");
+
 // app/utils/constants.js
 var API_BASE_URL = "http://192.168.1.51:8056";
 
 // app/lib/products.js
 async function fetchCategoriesAndProducts() {
-  let [categoriesResponse, productsResponse] = await Promise.all([
-    fetch(`${API_BASE_URL}/items/Products`),
-    fetch(`${API_BASE_URL}/items/Product_list`)
-  ]);
-  if (!categoriesResponse.ok || !productsResponse.ok)
-    throw new Error("Failed to fetch product data.");
-  let [categories, products] = await Promise.all([
-    categoriesResponse.json(),
-    productsResponse.json()
-  ]), categoriesData = (categories.data || []).slice().sort(
+  var _a, _b;
+  let categories = [], products = [], client2 = (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)());
+  try {
+    [categories, products] = await Promise.all([
+      client2.request((0, import_sdk.readItems)("Products")),
+      client2.request((0, import_sdk.readItems)("Product_list"))
+    ]);
+  } catch (err) {
+    throw console.error("Directus SDK fetch error:", err), new Error(
+      ((_b = (_a = err == null ? void 0 : err.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to fetch product data."
+    );
+  }
+  let categoriesData = (categories || []).slice().sort(
     (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
-  ), productsData = (products.data || []).filter((prod) => !!prod.name && String(prod.name).trim().length > 0).slice().sort(
+  ), productsData = (products || []).filter((prod) => !!prod.name && String(prod.name).trim().length > 0).slice().sort(
     (a, b) => (a.sequence ?? 9999) - (b.sequence ?? 9999)
   );
   return {
@@ -210,16 +216,14 @@ async function fetchCategoriesAndProducts() {
   };
 }
 async function patchProducts(payload) {
-  let response = await fetch(`${API_BASE_URL}/items/Product_list`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-  if (!response.ok) {
-    let error2 = await response.text();
-    throw new Error(error2 || "Failed to save products.");
+  try {
+    let item_id_array = payload.map((item) => item.id), partial_item_object = payload.map(({ id, ...rest4 }) => rest4), result = await (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)()).request(
+      updateItems("Product_list", item_id_array, partial_item_object)
+    );
+    return console.log("SDK Update Result:", result), result;
+  } catch (error2) {
+    return console.error("Update failed:", error2), error2;
   }
-  return response.json();
 }
 
 // app/models/banner.server.js
@@ -1346,10 +1350,9 @@ async function updateCurrentUser(payload, token) {
 }
 async function getUserAllowedLocations(id) {
   var _a, _b;
-  let allowedLocationIds = ((_b = (_a = (await (await fetch(`${API_BASE_URL}/users/${id}?fields[]=*.*`)).json()).data) == null ? void 0 : _a.allowed_locations) == null ? void 0 : _b.map(
+  return ((_b = (_a = (await (await fetch(`${API_BASE_URL}/users/${id}?fields[]=*.*`)).json()).data) == null ? void 0 : _a.allowed_locations) == null ? void 0 : _b.map(
     (item) => item.Locations_id
   )) || [];
-  return console.log(allowedLocationIds), allowedLocationIds;
 }
 
 // app/components/UpdateCurrentUser.jsx
@@ -1470,9 +1473,7 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
   (0, import_react13.useEffect)(() => {
     async function loadData() {
       try {
-        let locs = await fetchLocations(), allowedLocs1 = await getUserAllowedLocations(user.id);
-        console.log(allowedLocs1);
-        let allowedLocs = allowedLocs1.length ? locs.filter(
+        let locs = await fetchLocations(), allowedLocs1 = await getUserAllowedLocations(user.id), allowedLocs = allowedLocs1.length ? locs.filter(
           (loc) => allowedLocs1.includes(loc.id)
         ) : [];
         if (setLocations(allowedLocs), user != null && user.selected_locations) {
@@ -3950,11 +3951,11 @@ function MultiselectLocation({ selectedLocations, setSelectedLocations, variant 
 var MultiselectLocation_default = MultiselectLocation;
 
 // app/utils/directus.server.js
-var import_sdk = require("@directus/sdk");
-var client = (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)()).with((0, import_sdk.authentication)());
+var import_sdk2 = require("@directus/sdk");
+var client = (0, import_sdk2.createDirectus)(API_BASE_URL).with((0, import_sdk2.rest)()).with((0, import_sdk2.authentication)());
 
 // app/routes/signup/index.jsx
-var import_sdk2 = require("@directus/sdk");
+var import_sdk3 = require("@directus/sdk");
 var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 async function loader6({ request }) {
   if ((await getSession(request)).get("user"))
@@ -3963,7 +3964,7 @@ async function loader6({ request }) {
   return console.log("API data " + locs[0].logo), `${API_BASE_URL}/assets/${locs[0].logo}`;
 }
 async function action2({ request }) {
-  var _a;
+  var _a, _b;
   let contentType = request.headers.get("content-type");
   if (console.log("Received Content-Type:", contentType), !contentType || !contentType.includes("multipart/form-data"))
     return (0, import_node10.json)({ error: "Bad content-type", contentType }, { status: 400 });
@@ -3982,7 +3983,7 @@ async function action2({ request }) {
       }
     }
   };
-  if ((await client.request((0, import_sdk2.readUsers)(query_object))).length > 0)
+  if ((await client.request((0, import_sdk3.readUsers)(query_object))).length > 0)
     return (0, import_node10.json)({
       toast: {
         type: "error",
@@ -3990,56 +3991,42 @@ async function action2({ request }) {
       }
     });
   let images = formData.getAll("avatar"), uploadedImageIds = [];
-  for (let image of images)
-    if (image && typeof image != "string" && image.size > 0) {
-      let uploadData = new FormData();
-      uploadData.append("file", image, image.name);
-      try {
-        let uploadRes = await fetch(`${API_BASE_URL}/files`, {
-          method: "POST",
-          body: uploadData
-        });
-        if (!uploadRes.ok) {
-          console.error("File upload failed:", await uploadRes.text());
-          continue;
-        }
-        let uploadJson = await uploadRes.json();
-        (_a = uploadJson == null ? void 0 : uploadJson.data) != null && _a.id && uploadedImageIds.push(uploadJson.data.id);
-      } catch (error2) {
-        console.error("Error uploading avatar:", error2);
-      }
-    }
-  let avatarId = uploadedImageIds.length > 0 ? uploadedImageIds[0] : null, userRes = await fetch(`${API_BASE_URL}/users`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      first_name,
-      last_name,
-      email,
-      password,
-      avatar: avatarId,
-      status: "active",
-      allowed_locations: selectLocations
-    })
-  });
-  if (!userRes.ok) {
-    let err = await userRes.text();
-    return (0, import_node10.json)(
-      {
-        toast: {
-          type: "error",
-          message: err.message || "There is a problem in saving user"
-        }
-      }
-    );
+  for (let image of images) {
+    if (!image || typeof image == "string" || image.size === 0)
+      continue;
+    let fd = new FormData();
+    fd.append("file", image, image.name);
+    let uploaded = await client.request((0, import_sdk3.uploadFiles)(fd));
+    uploadedImageIds.push(uploaded.id);
   }
-  return (0, import_node10.json)({
-    toast: {
-      type: "success",
-      message: "User saved successfully"
-    },
-    redirectTo: "/login"
-  });
+  let avatarId = uploadedImageIds.length > 0 ? uploadedImageIds[0] : null;
+  try {
+    let userRes = await client.request(
+      (0, import_sdk3.createUser)({
+        first_name,
+        last_name,
+        email,
+        password,
+        avatar: avatarId,
+        status: "active",
+        allowed_locations: selectLocations
+      })
+    );
+    return (0, import_node10.json)({
+      toast: {
+        type: "success",
+        message: "User saved successfully"
+      },
+      redirectTo: "/login"
+    });
+  } catch (err) {
+    return console.log("Directus createUser error:", err), (0, import_node10.json)({
+      toast: {
+        type: "error",
+        message: ((_b = (_a = err == null ? void 0 : err.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "There is a problem in saving user"
+      }
+    });
+  }
 }
 function SignUp() {
   let [selectedLocations, setSelectedLocations] = (0, import_react40.useState)([]), [toast, setToast] = (0, import_react40.useState)(null), navigate = (0, import_react41.useNavigate)(), actionData = (0, import_react41.useActionData)(), logoURL = (0, import_react41.useLoaderData)();
@@ -4052,48 +4039,48 @@ function SignUp() {
       "SignUp",
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("img", { src: logoURL || "/images/iss_logo.webp", alt: "location_logo", width: "50px" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 174,
+        lineNumber: 162,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/signup/index.jsx",
-      lineNumber: 172,
+      lineNumber: 160,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(import_react41.Form, { method: "post", encType: "multipart/form-data", onSubmit: () => console.log("Form submitted"), className: "flex flex-col gap-6 max-w-[400px] w-full", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "name", name: "first-name", required: !0, placeholder: "Enter your first name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 179,
+        lineNumber: 167,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "name", name: "last-name", required: !0, placeholder: "Enter your last name" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 181,
+        lineNumber: 169,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Input_default, { type: "email", required: !0, name: "email", placeholder: "Email" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 183,
+        lineNumber: 171,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { children: "Upload your image" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 185,
+        lineNumber: 173,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(ImagesUpload, { name: "avatar" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 187,
+        lineNumber: 175,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Enter password", required: !0, name: "password" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 189,
+        lineNumber: 177,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(PasswordInput_default, { placeholder: "Confirm password", required: !0, name: "confirm-password" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 191,
+        lineNumber: 179,
         columnNumber: 17
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
@@ -4107,24 +4094,24 @@ function SignUp() {
         !1,
         {
           fileName: "app/routes/signup/index.jsx",
-          lineNumber: 193,
+          lineNumber: 181,
           columnNumber: 17
         },
         this
       ),
       selectedLocations.map((id) => /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("input", { type: "hidden", name: "selected-locations[]", value: id }, id, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 200,
+        lineNumber: 188,
         columnNumber: 21
       }, this)),
       /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Button, { type: "submit", children: "Sign up" }, void 0, !1, {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 203,
+        lineNumber: 191,
         columnNumber: 17
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/signup/index.jsx",
-      lineNumber: 177,
+      lineNumber: 165,
       columnNumber: 13
     }, this),
     toast && /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
@@ -4138,14 +4125,14 @@ function SignUp() {
       !1,
       {
         fileName: "app/routes/signup/index.jsx",
-        lineNumber: 209,
+        lineNumber: 197,
         columnNumber: 17
       },
       this
     )
   ] }, void 0, !0, {
     fileName: "app/routes/signup/index.jsx",
-    lineNumber: 170,
+    lineNumber: 158,
     columnNumber: 9
   }, this);
 }
@@ -4186,7 +4173,7 @@ __export(login_exports, {
 });
 var import_node12 = require("@remix-run/node"), import_react44 = require("@remix-run/react");
 var import_lucide_react8 = require("lucide-react");
-var import_sdk3 = require("@directus/sdk");
+var import_sdk4 = require("@directus/sdk");
 var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
 async function loader8({ request }) {
   if ((await getSession(request)).get("user"))
@@ -4329,7 +4316,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "046d0cbb", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-GKE6LTLO.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-LVU3FKZZ.js", imports: ["/build/_shared/chunk-2DD3TBJV.js", "/build/_shared/chunk-37TQUAEP.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-VHV2RT6T.js", imports: ["/build/_shared/chunk-7RCL2I6E.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-U4GJY4JA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-2WSZRAFO.js", imports: ["/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-POB4YGPR.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-SY33GG4B.js", imports: ["/build/_shared/chunk-2DD3TBJV.js", "/build/_shared/chunk-37TQUAEP.js", "/build/_shared/chunk-7RCL2I6E.js", "/build/_shared/chunk-4DT52QEE.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-QI5OLCAQ.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-RZZN7F5A.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-Y4RMYCZL.js", imports: ["/build/_shared/chunk-QI5OLCAQ.js", "/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-UYV7FWTU.js", imports: ["/build/_shared/chunk-C3Y754S4.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-YZEFGZSM.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-046D0CBB.js" };
+var assets_manifest_default = { version: "2fc599ec", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-XJSEGIGX.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-MWY43GBG.js", imports: ["/build/_shared/chunk-LBVJ563J.js", "/build/_shared/chunk-3OWB3LTS.js", "/build/_shared/chunk-PQPTIWWC.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-LNV3CZS3.js", imports: ["/build/_shared/chunk-HJM5WBOE.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-HMIX7U5A.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-PGQEATOQ.js", imports: ["/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-SCJCRTRM.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-M45IAHPM.js", imports: ["/build/_shared/chunk-LBVJ563J.js", "/build/_shared/chunk-3OWB3LTS.js", "/build/_shared/chunk-HJM5WBOE.js", "/build/_shared/chunk-PQPTIWWC.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-CBE5575E.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-5QT4SBF6.js", imports: ["/build/_shared/chunk-CBE5575E.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-WOBRTSTN.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-2FC599EC.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
