@@ -66,7 +66,7 @@ function LocationSelector({ user, token, selectedLocation, setSelectedLocation, 
         }
 
         try {
-            await updateCurrentUser({ selected_locations: value }, token);
+            await updateCurrentUser({ selected_locations: value }, token, user.id);
 
             setToast({
                 message: "Location updated successfully!",

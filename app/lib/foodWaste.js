@@ -1,38 +1,67 @@
+import { createDirectus, createItems, readItems, rest, updateItem, updateItems } from "@directus/sdk";
 import { API_BASE_URL } from "../utils/constants";
 
+
+const client = createDirectus(API_BASE_URL).with(rest());
+
 export async function fetchFoodWaste(locationId) {
-  const url = `${API_BASE_URL}/items/Food_waste_information` +
-    (locationId ? `?filter[location_id][_eq]=${locationId}` : "");
+  try {
+    const data = await client.request(
+      readItems("Food_waste_information", {
+        filter: locationId
+          ? { location_id: { _eq: locationId } }
+          : {},
+      })
+    );
 
-  const response = await fetch(url);
+    return data; // Directus returns array of items
 
-  if (!response.ok) throw new Error("Failed to fetch food waste data.");
-
-  const result = await response.json();
-  return result.data || result;
+  } catch (err) {
+    console.error("Directus SDK fetch error:", err);
+    throw new Error(
+      err?.errors?.[0]?.message || "Failed to fetch food waste data."
+    );
+  }
 }
 
 
 export async function patchFoodWaste(payload) {
-  const response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const results = [];
 
-  if (!response.ok) throw new Error("Failed to update food waste.");
+    // Update each item individually
+    for (const item of payload) {
+      const { id, ...rest } = item;
 
-  return response.json();
+      const result = await client.request(
+        updateItem("Food_waste_information", id, rest)
+      );
+
+      results.push(result);
+    }
+
+    return results;
+
+  } catch (err) {
+    console.error("Directus SDK update error:", err);
+    throw new Error(
+      err?.errors?.[0]?.message || "Failed to update food waste."
+    );
+  }
 }
 
 export async function createFoodWaste(items) {
-  const response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(items), // Can be single object or array
-  });
+  try {
 
-  if (!response.ok) throw new Error("Failed to create food waste.");
+    return await client.request(
+      createItems("Food_waste_information", items)
+    );
 
-  return response.json();
+  } catch (err) {
+    console.error("Directus SDK create error:", err);
+    throw new Error(
+      err?.errors?.[0]?.message || "Failed to create food waste."
+    );
+  }
+
 }

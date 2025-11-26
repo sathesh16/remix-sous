@@ -84,7 +84,7 @@ export default function useFoodWasteTable(selectedLocationId) {
                 // New record (no id) → create
                 toCreate.push({
                     ...data,
-                    location_id: selectedLocation,
+                    location_id: selectedLocationId,
                 });
             }
         });

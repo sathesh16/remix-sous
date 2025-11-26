@@ -194,11 +194,11 @@ var API_BASE_URL = "http://192.168.1.51:8056";
 // app/lib/products.js
 async function fetchCategoriesAndProducts() {
   var _a, _b;
-  let categories = [], products = [], client2 = (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)());
+  let categories = [], products = [], client5 = (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)());
   try {
     [categories, products] = await Promise.all([
-      client2.request((0, import_sdk.readItems)("Products")),
-      client2.request((0, import_sdk.readItems)("Product_list"))
+      client5.request((0, import_sdk.readItems)("Products")),
+      client5.request((0, import_sdk.readItems)("Product_list"))
     ]);
   } catch (err) {
     throw console.error("Directus SDK fetch error:", err), new Error(
@@ -217,7 +217,7 @@ async function fetchCategoriesAndProducts() {
 }
 async function patchProducts(payload) {
   try {
-    let item_id_array = payload.map((item) => item.id), partial_item_object = payload.map(({ id, ...rest4 }) => rest4), result = await (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)()).request(
+    let item_id_array = payload.map((item) => item.id), partial_item_object = payload.map(({ id, ...rest7 }) => rest7), result = await (0, import_sdk.createDirectus)(API_BASE_URL).with((0, import_sdk.rest)()).request(
       updateItems("Product_list", item_id_array, partial_item_object)
     );
     return console.log("SDK Update Result:", result), result;
@@ -362,32 +362,50 @@ __export(banner_foodwaste_locationId_exports, {
 var import_react6 = require("@remix-run/react"), import_react7 = require("react");
 
 // app/lib/foodWaste.js
+var import_sdk2 = require("@directus/sdk");
+var client = (0, import_sdk2.createDirectus)(API_BASE_URL).with((0, import_sdk2.rest)());
 async function fetchFoodWaste(locationId) {
-  let url = `${API_BASE_URL}/items/Food_waste_information` + (locationId ? `?filter[location_id][_eq]=${locationId}` : ""), response = await fetch(url);
-  if (!response.ok)
-    throw new Error("Failed to fetch food waste data.");
-  let result = await response.json();
-  return result.data || result;
+  var _a, _b;
+  try {
+    return await client.request(
+      (0, import_sdk2.readItems)("Food_waste_information", {
+        filter: locationId ? { location_id: { _eq: locationId } } : {}
+      })
+    );
+  } catch (err) {
+    throw console.error("Directus SDK fetch error:", err), new Error(
+      ((_b = (_a = err == null ? void 0 : err.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to fetch food waste data."
+    );
+  }
 }
 async function patchFoodWaste(payload) {
-  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-  if (!response.ok)
-    throw new Error("Failed to update food waste.");
-  return response.json();
+  var _a, _b;
+  try {
+    let results = [];
+    for (let item of payload) {
+      let { id, ...rest7 } = item, result = await client.request(
+        (0, import_sdk2.updateItem)("Food_waste_information", id, rest7)
+      );
+      results.push(result);
+    }
+    return results;
+  } catch (err) {
+    throw console.error("Directus SDK update error:", err), new Error(
+      ((_b = (_a = err == null ? void 0 : err.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to update food waste."
+    );
+  }
 }
 async function createFoodWaste(items) {
-  let response = await fetch(`${API_BASE_URL}/items/Food_waste_information`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(items)
-  });
-  if (!response.ok)
-    throw new Error("Failed to create food waste.");
-  return response.json();
+  var _a, _b;
+  try {
+    return await client.request(
+      (0, import_sdk2.createItems)("Food_waste_information", items)
+    );
+  } catch (err) {
+    throw console.error("Directus SDK create error:", err), new Error(
+      ((_b = (_a = err == null ? void 0 : err.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to create food waste."
+    );
+  }
 }
 
 // app/routes/banner.foodwaste.$locationId.jsx
@@ -471,30 +489,35 @@ function ClientApexChart({ data = [], color = "#CBD5E1", width = 180, height = 4
 }
 
 // app/lib/locations.js
+var import_sdk3 = require("@directus/sdk");
+var client2 = (0, import_sdk3.createDirectus)(API_BASE_URL).with((0, import_sdk3.rest)());
 async function fetchLocations() {
-  let response = await fetch(`${API_BASE_URL}/items/Locations/`);
-  if (!response.ok)
-    throw new Error("Failed to fetch locations.");
-  let result = await response.json();
-  return result.data || result;
+  try {
+    return await client2.request((0, import_sdk3.readItems)("Locations"));
+  } catch (err) {
+    return console.error("Directus SDK fetch error:", err), err;
+  }
 }
 async function getLocationIsVertical(id) {
-  let response = await fetch(`${API_BASE_URL}/items/Locations/${id}`);
-  if (!response.ok)
-    throw new Error("Failed to fetch locations.");
-  return (await response.json()).data.is_vertical_foodwaste;
+  try {
+    return (await client2.request((0, import_sdk3.readItem)("Locations", id))).is_vertical_foodwaste;
+  } catch (err) {
+    return console.error("Directus SDK fetch error:", err), err;
+  }
 }
 async function updateLocationIsVertical(id, isVertical) {
-  let payload = {
-    is_vertical_foodwaste: isVertical
-  }, response = await fetch(`${API_BASE_URL}/items/Locations/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-  if (!response.ok)
-    throw new Error("Failed to update location.");
-  return response.json();
+  var _a, _b;
+  try {
+    return await client2.request(
+      (0, import_sdk3.updateItem)("Locations", id, {
+        is_vertical_foodwaste: isVertical
+      })
+    );
+  } catch (err) {
+    throw console.error("Directus update error:", err), new Error(
+      ((_b = (_a = err == null ? void 0 : err.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to update location."
+    );
+  }
 }
 
 // app/routes/banner.foodwaste.$locationId.jsx
@@ -1334,25 +1357,25 @@ function CurrentUserCard({ user }) {
 var import_react9 = require("react");
 
 // app/lib/users.js
-async function updateCurrentUser(payload, token) {
-  var _a, _b;
-  let response = await fetch(`${API_BASE_URL}/users/me`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ data: payload })
-  }), json8 = await response.json();
-  if (!response.ok)
-    throw new Error(((_b = (_a = json8 == null ? void 0 : json8.errors) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) || "Failed to update user");
-  return console.log("Updated user data:", json8), json8.data;
+var import_sdk4 = require("@directus/sdk");
+var client3 = (0, import_sdk4.createDirectus)(API_BASE_URL).with((0, import_sdk4.rest)());
+async function updateCurrentUser(payload, token, id) {
+  try {
+    return await client3.request((0, import_sdk4.updateUser)(id, payload));
+  } catch (err) {
+    return console.error("Directus SDK update user error:", err, id, payload), err;
+  }
 }
 async function getUserAllowedLocations(id) {
-  var _a, _b;
-  return ((_b = (_a = (await (await fetch(`${API_BASE_URL}/users/${id}?fields[]=*.*`)).json()).data) == null ? void 0 : _a.allowed_locations) == null ? void 0 : _b.map(
-    (item) => item.Locations_id
-  )) || [];
+  var _a;
+  try {
+    let user = await client3.request(
+      (0, import_sdk4.readUser)(id, { fields: ["*.*"] })
+    );
+    return ((_a = user == null ? void 0 : user.allowed_locations) == null ? void 0 : _a.map((item) => item.Locations_id)) || [];
+  } catch (err) {
+    throw console.error("Directus SDK user fetch error:", err), new Error("Failed to fetch user's allowed locations.");
+  }
 }
 
 // app/components/UpdateCurrentUser.jsx
@@ -1467,7 +1490,7 @@ function Toast({ message, type = "success", onClose }) {
 
 // app/components/LocationSelector.jsx
 var import_react14 = require("@headlessui/react"), import_jsx_dev_runtime13 = require("react/jsx-dev-runtime");
-function LocationSelector({ user, token, selectedLocation: selectedLocation2, setSelectedLocation, variant = "default" }) {
+function LocationSelector({ user, token, selectedLocation, setSelectedLocation, variant = "default" }) {
   var _a;
   let [locations, setLocations] = (0, import_react13.useState)([]), [userId] = (0, import_react13.useState)((user == null ? void 0 : user.id) || null), [toast, setToast] = (0, import_react13.useState)(null), dismissToast = () => setToast(null), isBlack = variant === "black", textColor = isBlack ? "text-[#777]" : "text-white", bgColor = isBlack ? "bg-white" : "bg-gray-700", optionActiveBg = isBlack ? "bg-gray-200" : "bg-gray-600", dropdownPosition = isBlack ? "" : "absolute";
   (0, import_react13.useEffect)(() => {
@@ -1494,7 +1517,7 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
     let selectedLocObject = locations.find((l) => l.id === value);
     selectedLocObject && window.dispatchEvent(new CustomEvent("locationChanged", { detail: selectedLocObject }));
     try {
-      await updateCurrentUser({ selected_locations: value }, token), setToast({
+      await updateCurrentUser({ selected_locations: value }, token, user.id), setToast({
         message: "Location updated successfully!",
         type: "success"
       });
@@ -1506,13 +1529,13 @@ function LocationSelector({ user, token, selectedLocation: selectedLocation2, se
     }
   }
   return /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_jsx_dev_runtime13.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react14.Listbox, { value: selectedLocation2, onChange: (value) => handleLocationChange(value), children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "relative w-full", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react14.Listbox, { value: selectedLocation, onChange: (value) => handleLocationChange(value), children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "relative w-full", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(
         import_react14.ListboxButton,
         {
           className: `w-full border border-gray-300 px-4 py-2 rounded text-left flex justify-between ${textColor}`,
           children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: selectedLocation2 ? (_a = locations.find((l) => l.id === selectedLocation2)) == null ? void 0 : _a.name : "Allowed Locations" }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("span", { children: selectedLocation ? (_a = locations.find((l) => l.id === selectedLocation)) == null ? void 0 : _a.name : "Allowed Locations" }, void 0, !1, {
               fileName: "app/components/LocationSelector.jsx",
               lineNumber: 93,
               columnNumber: 25
@@ -1599,7 +1622,7 @@ var LocationSelector_default = LocationSelector;
 // app/components/AdminLayout.jsx
 var import_jsx_dev_runtime14 = require("react/jsx-dev-runtime"), SelectedLocationContext = (0, import_react16.createContext)(null);
 function AdminLayout({ children, user, token }) {
-  let [logoUrl, setLogoUrl] = (0, import_react16.useState)(null), [open, setOpen] = (0, import_react16.useState)(!0), [selectedLocation2, setSelectedLocation] = (0, import_react16.useState)((user == null ? void 0 : user.selected_locations) || "");
+  let [logoUrl, setLogoUrl] = (0, import_react16.useState)(null), [open, setOpen] = (0, import_react16.useState)(!0), [selectedLocation, setSelectedLocation] = (0, import_react16.useState)((user == null ? void 0 : user.selected_locations) || "");
   return (0, import_react16.useEffect)(() => {
     function updateLogo(e) {
       let loc = e.detail;
@@ -1610,7 +1633,7 @@ function AdminLayout({ children, user, token }) {
       setLogoUrl(`${API_BASE_URL}/assets/${loc.logo}`);
     }
     return window.addEventListener("locationChanged", updateLogo), () => window.removeEventListener("locationChanged", updateLogo);
-  }, []), /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(SelectedLocationContext.Provider, { value: { selectedLocation: selectedLocation2, setSelectedLocation }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "min-h-screen flex relative", children: [
+  }, []), /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(SelectedLocationContext.Provider, { value: { selectedLocation, setSelectedLocation }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "min-h-screen flex relative", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
       "aside",
       {
@@ -1637,7 +1660,7 @@ function AdminLayout({ children, user, token }) {
             {
               user,
               token,
-              selectedLocation: selectedLocation2,
+              selectedLocation,
               setSelectedLocation
             },
             void 0,
@@ -1751,7 +1774,7 @@ async function loader3({ request }) {
   return (0, import_node5.json)({ user });
 }
 function Dashboard() {
-  let { user, token, refresh_token, expires_in } = (0, import_react17.useLoaderData)(), { selectedLocation: selectedLocation2 } = (0, import_react18.useContext)(SelectedLocationContext);
+  let { user, token, refresh_token, expires_in } = (0, import_react17.useLoaderData)(), { selectedLocation } = (0, import_react18.useContext)(SelectedLocationContext);
   return console.log("\u{1F510} CLIENT \u2014 USER:", user), /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("div", { className: "p-6", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("h1", { className: "text-2xl font-bold", children: [
       "Welcome, ",
@@ -1764,7 +1787,7 @@ function Dashboard() {
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("h1", { className: "text-2xl font-bold", children: [
       "Your current location: ",
-      selectedLocation2.selectedLocation,
+      selectedLocation.selectedLocation,
       "    "
     ] }, void 0, !0, {
       fileName: "app/routes/dashboard/index.jsx",
@@ -2727,7 +2750,7 @@ function useFoodWasteTable(selectedLocationId) {
     Object.entries(updates).forEach(([key, data]) => {
       Number(key) ? toUpdate.push({ id: Number(key), ...data }) : toCreate.push({
         ...data,
-        location_id: selectedLocation
+        location_id: selectedLocationId
       });
     }), setIsSaving(!0);
     try {
@@ -2791,14 +2814,14 @@ function FoodWastePreview({
   totalSeries = [],
   isIncreasePlate,
   isIncreaseTotal,
-  selectedLocation: selectedLocation2
+  selectedLocation
 }) {
   let textColorPlate = isIncreasePlate ? "text-[#8B4513]" : "text-[#24361F]", arrowIconPlate = isIncreasePlate ? "/images/arrow-up.svg" : "/images/arrow-down.svg", textColorAvg = isIncreaseTotal ? "text-[#8B4513]" : "text-[#24361F]", arrowIconAvg = isIncreaseTotal ? "/images/arrow-up.svg" : "/images/arrow-down.svg", clipboard = useClipboard_default({ resetDelay: 2e3 }), linkToCopy = (0, import_react28.useMemo)(() => {
-    if (!selectedLocation2)
+    if (!selectedLocation)
       return "";
     let { origin } = window.location;
-    return url_default(`/banner/foodwaste/${selectedLocation2}`, origin);
-  }, [selectedLocation2]), label = clipboard.status === "success" ? "Copied!" : clipboard.status === "error" ? "Failed to copy" : "Copy Link", handleCopy = () => clipboard.copy(linkToCopy);
+    return url_default(`/banner/foodwaste/${selectedLocation}`, origin);
+  }, [selectedLocation]), label = clipboard.status === "success" ? "Copied!" : clipboard.status === "error" ? "Failed to copy" : "Copy Link", handleCopy = () => clipboard.copy(linkToCopy);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: (0, import_clsx3.default)("bg-[#E6EFE6] py-8 px-12 rounded-md h-full overflow-y-auto", orientation === "landscape" ? "food-waste-hr-bg" : "food-waste-vr-bg"), children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("h1", { className: (0, import_clsx3.default)("mb-10 font-semibold text-3xl", orientation === "landscape" ? "text-[#24361F]" : "text-black"), children: "Food Waste" }, void 0, !1, {
       fileName: "app/components/FoodWastePreview.jsx",
@@ -3138,7 +3161,7 @@ function coerceDisplayValue(value) {
   return value ?? "";
 }
 function FoodWaste() {
-  let selectedLocation2 = (0, import_react30.useContext)(SelectedLocationContext), {
+  let selectedLocation = (0, import_react30.useContext)(SelectedLocationContext), {
     week,
     setWeek,
     allRecords,
@@ -3153,7 +3176,7 @@ function FoodWaste() {
     dismissToast,
     orientation,
     setOrientation
-  } = useFoodWasteTable(selectedLocation2.selectedLocation), [isClient, setIsClient] = (0, import_react30.useState)(!1), [Spreadsheet, setSpreadsheet] = (0, import_react30.useState)(null), [sheetData, setSheetData] = (0, import_react30.useState)([]), [showPreview, setShowPreview] = (0, import_react30.useState)(!1), [previewData, setPreviewData] = (0, import_react30.useState)(null);
+  } = useFoodWasteTable(selectedLocation.selectedLocation), [isClient, setIsClient] = (0, import_react30.useState)(!1), [Spreadsheet, setSpreadsheet] = (0, import_react30.useState)(null), [sheetData, setSheetData] = (0, import_react30.useState)([]), [showPreview, setShowPreview] = (0, import_react30.useState)(!1), [previewData, setPreviewData] = (0, import_react30.useState)(null);
   (0, import_react30.useEffect)(() => {
     setIsClient(!0);
   }, []), (0, import_react30.useEffect)(() => {
@@ -3304,7 +3327,7 @@ function FoodWaste() {
             value: orientation,
             onChange: (value) => {
               setOrientation(value), updateLocationIsVertical(
-                selectedLocation2.selectedLocation,
+                selectedLocation.selectedLocation,
                 value === "portrait"
               ).then(() => console.log("Orientation updated")).catch((err) => console.error(err));
             }
@@ -3427,7 +3450,7 @@ function FoodWaste() {
         totalSeries: previewData.totalSeries,
         isIncreasePlate: previewData.isIncreasePlate,
         isIncreaseTotal: previewData.isIncreaseTotal,
-        selectedLocation: selectedLocation2.selectedLocation
+        selectedLocation: selectedLocation.selectedLocation
       },
       void 0,
       !1,
@@ -3951,11 +3974,11 @@ function MultiselectLocation({ selectedLocations, setSelectedLocations, variant 
 var MultiselectLocation_default = MultiselectLocation;
 
 // app/utils/directus.server.js
-var import_sdk2 = require("@directus/sdk");
-var client = (0, import_sdk2.createDirectus)(API_BASE_URL).with((0, import_sdk2.rest)()).with((0, import_sdk2.authentication)());
+var import_sdk5 = require("@directus/sdk");
+var client4 = (0, import_sdk5.createDirectus)(API_BASE_URL).with((0, import_sdk5.rest)()).with((0, import_sdk5.authentication)());
 
 // app/routes/signup/index.jsx
-var import_sdk3 = require("@directus/sdk");
+var import_sdk6 = require("@directus/sdk");
 var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
 async function loader6({ request }) {
   if ((await getSession(request)).get("user"))
@@ -3983,7 +4006,7 @@ async function action2({ request }) {
       }
     }
   };
-  if ((await client.request((0, import_sdk3.readUsers)(query_object))).length > 0)
+  if ((await client4.request((0, import_sdk6.readUsers)(query_object))).length > 0)
     return (0, import_node10.json)({
       toast: {
         type: "error",
@@ -3996,13 +4019,13 @@ async function action2({ request }) {
       continue;
     let fd = new FormData();
     fd.append("file", image, image.name);
-    let uploaded = await client.request((0, import_sdk3.uploadFiles)(fd));
+    let uploaded = await client4.request((0, import_sdk6.uploadFiles)(fd));
     uploadedImageIds.push(uploaded.id);
   }
   let avatarId = uploadedImageIds.length > 0 ? uploadedImageIds[0] : null;
   try {
-    let userRes = await client.request(
-      (0, import_sdk3.createUser)({
+    let userRes = await client4.request(
+      (0, import_sdk6.createUser)({
         first_name,
         last_name,
         email,
@@ -4173,7 +4196,7 @@ __export(login_exports, {
 });
 var import_node12 = require("@remix-run/node"), import_react44 = require("@remix-run/react");
 var import_lucide_react8 = require("lucide-react");
-var import_sdk4 = require("@directus/sdk");
+var import_sdk7 = require("@directus/sdk");
 var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
 async function loader8({ request }) {
   if ((await getSession(request)).get("user"))
@@ -4184,7 +4207,7 @@ async function loader8({ request }) {
 async function action3({ request }) {
   let formData = await request.formData(), email = formData.get("email"), password = formData.get("password"), redirectTo = "/admin/kitchen/cafe";
   try {
-    let data = await client.login({ email, password }), session = await getSession(request);
+    let data = await client4.login({ email, password }), session = await getSession(request);
     return session.set("token", data.access_token), session.set("refresh_token", data.refresh_token), session.set("expires_in", data.expires), session.set("user", data.user || { email }), (0, import_node12.redirect)(redirectTo, {
       headers: { "Set-Cookie": await commitSession(session) }
     });
@@ -4316,7 +4339,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "2fc599ec", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-XJSEGIGX.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-MWY43GBG.js", imports: ["/build/_shared/chunk-LBVJ563J.js", "/build/_shared/chunk-3OWB3LTS.js", "/build/_shared/chunk-PQPTIWWC.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-LNV3CZS3.js", imports: ["/build/_shared/chunk-HJM5WBOE.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-HMIX7U5A.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-PGQEATOQ.js", imports: ["/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-ONRFSEAV.js", imports: ["/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-SCJCRTRM.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-M45IAHPM.js", imports: ["/build/_shared/chunk-LBVJ563J.js", "/build/_shared/chunk-3OWB3LTS.js", "/build/_shared/chunk-HJM5WBOE.js", "/build/_shared/chunk-PQPTIWWC.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-CBE5575E.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-7H3TDLW4.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-4NC6K6WE.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-5QT4SBF6.js", imports: ["/build/_shared/chunk-CBE5575E.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-WOBRTSTN.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-VIZKJ4MD.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-FX3I2BK2.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-UMTRTZVR.js", "/build/_shared/chunk-37D2R22D.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-2FC599EC.js" };
+var assets_manifest_default = { version: "07f92086", entry: { module: "/build/entry.client-T7Z7HZQN.js", imports: ["/build/_shared/chunk-ZET52ZWX.js", "/build/_shared/chunk-HPOQQBQV.js", "/build/_shared/chunk-CWKW5RDC.js", "/build/_shared/chunk-UP37MDVE.js", "/build/_shared/chunk-4IYZMDEG.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-H2QA3DY6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-MT5HJCBM.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-JRTW3MID.js", "/build/_shared/chunk-66P7H762.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen": { id: "routes/admin/kitchen", parentId: "root", path: "admin/kitchen", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen-AFYL7CPL.js", imports: ["/build/_shared/chunk-BKMDAJZ5.js", "/build/_shared/chunk-TGYPWTZA.js", "/build/_shared/chunk-WYVN6D4K.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-RQ2CZLRC.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-JRTW3MID.js", "/build/_shared/chunk-66P7H762.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/cafe": { id: "routes/admin/kitchen/cafe", parentId: "routes/admin/kitchen", path: "cafe", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/cafe-V2FEUJ5U.js", imports: ["/build/_shared/chunk-V44HVK5U.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/kitchen/foodwaste": { id: "routes/admin/kitchen/foodwaste", parentId: "routes/admin/kitchen", path: "foodwaste", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/kitchen/foodwaste-46ZKAVCG.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/settings": { id: "routes/admin/settings", parentId: "root", path: "admin/settings", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/settings-RFVYGHT3.js", imports: ["/build/_shared/chunk-JRTW3MID.js", "/build/_shared/chunk-66P7H762.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/test": { id: "routes/admin/test", parentId: "root", path: "admin/test", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/test-XBAW3OHD.js", imports: ["/build/_shared/chunk-V6LQV4ZH.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api.update-location": { id: "routes/api.update-location", parentId: "root", path: "api/update-location", index: void 0, caseSensitive: void 0, module: "/build/routes/api.update-location-RQXZMDZZ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.foodwaste.$locationId": { id: "routes/banner.foodwaste.$locationId", parentId: "root", path: "banner/foodwaste/:locationId", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.foodwaste.$locationId-P2YIKLCM.js", imports: ["/build/_shared/chunk-RQ2CZLRC.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/banner.product.$productId.$screen": { id: "routes/banner.product.$productId.$screen", parentId: "root", path: "banner/product/:productId/:screen", index: void 0, caseSensitive: void 0, module: "/build/routes/banner.product.$productId.$screen-FTNXA4DE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "root", path: "dashboard", index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-PFJBQNIX.js", imports: ["/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-JRTW3MID.js", "/build/_shared/chunk-66P7H762.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/example/chart/AreaChart": { id: "routes/example/chart/AreaChart", parentId: "root", path: "example/chart/AreaChart", index: void 0, caseSensitive: void 0, module: "/build/routes/example/chart/AreaChart-XLEMYURJ.js", imports: ["/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-4KMMNWFL.js", imports: ["/build/_shared/chunk-BKMDAJZ5.js", "/build/_shared/chunk-TGYPWTZA.js", "/build/_shared/chunk-V44HVK5U.js", "/build/_shared/chunk-WYVN6D4K.js", "/build/_shared/chunk-KEQE3GLU.js", "/build/_shared/chunk-CBE5575E.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-RQ2CZLRC.js", "/build/_shared/chunk-V6LQV4ZH.js", "/build/_shared/chunk-4UKVBTC2.js", "/build/_shared/chunk-UPMHR3XY.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-JRTW3MID.js", "/build/_shared/chunk-66P7H762.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-XIXI6E2O.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login/index": { id: "routes/login/index", parentId: "root", path: "login", index: !0, caseSensitive: void 0, module: "/build/routes/login/index-TZ4D4NOK.js", imports: ["/build/_shared/chunk-CBE5575E.js", "/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout/index": { id: "routes/logout/index", parentId: "root", path: "logout", index: !0, caseSensitive: void 0, module: "/build/routes/logout/index-373ICHOP.js", imports: ["/build/_shared/chunk-V2FERAFP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup/index": { id: "routes/signup/index", parentId: "root", path: "signup", index: !0, caseSensitive: void 0, module: "/build/routes/signup/index-7YWXRR44.js", imports: ["/build/_shared/chunk-6A6CDTV7.js", "/build/_shared/chunk-V2FERAFP.js", "/build/_shared/chunk-66P7H762.js", "/build/_shared/chunk-DPZWG5ON.js", "/build/_shared/chunk-T5AHSTUC.js", "/build/_shared/chunk-3TPZBIBZ.js", "/build/_shared/chunk-QMCBVEL4.js", "/build/_shared/chunk-AWAWJRMS.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-07F92086.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_meta: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
